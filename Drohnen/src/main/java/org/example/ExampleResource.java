@@ -12,6 +12,5 @@ public class ExampleResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String hello() {
         return "Hello from Quarkus";
-        return "Eas";
     }
 }
