@@ -1,45 +1,90 @@
-#Maven
-target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-release.properties
-.flattened-pom.xml
-
-# Eclipse
-.project
-.classpath
-.settings/
-bin/
-
-# IntelliJ
-.idea
-*.ipr
+########################################
+# IntelliJ IDEA
+########################################
+.idea/
 *.iml
+*.ipr
 *.iws
+out/
 
-# NetBeans
-nb-configuration.xml
+########################################
+# Backend – Quarkus (Maven)
+########################################
+backend/target/
+backend/.quarkus/
+backend/.quarkus-dev/
+backend/.quarkus-app/
+backend/.devservices/
 
-# Visual Studio Code
-.vscode
-.factorypath
+# Maven Release / Backup Files
+backend/pom.xml.tag
+backend/pom.xml.releaseBackup
+backend/pom.xml.versionsBackup
+backend/release.properties
+backend/.flattened-pom.xml
 
-# OSX
-.DS_Store
+########################################
+# Frontend – Node / Angular
+########################################
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/.cache/
+frontend/.npm/
+frontend/.vite/
+frontend/.parcel-cache/
 
-# Vim
-*.swp
-*.swo
-
-# patch
-*.orig
-*.rej
-
-# Local environment
+########################################
+# Environment / Secrets
+########################################
 .env
 
-# Plugin directory
-/.quarkus/cli/plugins/
-# TLS Certificates
+########################################
+# Logs
+########################################
+*.log
+logs/
+
+########################################
+# Native Builds (Quarkus / GraalVM)
+########################################
+*-runner
+*-runner.exe
+
+########################################
+# Docker (local overrides)
+########################################
+docker-compose.override.yml
+
+########################################
+# Quarkus CLI
+########################################
+.quarkus/cli/plugins/
+
+########################################
+# TLS / Certificates
+########################################
 .certs/
+
+########################################
+# Operating Systems
+########################################
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+# Linux
+*~
+
+########################################
+# Temporary / Patch Files
+########################################
+*.swp
+*.swo
+*.orig
+*.rej
