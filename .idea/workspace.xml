@@ -24,12 +24,12 @@
     &quot;assignee&quot;: &quot;stadlerp16&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/stadlerp16/Drohnenprojekt.git",
-    "accountId": "cc10e684-aff6-465f-98e4-3d624a14801b"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/stadlerp16/Drohnenprojekt.git&quot;,
+    &quot;accountId&quot;: &quot;cc10e684-aff6-465f-98e4-3d624a14801b&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0
 }</component>
@@ -78,7 +78,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-WS-252.27397.92" />
+        <option value="bundled-js-predefined-d6986cc7102b-b598e85cdad2-JavaScript-PY-252.25557.178" />
+        <option value="bundled-python-sdk-ce6832f46686-7b97d883f26b-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.25557.178" />
       </set>
     </attachedChunks>
   </component>
@@ -92,6 +93,7 @@
       <workItem from="1769075448168" duration="209000" />
       <workItem from="1769075687883" duration="149000" />
       <workItem from="1769075976131" duration="134000" />
+      <workItem from="1769161121304" duration="31000" />
     </task>
     <task id="LOCAL-00001" summary="Create Backend">
       <option name="closed" value="true" />
