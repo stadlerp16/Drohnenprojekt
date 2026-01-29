@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class DroneService {
 
-  private baseUrl = 'http://localhost:8080/api/drone';
+  private baseUrl = 'http://localhost:8000/drone';
 
   constructor(private http: HttpClient) {
   }
