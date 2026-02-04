@@ -10,7 +10,11 @@
           <small *ngIf="ipForm.get('droneIp')?.errors?.['required']">IP wird benötigt.</small>
         </div>
 
-        <button type="submit" [disabled]="ipForm.invalid">Verbinden</button>
+        <button
+          type="submit"
+          [disabled]="isConnecting || isConnected">
+          {{ isConnecting ? 'Verbinde...' : 'Verbinden' }}
+        </button>
 
         <div class="drone-controls" *ngIf="isConnected">
           <h3>Steuerung</h3>
