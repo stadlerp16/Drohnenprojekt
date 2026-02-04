@@ -14,7 +14,7 @@ export class DroneService {
 
   // Die Methode baut sich die URL dynamisch zusammen
   sendIpAddress(ip: string): Observable<any> {
-    const payload = {ipAddress: ip};
+    const payload = {ip: ip};
 
     return this.http.post(`${this.baseUrl}/connect`, payload);
   }

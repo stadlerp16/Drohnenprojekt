@@ -1,38 +1,37 @@
 import robomaster
 from robomaster import robot
 
+ep_drone = None
 
 def buildconnection(ip: str) -> bool:
-    """
-    Versucht, eine Verbindung zur Drohne über das RoboMaster-SDK aufzubauen.
-    Gibt True zurück, wenn erfolgreich, sonst False.
-    """
+    global ep_drone
+    print(ip)
+    close()  # 🔥 alten Zustand IMMER wegräumen
 
     try:
-
-        print(ip)
-        # Lokale IP setzen (wichtig für UDP)
-        robomaster.config.ROBOT_IP_STR = ip
-
-        # Roboter-Objekt erstellen
+        # ...
         ep_drone = robot.Drone()
+        ok = ep_drone.initialize()
+        if not ok:
+            return False
 
-        # Verbindung aufbauen (UDP / WLAN)
-        if not ep_drone.initialize():
-            raise ConnectionError()
-
-
-        # Optional: einfacher Test, ob Verbindung steht
         battery = ep_drone.battery.get_battery()
-        print(f"Verbindung erfolgreich, Batterie: {battery}%")
-
+        print(f"OK, Batterie: {battery}%")
         return True
 
     except Exception as e:
-        # Fehler abfangen, Verbindung fehlgeschlagen
-        print(f"Verbindungsfehler zur Drohne: {e}")
+        print(f"Verbindungsfehler: {e}")
+        close()
         return False
 
 
-
+def close():
+    global ep_drone
+    if ep_drone is not None:
+        try:
+            ep_drone.close()
+        except Exception:
+            pass
+        finally:
+            ep_drone = None
 
