@@ -2,6 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from Routes.drohnenRoutes import router as drohnen_router
 from  Services.drohneService import close
+from Routes.steuerungRoutes import router as steuer_router
+
+
 
 async def lifecycle(app: FastAPI):
     #start
@@ -20,3 +23,4 @@ app.add_middleware(
 )
 
 app.include_router(drohnen_router, prefix="/drone")
+app.include_router(steuer_router, prefix="/drone")

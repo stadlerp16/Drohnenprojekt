@@ -6,7 +6,7 @@ ep_drone = None
 def buildconnection(ip: str) -> bool:
     global ep_drone
     print(ip)
-    close()  # 🔥 alten Zustand IMMER wegräumen
+    close()
 
     try:
         # ...
