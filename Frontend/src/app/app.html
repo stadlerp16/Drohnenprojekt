@@ -11,6 +11,15 @@
         </div>
 
         <button type="submit" [disabled]="ipForm.invalid">Verbinden</button>
+
+        <div class="drone-controls" *ngIf="isConnected">
+          <h3>Steuerung</h3>
+          <div class="button-group">
+            <button class="btn-start" (click)="startDrone()">Start (1m Steigen)</button>
+            <button class="btn-stop" (click)="stopDrone()">Not-Stopp</button>
+          </div>
+        </div>
+
       </form>
     </div>
   </div>
