@@ -37,12 +37,11 @@ export class App {
 
       this.droneService.sendIpAddress(ip).subscribe({
         next: (response) => {
-          console.log('Erfolgreich übertragen:', response);
-          this.isConnected = true;
+          console.log('Verbindung erfolgreich:', response);
           this.isConnecting = false;
         },
         error: (err) => {
-          console.error('Fehler bei der Übertragung:', err);
+          console.error('Verbindung fehlgeschlagen:', err);
           this.isConnecting = false;
         }
       });
