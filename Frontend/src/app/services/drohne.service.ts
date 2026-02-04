@@ -12,7 +12,7 @@ export class DroneService {
   constructor(private http: HttpClient) {}
 
   sendIpAddress(ip: string): Observable<any> {
-    const payload = { ip: ip };
+    const payload = {ip: ip};
     // Nutzt baseUrl -> Ergebnis: http://localhost:8080/api/drone/connect
     return this.http.post(`${this.baseUrl}/connect`, payload);
   }
