@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="Create Backend">
+    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/src/app/app.html" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/app/app.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/app/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/app/app.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/app/services/drohne.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/app/services/drohne.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,12 +22,12 @@
     &quot;assignee&quot;: &quot;stadlerp16&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/stadlerp16/Drohnenprojekt.git",
-    "accountId": "d4b57c3b-1664-4b8f-9bdf-0cdca03b0d89"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/stadlerp16/Drohnenprojekt.git&quot;,
+    &quot;accountId&quot;: &quot;d4b57c3b-1664-4b8f-9bdf-0cdca03b0d89&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0
 }</component>
@@ -46,7 +44,7 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "Vitest.app.spec.ts.executor": "Run",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "Mario",
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "C:/Users/Mario/Projekt/Drohnenprojekt",
     "node.js.detected.package.eslint": "true",
