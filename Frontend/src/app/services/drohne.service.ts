@@ -7,12 +7,12 @@ import { Observable } from 'rxjs';
 })
 export class DroneService {
   // Wir nutzen hier deine definierte Basis-URL
-  private baseUrl = 'http://localhost:8080/api/drone';
+  private baseUrl = 'http://localhost:8000/drone';
 
   constructor(private http: HttpClient) {}
 
   sendIpAddress(ip: string): Observable<any> {
-    const payload = { ip: ip };
+    const payload = {ip: ip};
     // Nutzt baseUrl -> Ergebnis: http://localhost:8080/api/drone/connect
     return this.http.post(`${this.baseUrl}/connect`, payload);
   }
