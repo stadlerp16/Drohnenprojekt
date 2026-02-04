@@ -6,7 +6,7 @@ import { DroneService } from './services/drohne.service';
 
 @Component({
   selector: 'app-root',
-  standalone: true, // Sicherstellen, dass standalone aktiv ist
+  standalone: true,
   imports: [RouterOutlet, ReactiveFormsModule, NgIf],
   templateUrl: './app.html',
   styleUrl: './app.css'
@@ -15,6 +15,9 @@ export class App {
   protected readonly title = signal('SYPProjekt');
 
   ipForm: FormGroup;
+  // Hier fehlte die Zuweisung und der richtige Typ
+  isConnected: boolean = false;
+  isConnecting: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -26,19 +29,38 @@ export class App {
   }
 
   onSubmit() {
-    if (this.ipForm.valid) {
+    if (this.ipForm.valid && !this.isConnecting) {
+      this.isConnecting = true;
+
       const ip = this.ipForm.value.droneIp;
       console.log('Sende IP an Backend:', ip);
 
-      // Aufruf des Services
       this.droneService.sendIpAddress(ip).subscribe({
         next: (response) => {
           console.log('Erfolgreich übertragen:', response);
+          this.isConnected = true;
+          this.isConnecting = false;
         },
         error: (err) => {
           console.error('Fehler bei der Übertragung:', err);
+          this.isConnecting = false;
         }
       });
     }
+  }
+
+  // Hier waren die Klammern falsch verschachtelt:
+  startDrone() {
+    this.droneService.startDrone().subscribe({
+      next: (res) => console.log('Start erfolgreich:', res),
+      error: (err) => console.error('Start Fehler:', err)
+    });
+  }
+
+  stopDrone() {
+    this.droneService.stopDrone().subscribe({
+      next: (res) => console.log('Stopp erfolgreich:', res),
+      error: (err) => console.error('Stopp Fehler:', err)
+    });
   }
 }
