@@ -4,7 +4,11 @@ from Routes.drohnenRoutes import router as drohnen_router
 from  Services.drohneService import close
 from Routes.steuerungRoutes import router as steuer_router
 
+import sys
+import asyncio
 
+if sys.platform == "win32":
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 async def lifecycle(app: FastAPI):
     #start
