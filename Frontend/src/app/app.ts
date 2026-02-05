@@ -39,10 +39,12 @@ export class App {
         next: (response) => {
           console.log('Verbindung erfolgreich:', response);
           this.isConnecting = false;
+          this.isConnected = true;
         },
         error: (err) => {
           console.error('Verbindung fehlgeschlagen:', err);
           this.isConnecting = false;
+          this.isConnected = false;
         }
       });
     }

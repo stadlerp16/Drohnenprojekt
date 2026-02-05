@@ -65,3 +65,25 @@ button:disabled {
   font-size: 0.85rem;
   margin-top: -10px; /* Zieht die Fehlermeldung näher ans Inputfeld */
 }
+
+
+
+/* Buttons test ab hier*/
+.test-steuerung {
+  position: fixed;
+  bottom: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.test-steuerung button {
+  padding: 30px 60px;
+  font-size: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+}
+/*Ende Buttons Test hier*/

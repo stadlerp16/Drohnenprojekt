@@ -15,18 +15,14 @@
           [disabled]="isConnecting">
           {{ isConnecting ? 'Verbinde...' : 'Verbinden' }}
         </button>
-
-        <div class="drone-controls" *ngIf="isConnected">
-          <h3>Steuerung</h3>
-          <div class="button-group">
-            <button class="btn-start" (click)="startDrone()">Start</button>
-            <button class="btn-stop" (click)="stopDrone()">Stop</button>
-          </div>
-        </div>
-
       </form>
     </div>
   </div>
 </main>
+
+<div class="test-steuerung" *ngIf="isConnected">
+  <button class="btn-start big-btn" (click)="startDrone()">START</button>
+  <button class="btn-stop big-btn" (click)="stopDrone()">STOP</button>
+</div>
 
 <router-outlet />
