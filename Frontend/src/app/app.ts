@@ -17,6 +17,7 @@ export class App {
   ipForm: FormGroup;
   // Hier fehlte die Zuweisung und der richtige Typ
   isConnected: boolean = false;
+  isConnecting: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -28,18 +29,20 @@ export class App {
   }
 
   onSubmit() {
-    if (this.ipForm.valid) {
+    if (this.ipForm.valid && !this.isConnecting) {
+      this.isConnecting = true;
+
       const ip = this.ipForm.value.droneIp;
       console.log('Sende IP an Backend:', ip);
 
       this.droneService.sendIpAddress(ip).subscribe({
         next: (response) => {
-          console.log('Erfolgreich übertragen:', response);
-          // Schaltet die Buttons im HTML frei
-          this.isConnected = true;
+          console.log('Verbindung erfolgreich:', response);
+          this.isConnecting = false;
         },
         error: (err) => {
-          console.error('Fehler bei der Übertragung:', err);
+          console.error('Verbindung fehlgeschlagen:', err);
+          this.isConnecting = false;
         }
       });
     }
