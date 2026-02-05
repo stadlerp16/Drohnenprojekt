@@ -3,27 +3,25 @@ from robomaster import robot
 
 ep_drone = None
 
-def buildconnection(ip: str) -> bool:
+def buildconnection(drone_ip: str) -> bool:
     global ep_drone
-    print(ip)
     close()
 
     try:
-        # ...
+        robomaster.config.ROBOT_IP_STR = drone_ip
+
         ep_drone = robot.Drone()
-        ok = ep_drone.initialize()
+        ok = ep_drone.initialize(conn_type="sta")
         if not ok:
+            close()
             return False
 
-        battery = ep_drone.battery.get_battery()
-        print(f"OK, Batterie: {battery}%")
         return True
 
     except Exception as e:
         print(f"Verbindungsfehler: {e}")
         close()
         return False
-
 
 def close():
     global ep_drone
@@ -34,4 +32,3 @@ def close():
             pass
         finally:
             ep_drone = None
-
