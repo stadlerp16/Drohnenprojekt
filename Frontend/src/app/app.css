@@ -67,6 +67,26 @@ button:disabled {
 }
 
 
+.test-steuerung {
+  position: fixed;
+  bottom: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+
+.test-steuerung button {
+  padding: 30px 60px;
+  font-size: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+}
+
+
 
 /* Buttons test ab hier*/
 .test-steuerung {

@@ -44,7 +44,7 @@ export class App {
         error: (err) => {
           console.error('Verbindung fehlgeschlagen:', err);
           this.isConnecting = false;
-          this.isConnected = false;
+          this.isConnected = true;
         }
       });
     }
@@ -63,5 +63,13 @@ export class App {
       next: (res) => console.log('Stopp erfolgreich:', res),
       error: (err) => console.error('Stopp Fehler:', err)
     });
+  }
+
+  emergencyStop() {
+
+    this.isConnected = false;
+    this.isConnecting = false;
+    this.ipForm.reset(); //Löscht die IP aus dem Feld
+    console.log('Not-Aus: Verbindung im Frontend getrennt.');
   }
 }

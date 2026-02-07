@@ -20,9 +20,9 @@
   </div>
 </main>
 
-<div class="test-steuerung" *ngIf="isConnected">
-  <button class="btn-start big-btn" (click)="startDrone()">START</button>
-  <button class="btn-stop big-btn" (click)="stopDrone()">STOP</button>
+<div *ngIf="isConnected" class="test-steuerung">
+  <button class="btn-gruen" (click)="startDrone()">START</button>
+  <button class="btn-rot" (click)="stopDrone()">STOP</button>
+  <button class="btn-emergency" (click)="emergencyStop()">EMERGENCY-STOP</button>
 </div>
-
 <router-outlet />
