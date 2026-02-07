@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class DroneService {
-  // Wir nutzen hier deine definierte Basis-URL
   private baseUrl = 'http://localhost:8000/drone';
 
   constructor(private http: HttpClient) {}
@@ -25,5 +24,8 @@ export class DroneService {
   stopDrone(): Observable<any> {
     // Geändert von apiUrl zu baseUrl -> Ergebnis: http://localhost:8080/api/drone/stop
     return this.http.post(`${this.baseUrl}/stop`, {});
+  }
+  emergencyStop(): Observable<any> {
+    return this.http.post(`${this.baseUrl}/emergency`, {});
   }
 }

@@ -1,6 +1,6 @@
 <main class="main">
   <div class="content">
-    <div class="left-side">
+    <div class="left-side" *ngIf="router.url === '/'">
       <form [formGroup]="ipForm" (ngSubmit)="onSubmit()">
         <label for="ip">Drohnen IP-Adresse</label>
 
@@ -9,7 +9,6 @@
         <div class="error-message" *ngIf="ipForm.get('droneIp')?.touched && ipForm.get('droneIp')?.invalid">
           <small *ngIf="ipForm.get('droneIp')?.errors?.['required']">IP wird benötigt.</small>
         </div>
-
         <button
           type="submit"
           [disabled]="isConnecting">
@@ -17,12 +16,7 @@
         </button>
       </form>
     </div>
+
+    <router-outlet />
   </div>
 </main>
-
-<div *ngIf="isConnected" class="test-steuerung">
-  <button class="btn-gruen" (click)="startDrone()">START</button>
-  <button class="btn-rot" (click)="stopDrone()">STOP</button>
-  <button class="btn-emergency" (click)="emergencyStop()">EMERGENCY-STOP</button>
-</div>
-<router-outlet />
