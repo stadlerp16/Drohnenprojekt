@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import {DroneService} from '../app/services/drohne.service';
 import {Router} from '@angular/router';
-import { NgIf, NgClass } from '@angular/common';
+//import { NgIf, NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [NgIf, NgClass],
+  imports: [],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })

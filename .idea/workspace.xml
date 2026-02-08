@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="Start, Stop &amp; Emergency Button und einen neuen Pfad für die Control Ansicht eingereichtet">
+    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="tastatur und Controller auswahl aber noch keine genaueren Details">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/app/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/app/app.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,7 +122,7 @@
       <workItem from="1770187835484" duration="1119000" />
       <workItem from="1770508775451" duration="6000" />
       <workItem from="1770562563198" duration="2452000" />
-      <workItem from="1770565701941" duration="63000" />
+      <workItem from="1770565701941" duration="235000" />
     </task>
     <task id="LOCAL-00001" summary="Create Backend">
       <option name="closed" value="true" />
@@ -156,7 +156,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770563119812</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="tastatur und Controller auswahl aber noch keine genaueren Details">
+      <option name="closed" value="true" />
+      <created>1770565883527</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1770565883527</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -166,6 +174,7 @@
     <MESSAGE value="Create Backend" />
     <MESSAGE value="Start, Stop &amp; Emergency Button" />
     <MESSAGE value="Start, Stop &amp; Emergency Button und einen neuen Pfad für die Control Ansicht eingereichtet" />
-    <option name="LAST_COMMIT_MESSAGE" value="Start, Stop &amp; Emergency Button und einen neuen Pfad für die Control Ansicht eingereichtet" />
+    <MESSAGE value="tastatur und Controller auswahl aber noch keine genaueren Details" />
+    <option name="LAST_COMMIT_MESSAGE" value="tastatur und Controller auswahl aber noch keine genaueren Details" />
   </component>
 </project>
