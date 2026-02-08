@@ -45,7 +45,7 @@ export class App {
           console.error('Verbindung fehlgeschlagen:', err);
           this.isConnecting = false;
           this.ipForm.reset();
-          //this.router.navigate(['/control']);   //Diese Zeile auskommentieren, wenn man es ohne Backend versuchen will
+          this.router.navigate(['/control']);   //Diese Zeile auskommentieren, wenn man es ohne Backend versuchen will
         }
       });
     }

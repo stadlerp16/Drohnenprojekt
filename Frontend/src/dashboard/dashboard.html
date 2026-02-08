@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="dashboard.css">
+<div class="test-steuerung">
+  <h2>Steuerungs-Zentrale</h2>
+
+  <div class="mode-section">
+    <button
+      type="button"
+      class="mode-btn"
+      [class.active]="controlMode === 'keyboard'"
+      [disabled]="isFlying"
+      (click)="selectMode('keyboard')">
+      Tastatur
+    </button>
+    <button
+      type="button"
+      class="mode-btn"
+      [class.active]="controlMode === 'controller'"
+      [disabled]="isFlying"
+      (click)="selectMode('controller')">
+      Controller
+    </button>
+  </div>
+
+  <div class="button-row">
+    <button
+      class="btn-gruen"
+      [disabled]="!controlMode || isFlying"
+      (click)="startDrone()">
+      START
+    </button>
+    <button
+      class="btn-rot"
+      [disabled]="!isFlying"
+      (click)="stopDrone()">
+      STOP
+    </button>
+  </div>
+
+  <button class="btn-emergency" (click)="emergencyStop()">EMERGENCY STOP</button>
+</div>

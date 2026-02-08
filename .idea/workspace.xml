@@ -121,7 +121,8 @@
       <workItem from="1769161121304" duration="31000" />
       <workItem from="1770187835484" duration="1119000" />
       <workItem from="1770508775451" duration="6000" />
-      <workItem from="1770562563198" duration="434000" />
+      <workItem from="1770562563198" duration="2452000" />
+      <workItem from="1770565701941" duration="63000" />
     </task>
     <task id="LOCAL-00001" summary="Create Backend">
       <option name="closed" value="true" />
@@ -147,7 +148,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770508453664</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Start, Stop &amp; Emergency Button und einen neuen Pfad für die Control Ansicht eingereichtet">
+      <option name="closed" value="true" />
+      <created>1770563119812</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1770563119812</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
