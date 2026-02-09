@@ -46,7 +46,7 @@ def toggle_takeoff_land() -> bool:
         return False
 
     if _in_transition:
-        return True  # schon am takeoff/land
+        return True
 
     now = time.time()
     if now - _last_toggle_ts < _TOGGLE_DEBOUNCE_S:
