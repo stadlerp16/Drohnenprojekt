@@ -5,12 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="26b6f950-785b-47a4-9c2f-9295330bdc85" name="Changes" comment="test">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/controlServices.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/flightExekutor.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/input_ps5.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Routes/steuerungRoutes.py" beforeDir="false" afterPath="$PROJECT_DIR$/Routes/steuerungRoutes.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Services/drohneService.py" beforeDir="false" afterPath="$PROJECT_DIR$/Services/drohneService.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Services/keyboardSteuerung.py" beforeDir="false" afterPath="$PROJECT_DIR$/Services/keyboardSteuerung.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/connect.py" beforeDir="false" afterPath="$PROJECT_DIR$/connect.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,6 +71,11 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\RechenzentrumGastein\Projekte\SYP\DrohnenProjekt\Drohnenprojekt\Backend" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration default="true" type="DjangoTestsConfigurationType">
       <module name="Backend" />
