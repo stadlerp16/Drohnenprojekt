@@ -4,13 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26b6f950-785b-47a4-9c2f-9295330bdc85" name="Changes" comment="test">
-      <change afterPath="$PROJECT_DIR$/Services/controlServices.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Services/flightExekutor.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Services/input_ps5.py" afterDir="false" />
+    <list default="true" id="26b6f950-785b-47a4-9c2f-9295330bdc85" name="Changes" comment="Controller+Keyboardsteuerung finsished">
+      <change afterPath="$PROJECT_DIR$/Services/input_touch.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Routes/steuerungRoutes.py" beforeDir="false" afterPath="$PROJECT_DIR$/Routes/steuerungRoutes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/drohneService.py" beforeDir="false" afterPath="$PROJECT_DIR$/Services/drohneService.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/keyboardSteuerung.py" beforeDir="false" afterPath="$PROJECT_DIR$/Services/keyboardSteuerung.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/flightExekutor.py" beforeDir="false" afterPath="$PROJECT_DIR$/Services/flightExekutor.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -271,6 +269,8 @@
       <workItem from="1770285362731" duration="482000" />
       <workItem from="1770285869017" duration="242000" />
       <workItem from="1770286133654" duration="89000" />
+      <workItem from="1770667212994" duration="383000" />
+      <workItem from="1770667609043" duration="430000" />
     </task>
     <task id="LOCAL-00001" summary="Grundlegende Ordnerstrukur und routing von main.py in die anderen Routes">
       <option name="closed" value="true" />
