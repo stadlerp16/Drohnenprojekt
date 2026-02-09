@@ -1,14 +1,25 @@
-# Routes/steuerungRoutes.py
-import asyncio
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
-
-from Services.keyboardSteuerung import set_key, stop_all, control_loop, toggle_takeoff_land
 import Services.drohneService as ds
+
+from Services.controlServices import ControlSession
+from Services.keyboardSteuerung import set_key
+from Services.input_ps5 import set_gamepad
 
 router = APIRouter()
 
+_ALLOWED_KEYS = {
+    "w","a","s","d",
+    "ArrowUp","ArrowDown",
+    "ArrowLeft","ArrowRight",
+    "up","down","left","right",
+}
+
+_SPACE_KEYS = {" ", "Space", "Spacebar"}
+
+
+
 @router.websocket("/controlkeyboard")
-async def ws_control(ws: WebSocket):
+async def ws_keyboard(ws: WebSocket):
     await ws.accept()
 
     if ds.ep_drone is None:
@@ -16,8 +27,8 @@ async def ws_control(ws: WebSocket):
         await ws.close()
         return
 
-    stop_event = asyncio.Event()
-    loop_task = asyncio.create_task(control_loop(stop_event, hz=20))
+    session = ControlSession(hz=20)
+    await session.start()
 
     try:
         while True:
@@ -25,27 +36,57 @@ async def ws_control(ws: WebSocket):
             key = msg.get("key")
             pressed = bool(msg.get("pressed", False))
 
-            # Space nur bei pressed=True behandeln (machst du schon)
-            if key in (" ", "Space", "Spacebar") and pressed:
-                loop = asyncio.get_running_loop()
-                ok = await loop.run_in_executor(None, toggle_takeoff_land)
+            if key in _SPACE_KEYS and pressed:
+                ok = await session.takeoff_land()
                 await ws.send_json({"ok": ok})
                 continue
 
-            if key in (
-                    "w", "a", "s", "d",
-                    "ArrowUp", "ArrowDown",
-                    "ArrowLeft", "ArrowRight",  # <-- NEU
-                    "up", "down", "left", "right"
-            ):set_key(key, pressed)
+            if key in _ALLOWED_KEYS:
+                set_key(key, pressed)
 
             await ws.send_json({"ok": True})
 
     except WebSocketDisconnect:
         pass
     finally:
-        # NEU: sofort stoppen, dann erst loop beenden
-        stop_all()
-        stop_event.set()
-        await loop_task
-        stop_all()
+        await session.stop()
+
+
+
+@router.websocket("/controlps")
+async def ws_ps5(ws: WebSocket):
+    print("Hello Motherfucker")
+    await ws.accept()
+
+    if ds.ep_drone is None:
+        await ws.send_json({"ok": False, "error": "Drone not connected"})
+        await ws.close()
+        return
+
+    session = ControlSession(hz=20)
+    await session.start()
+
+    try:
+        while True:
+            msg = await ws.receive_json()
+
+            # Button-Trigger vom Frontend (z.B. X)
+            if msg.get("takeoffLand") is True:
+                ok = await session.takeoff_land()
+                await ws.send_json({"ok": ok})
+                continue
+
+            set_gamepad(
+                lx=float(msg.get("lx", 0.0)),
+                ly=float(msg.get("ly", 0.0)),
+                rx=float(msg.get("rx", 0.0)),
+                l2=float(msg.get("l2", 0.0)),
+                r2=float(msg.get("r2", 0.0)),
+            )
+
+            await ws.send_json({"ok": True})
+
+    except WebSocketDisconnect:
+        pass
+    finally:
+        await session.stop()
