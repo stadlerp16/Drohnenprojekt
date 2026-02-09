@@ -4,13 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26b6f950-785b-47a4-9c2f-9295330bdc85" name="Changes" comment="test">
+    <list default="true" id="26b6f950-785b-47a4-9c2f-9295330bdc85" name="Changes" comment="Steuerung finished">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Routes/drohnenRoutes.py" beforeDir="false" afterPath="$PROJECT_DIR$/Routes/drohnenRoutes.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Routes/steuerungRoutes.py" beforeDir="false" afterPath="$PROJECT_DIR$/Routes/steuerungRoutes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/drohneService.py" beforeDir="false" afterPath="$PROJECT_DIR$/Services/drohneService.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Services/keyboardSteuerung.py" beforeDir="false" afterPath="$PROJECT_DIR$/Services/keyboardSteuerung.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/connect.py" beforeDir="false" afterPath="$PROJECT_DIR$/connect.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,11 +54,12 @@
   &quot;keyToString&quot;: {
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;Python.connect.executor&quot;: &quot;Run&quot;,
+    &quot;Python.keyboardSteuerung.executor&quot;: &quot;Run&quot;,
     &quot;Python.main.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Simon&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/RechenzentrumGastein/Projekte/SYP/DrohnenProjekt/Drohnenprojekt/Backend&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -266,6 +265,18 @@
       <workItem from="1770285362731" duration="482000" />
       <workItem from="1770285869017" duration="242000" />
       <workItem from="1770286133654" duration="89000" />
+      <workItem from="1770305509352" duration="341000" />
+      <workItem from="1770393351849" duration="913000" />
+      <workItem from="1770394282095" duration="592000" />
+      <workItem from="1770394899071" duration="238000" />
+      <workItem from="1770395176280" duration="114000" />
+      <workItem from="1770395299625" duration="232000" />
+      <workItem from="1770395544180" duration="501000" />
+      <workItem from="1770396057022" duration="88000" />
+      <workItem from="1770396157322" duration="195000" />
+      <workItem from="1770396361163" duration="704000" />
+      <workItem from="1770397163990" duration="21000" />
+      <workItem from="1770397965398" duration="7000" />
     </task>
     <task id="LOCAL-00001" summary="Grundlegende Ordnerstrukur und routing von main.py in die anderen Routes">
       <option name="closed" value="true" />
@@ -301,10 +312,12 @@
     <MESSAGE value="Grundlegende Ordnerstrukur und routing von main.py in die anderen Routes" />
     <MESSAGE value="x" />
     <MESSAGE value="test" />
-    <option name="LAST_COMMIT_MESSAGE" value="test" />
+    <MESSAGE value="Steuerung finished" />
+    <option name="LAST_COMMIT_MESSAGE" value="Steuerung finished" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Backend$main.coverage" NAME="main Coverage Results" MODIFIED="1769077331138" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Backend$connect.coverage" NAME="connect Coverage Results" MODIFIED="1770285071005" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Backend$keyboardSteuerung.coverage" NAME="keyboardSteuerung Coverage Results" MODIFIED="1770395527800" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Services" />
   </component>
 </project>
