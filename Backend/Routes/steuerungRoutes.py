@@ -89,9 +89,6 @@ async def ws_ps5(ws: WebSocket):
         await session.stop()
 
 
-# =========================
-# NEU: Touch / Virtual Joysticks
-# =========================
 @router.websocket("/controltouch")
 async def ws_touch(ws: WebSocket):
     await ws.accept()
@@ -114,9 +111,7 @@ async def ws_touch(ws: WebSocket):
                 await ws.send_json({"ok": ok})
                 continue
 
-            # erwartet 2 Joysticks:
-            # left:  lx, ly
-            # right: rx, ry
+
             set_touch(
                 lx=float(msg.get("lx", 0.0)),
                 ly=float(msg.get("ly", 0.0)),
