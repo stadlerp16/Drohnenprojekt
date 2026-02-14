@@ -1,22 +1,55 @@
 <main class="main">
   <div class="content">
-    <div class="left-side" *ngIf="router.url === '/'">
-      <form [formGroup]="ipForm" (ngSubmit)="onSubmit()">
-        <label for="ip">Drohnen IP-Adresse</label>
+    <div class="left-side" *ngIf="!router.url.includes('control')">
 
-        <input id="ip" type="text" formControlName="droneIp" placeholder="z.B. 192.168.1.1">
+      <div class="setup-wrapper">
 
-        <div class="error-message" *ngIf="ipForm.get('droneIp')?.touched && ipForm.get('droneIp')?.invalid">
-          <small *ngIf="ipForm.get('droneIp')?.errors?.['required']">IP wird benötigt.</small>
+        <form [formGroup]="ipForm" (ngSubmit)="onSubmit()">
+          <label for="ip">Drohnen IP-Adresse</label>
+          <input id="ip" type="text" formControlName="droneIp" placeholder="z.B. 192.168.1.1">
+
+          <div class="error-message" *ngIf="ipForm.get('droneIp')?.touched && ipForm.get('droneIp')?.invalid">
+            <small>IP wird benötigt.</small>
+          </div>
+
+          <button type="submit" [disabled]="isConnecting || isConnected">
+            {{ isConnected ? 'VERBUNDEN' : (isConnecting ? 'Verbinde...' : 'VERBINDEN') }}
+          </button>
+        </form>
+
+        <div class="test-steuerung" *ngIf="isConnected">
+          <label>Steuerung wählen</label>
+
+          <div class="mode-section">
+            <button
+              type="button"
+              class="mode-btn"
+              [class.active]="droneService.selectedMode === 'keyboard'"
+              (click)="selectMode('keyboard')">
+              Tastatur
+            </button>
+            <button
+              type="button"
+              class="mode-btn"
+              [class.active]="droneService.selectedMode === 'controller'"
+              (click)="selectMode('controller')">
+              Controller
+            </button>
+          </div>
+
+          <div class="button-row">
+            <button
+              type="button"
+              class="btn-gruen"
+              [disabled]="!droneService.selectedMode"
+              (click)="onContinue()">
+              WEITER
+            </button>
+          </div>
         </div>
-        <button
-          type="submit"
-          [disabled]="isConnecting">
-          {{ isConnecting ? 'Verbinde...' : 'Verbinden' }}
-        </button>
-      </form>
-    </div>
 
+      </div>
+    </div>
     <router-outlet />
   </div>
 </main>

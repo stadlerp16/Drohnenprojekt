@@ -12,49 +12,40 @@ import {Router} from '@angular/router';
 })
 export class Dashboard {
   isFlying: boolean = false;
-  controlMode: 'keyboard' | 'controller' | null = null;   //Zu beginn nichts
 
-  constructor(private droneService: DroneService, private router: Router) {}
+  constructor(protected droneService: DroneService, private router: Router) {}
 
-  selectMode(mode: 'keyboard' | 'controller') {
-    if (!this.isFlying) {
-      this.controlMode = mode;
-      console.log('Steuerungsmodus gewählt:', mode);
-    }
-  }
 
   startDrone() {
-    if (!this.controlMode) {
-      alert('Bitte wählen Sie zuerst einen Steuerungsmodus!');
-      return;
-    }
-
     this.droneService.startDrone().subscribe({
       next: (res) => {
-        this.isFlying = true; // Sperrt die Auswahl
-        console.log('Drohne gestartet');
+        this.isFlying = true;
+        console.log('Drohne gestartet. Modus:', this.droneService.selectedMode);
       },
-      error: (err) => console.error(err)
+      error: (err) => console.error('Start Fehler:', err)
     });
   }
 
   stopDrone() {
     this.droneService.stopDrone().subscribe({
       next: (res) => {
-        this.isFlying = false; // Gibt die Auswahl wieder frei
+        this.isFlying = false;
         console.log('Drohne gelandet/gestoppt');
       },
-      error: (err) => console.error(err)
+      error: (err) => console.error('Stop Fehler:', err)
     });
   }
 
   emergencyStop() {
-    this.droneService.emergencyStop().subscribe({
-      next: (res) => console.log('Not-Aus erfolgreich gesendet'),
-      error: (err) => console.error('Not-Aus Fehler:', err)
-    });
-    this.router.navigate(['/']);
+    this.droneService.emergencyStop().subscribe();
     this.isFlying = false;
+
+    // Alles im Service resetten -> Damit springt die Startseite in den Anfangszustand
+    this.droneService.isConnected = false;
+    this.droneService.selectedMode = null;
+
+    // Zurück navigieren
+    this.router.navigate(['/']);
   }
 
 }

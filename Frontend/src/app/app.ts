@@ -15,17 +15,21 @@ export class App {
   protected readonly title = signal('SYPProjekt');
 
   ipForm: FormGroup;
-  // Hier fehlte die Zuweisung und der richtige Typ
   isConnecting: boolean = false;
+  isConnected: boolean = false;
 
   constructor(
     private fb: FormBuilder,
-    private droneService: DroneService,
+    public droneService: DroneService,
     public router: Router
   ) {
     this.ipForm = this.fb.group({
       droneIp: ['', [Validators.required]]
     });
+  }
+
+  selectMode(mode: 'keyboard' | 'controller') {
+    this.droneService.selectedMode = mode;
   }
 
   onSubmit() {
@@ -39,15 +43,20 @@ export class App {
         next: (response) => {
           console.log('Verbindung erfolgreich:', response);
           this.isConnecting = false;
-          this.router.navigate(['/control']);
+          this.isConnected = true;
         },
         error: (err) => {
           console.error('Verbindung fehlgeschlagen:', err);
           this.isConnecting = false;
           this.ipForm.reset();
-          this.router.navigate(['/control']);   //Diese Zeile auskommentieren, wenn man es ohne Backend versuchen will
+          this.isConnected = true;  //Diese Zeile auskommentieren, wenn man es ohne Backend versuchen will
         }
       });
+    }
+  }
+  onContinue() {
+    if (this.droneService.selectedMode) {
+      this.router.navigate(['/control']);
     }
   }
 }
