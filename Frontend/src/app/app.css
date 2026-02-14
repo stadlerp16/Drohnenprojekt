@@ -57,7 +57,7 @@ form button {
   font-weight: bold;
 }
 
-/* --- NEUES DESIGN FÜR MODUS-WAHL & WEITER BUTTON --- */
+/* --- DESIGN FÜR MODUS-WAHL & WEITER BUTTON --- */
 .test-steuerung {
   display: flex;
   flex-direction: column;

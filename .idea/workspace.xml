@@ -4,18 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="tastatur und Controller auswahl aber noch keine genaueren Details">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_05_02_2026_09_53_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_05_02_2026_09_53__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_05_02_2026_09_54_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_05_02_2026_09_54__Changes_.xml" beforeDir="false" />
+    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="Verbesserung, des layouts und Änderung der Inhalten der Pfade">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/src/app/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/app/app.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/app/app.html" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/app/app.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/app/app.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/app/app.routes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/app/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/app/app.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/app/services/drohne.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/app/services/drohne.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -139,7 +130,7 @@
       <workItem from="1770665838016" duration="770000" />
       <workItem from="1770728593395" duration="11192000" />
       <workItem from="1770891169787" duration="3342000" />
-      <workItem from="1771059446365" duration="894000" />
+      <workItem from="1771059446365" duration="3680000" />
     </task>
     <task id="LOCAL-00001" summary="Create Backend">
       <option name="closed" value="true" />
@@ -189,7 +180,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770565951789</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Verbesserung, des layouts und Änderung der Inhalten der Pfade">
+      <option name="closed" value="true" />
+      <created>1771060415442</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1771060415442</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -200,6 +199,7 @@
     <MESSAGE value="Start, Stop &amp; Emergency Button" />
     <MESSAGE value="Start, Stop &amp; Emergency Button und einen neuen Pfad für die Control Ansicht eingereichtet" />
     <MESSAGE value="tastatur und Controller auswahl aber noch keine genaueren Details" />
-    <option name="LAST_COMMIT_MESSAGE" value="tastatur und Controller auswahl aber noch keine genaueren Details" />
+    <MESSAGE value="Verbesserung, des layouts und Änderung der Inhalten der Pfade" />
+    <option name="LAST_COMMIT_MESSAGE" value="Verbesserung, des layouts und Änderung der Inhalten der Pfade" />
   </component>
 </project>
