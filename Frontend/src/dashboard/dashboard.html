@@ -1,0 +1,24 @@
+<div class="test-steuerung">
+  <h2>Steuerungs-Zentrale</h2>
+
+  <p style="color: #666; font-size: 0.9rem;">
+    Aktiver Modus: <strong>{{ droneService.selectedMode }}</strong>
+  </p>
+
+  <div class="button-row">
+    <button
+      class="btn-gruen"
+      [disabled]="isFlying"
+      (click)="startDrone()">
+      START
+    </button>
+    <button
+      class="btn-rot"
+      [disabled]="!isFlying"
+      (click)="stopDrone()">
+      STOP
+    </button>
+  </div>
+
+  <button class="btn-emergency" (click)="emergencyStop()">EMERGENCY STOP</button>
+</div>

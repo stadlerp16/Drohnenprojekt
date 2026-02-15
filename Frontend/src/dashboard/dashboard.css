@@ -1,0 +1,73 @@
+.test-steuerung {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  padding: 40px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  min-width: 400px;
+}
+
+/* Modus-Sektion */
+.mode-section {
+  display: flex;
+  gap: 10px;
+  background-color: #f8f9fa;
+  padding: 5px;
+  border-radius: 8px;
+}
+
+.mode-btn {
+  padding: 10px 25px !important;
+  font-size: 14px !important;
+  background-color: transparent !important;
+  color: #666 !important;
+  border-radius: 6px !important;
+  transition: all 0.2s ease;
+}
+
+.mode-btn.active {
+  background-color: white !important;
+  color: #007bff !important;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  font-weight: bold;
+}
+
+/* Haupt-Buttons */
+.button-row {
+  display: flex;
+  gap: 20px;
+}
+
+.test-steuerung button {
+  padding: 18px 45px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.test-steuerung button:active {
+  transform: scale(0.98);
+}
+
+.btn-gruen { background-color: #28a745; }
+.btn-rot { background-color: #dc3545; }
+.btn-emergency {
+  background-color: #6c757d;
+  font-size: 14px !important;
+  padding: 10px 20px !important;
+  margin-top: 10px;
+}
+
+/* Disabled State */
+button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  filter: grayscale(1);
+}

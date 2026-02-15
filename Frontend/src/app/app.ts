@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {Router, RouterOutlet} from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { DroneService } from './services/drohne.service';
@@ -15,17 +15,21 @@ export class App {
   protected readonly title = signal('SYPProjekt');
 
   ipForm: FormGroup;
-  // Hier fehlte die Zuweisung und der richtige Typ
-  isConnected: boolean = false;
   isConnecting: boolean = false;
+  isConnected: boolean = false;
 
   constructor(
     private fb: FormBuilder,
-    private droneService: DroneService
+    public droneService: DroneService,
+    public router: Router
   ) {
     this.ipForm = this.fb.group({
       droneIp: ['', [Validators.required]]
     });
+  }
+
+  selectMode(mode: 'keyboard' | 'controller') {
+    this.droneService.selectedMode = mode;
   }
 
   onSubmit() {
@@ -39,27 +43,20 @@ export class App {
         next: (response) => {
           console.log('Verbindung erfolgreich:', response);
           this.isConnecting = false;
+          this.isConnected = true;
         },
         error: (err) => {
           console.error('Verbindung fehlgeschlagen:', err);
           this.isConnecting = false;
+          this.ipForm.reset();
+          this.isConnected = true;  //Diese Zeile auskommentieren, wenn man es ohne Backend versuchen will
         }
       });
     }
   }
-
-  // Hier waren die Klammern falsch verschachtelt:
-  startDrone() {
-    this.droneService.startDrone().subscribe({
-      next: (res) => console.log('Start erfolgreich:', res),
-      error: (err) => console.error('Start Fehler:', err)
-    });
-  }
-
-  stopDrone() {
-    this.droneService.stopDrone().subscribe({
-      next: (res) => console.log('Stopp erfolgreich:', res),
-      error: (err) => console.error('Stopp Fehler:', err)
-    });
+  onContinue() {
+    if (this.droneService.selectedMode) {
+      this.router.navigate(['/control']);
+    }
   }
 }
