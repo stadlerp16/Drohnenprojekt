@@ -8,7 +8,7 @@ export class DroneService {
 
   // Zentraler Status
   isConnected = false;
-  selectedMode: 'keyboard' | 'controller' | null = null;
+  selectedMode: 'controlkeyboard' | 'controlps' | null = null;
 
   constructor(private http: HttpClient) {}
 
