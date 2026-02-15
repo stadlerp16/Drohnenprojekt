@@ -18,7 +18,7 @@ export class Dashboard implements OnDestroy {
   private readonly SEND_HZ = 20;
   private readonly SEND_DT_MS = 1000 / this.SEND_HZ;
   private controllerLoopId: any = null;
-  private lastXPressed = false;
+  private lastXPressed = true;
 
   private readonly allowedKeys = new Set([
     "w", "a", "s", "d", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " ", "Space"
@@ -31,12 +31,12 @@ export class Dashboard implements OnDestroy {
   private connectWebSocket() {
     const mode = this.droneService.selectedMode;
     // Dynamischer Pfad: /keyboard oder /controller
-    const WS_URL = `ws://localhost:8000/drone/control/${mode}`;
+    const WS_URL = `ws://localhost:8000/drone/${mode}`;
 
     this.socket = new WebSocket(WS_URL);
     this.socket.onopen = () => {
       console.log(`WS verbunden: ${mode}`);
-      if (mode === 'controller') {
+      if (mode === 'controlps') {
         this.startControllerLoop(); // Starte Polling wenn Controller gewählt
       }
     };
@@ -53,7 +53,7 @@ export class Dashboard implements OnDestroy {
 
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
-    if (this.isFlying && this.droneService.selectedMode === 'keyboard') {
+    if (this.isFlying && this.droneService.selectedMode === 'controlkeyboard') {
       if (!this.allowedKeys.has(event.key)) return;
       event.preventDefault();
       if (event.repeat) return;
@@ -63,7 +63,7 @@ export class Dashboard implements OnDestroy {
 
   @HostListener('window:keyup', ['$event'])
   handleKeyUp(event: KeyboardEvent) {
-    if (this.isFlying && this.droneService.selectedMode === 'keyboard') {
+    if (this.isFlying && this.droneService.selectedMode === 'controlkeyboard') {
       if (!this.allowedKeys.has(event.key)) return;
       event.preventDefault();
       this.sendData({ key: event.key, pressed: false });
@@ -75,7 +75,7 @@ export class Dashboard implements OnDestroy {
   private startControllerLoop() {
     this.stopControllerLoop(); // Sicherstellen, dass kein alter Loop läuft
     const loop = () => {
-      if (!this.isFlying || this.droneService.selectedMode !== 'controller') return;
+      if (!this.isFlying || this.droneService.selectedMode !== 'controlps') return;
 
       const gp = this.getFirstGamepad();
       if (gp) {

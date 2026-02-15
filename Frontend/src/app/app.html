@@ -24,15 +24,15 @@
             <button
               type="button"
               class="mode-btn"
-              [class.active]="droneService.selectedMode === 'keyboard'"
-              (click)="selectMode('keyboard')">
+              [class.active]="droneService.selectedMode === 'controlkeyboard'"
+              (click)="selectMode('controlkeyboard')">
               Tastatur
             </button>
             <button
               type="button"
               class="mode-btn"
-              [class.active]="droneService.selectedMode === 'controller'"
-              (click)="selectMode('controller')">
+              [class.active]="droneService.selectedMode === 'controlps'"
+              (click)="selectMode('controlps')">
               Controller
             </button>
           </div>

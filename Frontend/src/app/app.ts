@@ -28,7 +28,7 @@ export class App {
     });
   }
 
-  selectMode(mode: 'keyboard' | 'controller') {
+  selectMode(mode: 'controlps' | 'controlkeyboard') {
     this.droneService.selectedMode = mode;
   }
 
