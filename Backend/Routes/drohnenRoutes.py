@@ -7,13 +7,6 @@ router = APIRouter()
 
 @router.post("/connect")
 def connect_drone(ip: str = Body(..., embed=True)):
-    """
-    Baut einmalig die Verbindung zur Drohne auf.
-    Erwarteter Body:
-    {
-        "ip": "192.168.0.10"
-    }
-    """
 
     # 1) IPv4 validieren
     try:
