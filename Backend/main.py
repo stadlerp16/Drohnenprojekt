@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from Routes.drohnenRoutes import router as drohnen_router
-from  Services.drohneService import close
+from Services.drohneService import close
 from Routes.steuerungRoutes import router as steuer_router
+from connect import init_db  # <-- NEU: Importiere die DB-Initialisierung
 
 import sys
 import asyncio
@@ -10,14 +11,23 @@ import asyncio
 if sys.platform == "win32":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
+
 async def lifecycle(app: FastAPI):
-    #start
+    # START: Wird ausgeführt, wenn die FastAPI App hochfährt
+    print("Starte MariaDB Initialisierung...")
+    init_db()
+    print("Datenbank bereit.")
+
     yield
-    #end
+
+    # END: Wird ausgeführt, wenn die App beendet wird
+    print("Schließe Drohnen-Verbindung...")
     close()
 
-app = FastAPI(lifecycle=lifecycle)
 
+app = FastAPI(lifespan=lifecycle)  # In FastAPI heißt das Argument meist 'lifespan'
+
+# ... Rest deiner Middleware und Router ...
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:4200"],
