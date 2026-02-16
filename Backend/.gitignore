@@ -14,5 +14,3 @@ venv/
 # OS
 .DS_Store
 Thumbs.db
-
-mariadb_data

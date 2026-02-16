@@ -6,15 +6,16 @@
   <component name="ChangeListManager">
     <list default="true" id="26b6f950-785b-47a4-9c2f-9295330bdc85" name="Changes" comment="Merge branch 'main' of https://github.com/stadlerp16/Drohnenprojekt&#10;&#10;# Conflicts:&#10;#&#9;Backend/.idea/workspace.xml">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mariadb_data/ddl_recovery.log" beforeDir="false" afterPath="$PROJECT_DIR$/mariadb_data/ddl_recovery.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mariadb_data/aria_log.00000001" beforeDir="false" afterPath="$PROJECT_DIR$/mariadb_data/aria_log.00000001" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mariadb_data/aria_log_control" beforeDir="false" afterPath="$PROJECT_DIR$/mariadb_data/aria_log_control" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mariadb_data/ddl_recovery.log" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/mariadb_data/drohnen_db/command_logs.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/mariadb_data/drohnen_db/command_logs.ibd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mariadb_data/ib_buffer_pool" beforeDir="false" afterPath="$PROJECT_DIR$/mariadb_data/ib_buffer_pool" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mariadb_data/ib_logfile0" beforeDir="false" afterPath="$PROJECT_DIR$/mariadb_data/ib_logfile0" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/app/app.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/app/app.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/app/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/app/app.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/app/services/drohne.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/app/services/drohne.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/dashboard/dashboard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/dashboard/dashboard.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mariadb_data/ibdata1" beforeDir="false" afterPath="$PROJECT_DIR$/mariadb_data/ibdata1" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mariadb_data/ibtmp1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mariadb_data/mysql/innodb_index_stats.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/mariadb_data/mysql/innodb_index_stats.ibd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mariadb_data/mysql/innodb_table_stats.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/mariadb_data/mysql/innodb_table_stats.ibd" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,12 +43,12 @@
     &quot;assignee&quot;: &quot;SimLan16&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/stadlerp16/Drohnenprojekt.git&quot;,
-    &quot;accountId&quot;: &quot;8c2d0d0f-583c-4ad0-87ca-0f7340ebe638&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/stadlerp16/Drohnenprojekt.git",
+    "accountId": "833642a4-41db-4f43-a67c-8f86849f90e4"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -56,27 +57,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Docker.docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python.connect.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;Python.setup_drone_wifi.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/RechenzentrumGastein/Projekte/SYP/DrohnenProjekt/Drohnenprojekt/Backend&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Docker.docker-compose.yml: Compose Deployment.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.connect.executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.setup_drone_wifi.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "Luca",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/RechenzentrumGastein/Projekte/SYP/DrohnenProjekt/Drohnenprojekt/Backend",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\RechenzentrumGastein\Projekte\SYP\DrohnenProjekt\Drohnenprojekt\Backend" />
