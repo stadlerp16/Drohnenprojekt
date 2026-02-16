@@ -96,8 +96,42 @@ async def ws_ps5(ws: WebSocket):
     finally:
         await session.stop()
 
+
 @router.websocket("/controltouch")
 async def ws_touch(ws: WebSocket):
     await ws.accept()
+
     if ds.ep_drone is None:
-        await ws.send_
+        await ws.send_json({"ok": False, "error": "Drone not connected"})
+        await ws.close()
+        return
+
+    session = ControlSession(hz=20)
+    await session.start()
+
+    try:
+        while True:
+            msg = await ws.receive_json()
+
+            # optional: Takeoff/Land vom Handy-UI Button
+            if msg.get("takeoffLand") is True:
+                ok = await session.takeoff_land()
+                await ws.send_json({"ok": ok})
+                continue
+
+            # erwartet 2 Joysticks:
+            # left:  lx, ly
+            # right: rx, ry
+            set_touch(
+                lx=float(msg.get("lx", 0.0)),
+                ly=float(msg.get("ly", 0.0)),
+                rx=float(msg.get("rx", 0.0)),
+                ry=float(msg.get("ry", 0.0)),
+            )
+
+            await ws.send_json({"ok": True})
+
+    except WebSocketDisconnect:
+        pass
+    finally:
+        await session.stop()
