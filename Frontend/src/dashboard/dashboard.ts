@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { DroneService } from '../app/services/drohne.service';
 import { Router } from '@angular/router';
 
@@ -10,8 +10,19 @@ import { Router } from '@angular/router';
   styleUrl: './dashboard.css',
 })
 export class Dashboard implements OnDestroy , OnInit {
+  @ViewChild('leftStick') leftStick?: ElementRef;
+  @ViewChild('rightStick') rightStick?: ElementRef;
+  @ViewChild('leftJoy') leftJoy?: ElementRef;
+  @ViewChild('rightJoy') rightJoy?: ElementRef;
+
   isFlying: boolean = true;
   private socket: WebSocket | null = null;
+
+  // JOYSTICK STATE
+  private left = { x: 0, y: 0 };
+  private right = { x: 0, y: 0 };
+  private draggingSide: 'left' | 'right' | null = null;
+  private readonly RADIUS = 50; // Bewegungsradius in Pixeln
 
   //CONTROLLER KONFIGURATION
   private readonly DEADZONE = 0.08;
@@ -49,6 +60,78 @@ export class Dashboard implements OnDestroy , OnInit {
   private sendData(data: any) {
     if (this.socket && this.socket.readyState === WebSocket.OPEN) {
       this.socket.send(JSON.stringify(data));
+    }
+  }
+
+  startJoystick(event: MouseEvent | TouchEvent, side: 'left' | 'right') {
+    event.preventDefault();
+    this.draggingSide = side;
+  }
+
+  @HostListener('window:mousemove', ['$event'])
+  @HostListener('window:touchmove', ['$event'])
+  handleJoystickMove(event: any) {
+    if (!this.draggingSide) return;
+
+    const clientX = event.touches ? event.touches[0].clientX : event.clientX;
+    const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+
+    const root = this.draggingSide === 'left' ? this.leftJoy : this.rightJoy;
+    const stick = this.draggingSide === 'left' ? this.leftStick : this.rightStick;
+    const state = this.draggingSide === 'left' ? this.left : this.right;
+
+    if (!root || !stick) return;
+
+    const rect = root.nativeElement.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+
+    let dx = clientX - cx;
+    let dy = clientY - cy;
+
+    const dist = Math.hypot(dx, dy);
+    if (dist > this.RADIUS) {
+      dx *= this.RADIUS / dist;
+      dy *= this.RADIUS / dist;
+    }
+
+    // Visuelle Bewegung
+    stick.nativeElement.style.left = 50 + (dx / this.RADIUS) * 50 + "%";
+    stick.nativeElement.style.top = 50 + (dy / this.RADIUS) * 50 + "%";
+
+    // Werte für Backend (-1 bis 1)
+    state.x = dx / this.RADIUS;
+    state.y = dy / this.RADIUS;
+
+    if (this.droneService.selectedMode === 'controltouch') {
+      this.sendData({
+        lx: this.left.x,
+        ly: this.left.y,
+        rx: this.right.x,
+        ry: this.right.y
+      });
+    }
+  }
+
+  @HostListener('window:mouseup')
+  @HostListener('window:touchend')
+  stopJoystick() {
+    if (!this.draggingSide) return;
+
+    const stick = this.draggingSide === 'left' ? this.leftStick : this.rightStick;
+    const state = this.draggingSide === 'left' ? this.left : this.right;
+
+    if (stick) {
+      stick.nativeElement.style.left = "50%";
+      stick.nativeElement.style.top = "50%";
+    }
+
+    state.x = 0;
+    state.y = 0;
+    this.draggingSide = null;
+
+    if (this.droneService.selectedMode === 'controltouch') {
+      this.sendData({ lx: 0, ly: 0, rx: 0, ry: 0 });
     }
   }
 

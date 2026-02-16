@@ -35,7 +35,6 @@
   font-weight: bold;
 }
 
-/* Haupt-Buttons */
 .button-row {
   display: flex;
   gap: 20px;
@@ -70,4 +69,44 @@ button:disabled {
   opacity: 0.3;
   cursor: not-allowed;
   filter: grayscale(1);
+}
+
+.joystick-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 100px;
+  width: 100%;
+  margin: 40px 0;
+  padding: 20px;
+}
+
+.joystick {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 3px solid #dee2e6;
+  background: #f8f9fa;
+  touch-action: none;
+}
+
+.stick {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #0a84ff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  cursor: grab;
+  z-index: 10;
+}
+
+.stick:active {
+  cursor: grabbing;
+  background: #007aff;
 }

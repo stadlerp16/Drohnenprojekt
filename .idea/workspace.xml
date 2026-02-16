@@ -4,8 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="Create Backend">
+    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="Verbesserung, des layouts und Änderung der Inhalten der Pfade + Tastatur und Controller">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_07_02_2026_22_09_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_07_02_2026_22_09__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/app/app.html" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/app/app.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/app/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/app/app.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/app/services/drohne.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/app/services/drohne.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -13,6 +22,24 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <favorite-branches>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="Mario" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </favorite-branches>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -27,6 +54,9 @@
     &quot;accountId&quot;: &quot;d4b57c3b-1664-4b8f-9bdf-0cdca03b0d89&quot;
   }
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0
 }</component>
@@ -35,26 +65,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Node.js.main.ts.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;Vitest.app.spec.ts.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Mario/Projekt/Drohnenprojekt&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Mario\\Projekt\\Drohnenprojekt\\Frontend\\node_modules\\typescript\\lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JavaScript Debug.app.html.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Node.js.app.ts.executor": "Run",
+    "Node.js.main.ts.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Vitest.app.spec.ts.executor": "Run",
+    "git-widget-placeholder": "Mario",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/Mario/Projekt/Drohnenprojekt",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "C:\\Users\\Mario\\Projekt\\Drohnenprojekt\\Frontend\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="Drohnenprojekt" />
@@ -99,6 +131,14 @@
       <workItem from="1769075976131" duration="134000" />
       <workItem from="1769161121304" duration="31000" />
       <workItem from="1770187835484" duration="1119000" />
+      <workItem from="1770508775451" duration="6000" />
+      <workItem from="1770562563198" duration="2452000" />
+      <workItem from="1770565701941" duration="368000" />
+      <workItem from="1770665838016" duration="770000" />
+      <workItem from="1770728593395" duration="11192000" />
+      <workItem from="1770891169787" duration="3342000" />
+      <workItem from="1771059446365" duration="3680000" />
+      <workItem from="1771235639324" duration="4576000" />
     </task>
     <task id="LOCAL-00001" summary="Create Backend">
       <option name="closed" value="true" />
@@ -108,7 +148,55 @@
       <option name="project" value="LOCAL" />
       <updated>1769075502388</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Start, Stop &amp; Emergency Button">
+      <option name="closed" value="true" />
+      <created>1770499152238</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1770499152238</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Start, Stop &amp; Emergency Button und einen neuen Pfad für die Control Ansicht eingereichtet">
+      <option name="closed" value="true" />
+      <created>1770508453664</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1770508453664</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Start, Stop &amp; Emergency Button und einen neuen Pfad für die Control Ansicht eingereichtet">
+      <option name="closed" value="true" />
+      <created>1770563119812</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1770563119812</updated>
+    </task>
+    <task id="LOCAL-00005" summary="tastatur und Controller auswahl aber noch keine genaueren Details">
+      <option name="closed" value="true" />
+      <created>1770565883527</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1770565883527</updated>
+    </task>
+    <task id="LOCAL-00006" summary="tastatur und Controller auswahl aber noch keine genaueren Details">
+      <option name="closed" value="true" />
+      <created>1770565951789</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1770565951789</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Verbesserung, des layouts und Änderung der Inhalten der Pfade">
+      <option name="closed" value="true" />
+      <created>1771060415442</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1771060415442</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -116,6 +204,10 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Create Backend" />
-    <option name="LAST_COMMIT_MESSAGE" value="Create Backend" />
+    <MESSAGE value="Start, Stop &amp; Emergency Button" />
+    <MESSAGE value="Start, Stop &amp; Emergency Button und einen neuen Pfad für die Control Ansicht eingereichtet" />
+    <MESSAGE value="tastatur und Controller auswahl aber noch keine genaueren Details" />
+    <MESSAGE value="Verbesserung, des layouts und Änderung der Inhalten der Pfade" />
+    <option name="LAST_COMMIT_MESSAGE" value="Verbesserung, des layouts und Änderung der Inhalten der Pfade" />
   </component>
 </project>
