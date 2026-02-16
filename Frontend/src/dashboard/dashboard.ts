@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import { DroneService } from '../app/services/drohne.service';
 import { Router } from '@angular/router';
 
@@ -9,8 +9,8 @@ import { Router } from '@angular/router';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
-export class Dashboard implements OnDestroy {
-  isFlying: boolean = false;
+export class Dashboard implements OnDestroy , OnInit {
+  isFlying: boolean = true;
   private socket: WebSocket | null = null;
 
   //CONTROLLER KONFIGURATION
@@ -26,6 +26,9 @@ export class Dashboard implements OnDestroy {
 
   constructor(protected droneService: DroneService, private router: Router) {}
 
+  ngOnInit(){
+    this.connectWebSocket();
+  }
   //WEBSOCKET LOGIK
 
   private connectWebSocket() {
