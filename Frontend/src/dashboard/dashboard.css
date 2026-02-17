@@ -110,3 +110,26 @@ button:disabled {
   cursor: grabbing;
   background: #007aff;
 }
+
+/* Der Takeoff/Land Button (simuliert Leertaste) */
+.space-btn {
+  background-color: #f39c12 !important; /* Orange/Gold Farbe */
+  height: 60px;
+  font-size: 14px;
+  border: 2px solid rgba(0,0,0,0.1);
+  box-shadow: 0 4px 0 #d35400; /* Kleiner 3D-Effekt */
+}
+
+.space-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #d35400;
+  background-color: #e67e22 !important;
+}
+
+/* Anpassung der Steuerungssäule */
+.joystick-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}

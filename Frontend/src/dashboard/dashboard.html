@@ -1,24 +1,51 @@
 <div class="dashboard-page">
 
   @if (droneService.selectedMode === 'controltouch') {
-    <div class="joystick-wrapper">
+    <div class="joystick-main-container">
 
-      <div class="joystick-container">
-        <span class="joystick-label">L-Stick</span>
-        <div class="joystick" #leftJoy>
-          <div class="stick" #leftStick
-               (mousedown)="startJoystick($event, 'left')"
-               (touchstart)="startJoystick($event, 'left')">
+      <div class="joystick-wrapper">
+        <div class="joystick-container">
+          <span class="joystick-label">Throttle / Yaw</span>
+          <div class="joystick" #leftJoy>
+            <div class="stick" #leftStick
+                 (mousedown)="startJoystick($event, 'left')"
+                 (touchstart)="startJoystick($event, 'left')">
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="joystick-container">
-        <span class="joystick-label">R-Stick</span>
-        <div class="joystick" #rightJoy>
-          <div class="stick" #rightStick
-               (mousedown)="startJoystick($event, 'right')"
-               (touchstart)="startJoystick($event, 'right')">
+        <div class="joystick-controls">
+          <button
+            class="btn-joy start"
+            [disabled]="isFlying"
+            (click)="startDrone()">
+            START
+          </button>
+
+          <button
+            class="btn-joy space-btn"
+            (mousedown)="handleSpaceAction(true)"
+            (mouseup)="handleSpaceAction(false)"
+            (touchstart)="handleSpaceAction(true)"
+            (touchend)="handleSpaceAction(false)">
+            TAKEOFF / LAND
+          </button>
+
+          <button
+            class="btn-joy stop"
+            [disabled]="!isFlying"
+            (click)="stopDrone()">
+            STOP
+          </button>
+        </div>
+
+        <div class="joystick-container">
+          <span class="joystick-label">Pitch / Roll</span>
+          <div class="joystick" #rightJoy>
+            <div class="stick" #rightStick
+                 (mousedown)="startJoystick($event, 'right')"
+                 (touchstart)="startJoystick($event, 'right')">
+            </div>
           </div>
         </div>
       </div>
@@ -28,26 +55,9 @@
 
   <div class="test-steuerung">
     <h2>Steuerungs-Zentrale</h2>
-
     <p style="color: #666; font-size: 0.9rem;">
       Aktiver Modus: <strong>{{ droneService.selectedMode }}</strong>
     </p>
-
-    <div class="button-row">
-      <button
-        class="btn-gruen"
-        [disabled]="isFlying"
-        (click)="startDrone()">
-        START
-      </button>
-      <button
-        class="btn-rot"
-        [disabled]="!isFlying"
-        (click)="stopDrone()">
-        STOP
-      </button>
-    </div>
-
     <button class="btn-emergency" (click)="emergencyStop()">EMERGENCY STOP</button>
   </div>
 

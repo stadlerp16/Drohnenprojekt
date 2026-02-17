@@ -134,6 +134,14 @@ export class Dashboard implements OnDestroy , OnInit {
       this.sendData({ lx: 0, ly: 0, rx: 0, ry: 0 });
     }
   }
+  handleSpaceAction(isPressed: boolean) {
+    if (this.droneService.selectedMode === 'controltouch') {
+      this.sendData({
+        key: ' ',
+        pressed: isPressed
+      });
+    }
+  }
 
   //TASTATUR LOGIK
 
