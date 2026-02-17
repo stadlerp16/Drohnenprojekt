@@ -4,22 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="Hinzufügen von joySticks">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/mariadb_data/aria_log.00000001" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/mariadb_data/aria_log.00000001" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/mariadb_data/aria_log_control" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/mariadb_data/aria_log_control" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/mariadb_data/ddl_recovery.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/mariadb_data/drohnen_db/command_logs.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/mariadb_data/drohnen_db/command_logs.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/mariadb_data/ib_buffer_pool" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/mariadb_data/ib_buffer_pool" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/mariadb_data/ib_logfile0" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/mariadb_data/ib_logfile0" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/mariadb_data/ibdata1" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/mariadb_data/ibdata1" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/mariadb_data/ibtmp1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/mariadb_data/mysql/innodb_index_stats.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/mariadb_data/mysql/innodb_index_stats.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/mariadb_data/mysql/innodb_table_stats.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/mariadb_data/mysql/innodb_table_stats.ibd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.ts" afterDir="false" />
+    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="db weg">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -144,7 +130,7 @@
       <workItem from="1770891169787" duration="3342000" />
       <workItem from="1771059446365" duration="3680000" />
       <workItem from="1771235639324" duration="5715000" />
-      <workItem from="1771322160014" duration="1391000" />
+      <workItem from="1771322160014" duration="1634000" />
     </task>
     <task id="LOCAL-00001" summary="Create Backend">
       <option name="closed" value="true" />
@@ -210,7 +196,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771240503633</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="db weg">
+      <option name="closed" value="true" />
+      <created>1771323768115</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1771323768115</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -223,6 +217,7 @@
     <MESSAGE value="tastatur und Controller auswahl aber noch keine genaueren Details" />
     <MESSAGE value="Verbesserung, des layouts und Änderung der Inhalten der Pfade" />
     <MESSAGE value="Hinzufügen von joySticks" />
-    <option name="LAST_COMMIT_MESSAGE" value="Hinzufügen von joySticks" />
+    <MESSAGE value="db weg" />
+    <option name="LAST_COMMIT_MESSAGE" value="db weg" />
   </component>
 </project>
