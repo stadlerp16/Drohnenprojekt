@@ -1,20 +1,28 @@
 <div class="dashboard-page">
 
   @if (droneService.selectedMode === 'controltouch') {
+
     <div class="joystick-main-container">
 
       <div class="joystick-wrapper">
+
+        <!-- LINKER JOYSTICK -->
         <div class="joystick-container">
           <span class="joystick-label">Throttle / Yaw</span>
-          <div class="joystick" #leftJoy>
-            <div class="stick" #leftStick
-                 (mousedown)="startJoystick($event, 'left')"
-                 (touchstart)="startJoystick($event, 'left')">
-            </div>
+
+          <div class="joystick"
+               #leftJoy
+               (pointerdown)="startJoystick($event, 'left')">
+
+            <div class="stick" #leftStick></div>
+
           </div>
         </div>
 
+
+        <!-- MITTLERE BUTTONS -->
         <div class="joystick-controls">
+
           <button
             class="btn-joy start"
             [disabled]="isFlying"
@@ -22,12 +30,10 @@
             START
           </button>
 
+          <!-- NUR EIN EVENT -->
           <button
             class="btn-joy space-btn"
-            (mousedown)="handleSpaceAction(true)"
-            (mouseup)="handleSpaceAction(false)"
-            (touchstart)="handleSpaceAction(true)"
-            (touchend)="handleSpaceAction(false)">
+            (pointerdown)="handleSpaceAction(true)">
             TAKEOFF / LAND
           </button>
 
@@ -37,28 +43,40 @@
             (click)="stopDrone()">
             STOP
           </button>
+
         </div>
 
+
+        <!-- RECHTER JOYSTICK -->
         <div class="joystick-container">
           <span class="joystick-label">Pitch / Roll</span>
-          <div class="joystick" #rightJoy>
-            <div class="stick" #rightStick
-                 (mousedown)="startJoystick($event, 'right')"
-                 (touchstart)="startJoystick($event, 'right')">
-            </div>
+
+          <div class="joystick"
+               #rightJoy
+               (pointerdown)="startJoystick($event, 'right')">
+
+            <div class="stick" #rightStick></div>
+
           </div>
         </div>
+
       </div>
 
     </div>
   }
 
+  <!-- INFO / EMERGENCY -->
   <div class="test-steuerung">
     <h2>Steuerungs-Zentrale</h2>
+
     <p style="color: #666; font-size: 0.9rem;">
-      Aktiver Modus: <strong>{{ droneService.selectedMode }}</strong>
+      Aktiver Modus:
+      <strong>{{ droneService.selectedMode }}</strong>
     </p>
-    <button class="btn-emergency" (click)="emergencyStop()">EMERGENCY STOP</button>
+
+    <button class="btn-emergency" (click)="emergencyStop()">
+      EMERGENCY STOP
+    </button>
   </div>
 
 </div>
