@@ -17,6 +17,7 @@ export class App {
   ipForm: FormGroup;
   isConnecting: boolean = false;
   isConnected: boolean = false;
+  isLanded: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -30,6 +31,25 @@ export class App {
 
   selectMode(mode: 'controlps' | 'controlkeyboard' | 'controltouch') {
     this.droneService.selectedMode = mode;
+  }
+
+  onDisconnect() {
+    this.droneService.disconnect().subscribe({
+      next: (res) => {
+        console.log('Backend: Drohne erfolgreich getrennt', res);
+        // Status erst bei Erfolg zurücksetzen
+        this.isConnected = false;
+        this.isConnecting = false;
+        this.droneService.selectedMode = null; // Modus auch zurücksetzen
+        this.ipForm.enable();
+      },
+      error: (err) => {
+        console.error('Fehler beim Trennen:', err);
+        // Optional: Trotz Fehler trennen, falls das Backend "tot" ist
+        this.isConnected = false;
+        this.ipForm.enable();
+      }
+    });
   }
 
   onSubmit() {
@@ -54,6 +74,65 @@ export class App {
       });
     }
   }
+
+  // Diese Methode wird aufgerufen, wenn der Flug beendet wurde
+
+  onDroneLanded() {
+
+    this.isLanded = true;
+
+// Setze Validator für den Kursnamen erst jetzt auf 'required'
+
+    this.ipForm.get('courseName')?.setValidators([Validators.required]);
+
+    this.ipForm.get('courseName')?.updateValueAndValidity();
+
+  }
+
+
+
+// Speichert den Flugkurs endgültig in der Datenbank
+
+  saveFlightCourse() {
+
+    if (this.ipForm.get('courseName')?.valid) {
+
+      const payload = {
+
+        ip: this.ipForm.value.droneIp,
+
+        courseName: this.ipForm.value.courseName
+
+      };
+
+
+
+      console.log('Speichere Flugkurs in Datenbank:', payload);
+
+
+
+// Hier rufen wir den Service auf
+
+      this.droneService.saveFlight(payload).subscribe({
+
+        next: (res) => {
+
+          alert('Flugkurs erfolgreich gespeichert!');
+
+          this.isLanded = false; // Feld wieder ausblenden
+
+          this.ipForm.get('courseName')?.reset();
+
+        },
+
+        error: (err) => console.error('Fehler beim Speichern:', err)
+
+      });
+
+    }
+
+  }
+
   onContinue() {
     if (this.droneService.selectedMode) {
       this.router.navigate(['/control']);

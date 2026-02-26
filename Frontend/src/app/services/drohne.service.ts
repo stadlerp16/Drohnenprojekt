@@ -16,6 +16,17 @@ export class DroneService {
     return this.http.post(`${this.baseUrl}/connect`, { ip });
   }
 
+  disconnect(): Observable<any> {
+    console.log('Service: Sende Disconnect-Anfrage an Backend...');
+    // Wir senden einen POST-Request ohne Body an den disconnect-Endpunkt
+    return this.http.post(`${this.baseUrl}/disconnect`, {});
+  }
+
+  // --- Methode zum Speichern des Flugkurses ---
+  saveFlight(payload: { ip: string, courseName: string }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/save-course`, payload);
+  }
+
   startDrone(): Observable<any> { return this.http.post(`${this.baseUrl}/start`, {}); }
   stopDrone(): Observable<any> { return this.http.post(`${this.baseUrl}/stop`, {}); }
   emergencyStop(): Observable<any> { return this.http.post(`${this.baseUrl}/emergency`, {}); }

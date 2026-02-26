@@ -71,6 +71,25 @@ form button {
   animation: fadeIn 0.5s ease-out;
 }
 
+.button-group {
+  display: flex;
+  gap: 10px; /* Abstand zwischen den Buttons */
+  margin-bottom: 15px;
+}
+
+.btn-disconnect {
+  background-color: #ff4d4d; /* Rot-Ton */
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-disconnect:hover {
+  background-color: #cc0000;
+}
+
 .test-steuerung label {
   font-size: 1.2rem;
   font-weight: bold;

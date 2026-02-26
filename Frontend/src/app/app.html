@@ -15,6 +15,50 @@
           <button type="submit" [disabled]="isConnecting || isConnected">
             {{ isConnected ? 'VERBUNDEN' : (isConnecting ? 'Verbinde...' : 'VERBINDEN') }}
           </button>
+
+          <button
+            type="button"
+            class="btn-disconnect"
+            *ngIf="isConnected"
+            (click)="onDisconnect()">
+            TRENNEN
+          </button>
+
+          <div class="landing-section" *ngIf="isLanded">
+
+            <hr>
+
+            <label for="courseName">Flug abgeschlossen: Kursname vergeben</label>
+
+            <input
+
+              id="courseName"
+
+              type="text"
+
+              formControlName="courseName"
+
+              placeholder="z.B. Rundflug_Alpen_01">
+
+
+
+            <div class="error-message" *ngIf="ipForm.get('courseName')?.touched && ipForm.get('courseName')?.invalid">
+
+              <small>Bitte gib einen Namen zum Speichern an.</small>
+
+            </div>
+
+
+
+            <button type="button" class="btn-save" (click)="saveFlightCourse()">
+
+              IN DATENBANK SPEICHERN
+
+            </button>
+
+          </div>
+
+
         </form>
 
         <div class="test-steuerung" *ngIf="isConnected">
