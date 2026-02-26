@@ -41,3 +41,20 @@ try:
     print("Speichern OK.")
 except Exception as e:
     print(f"Fehler aufgetreten: {e}")
+
+from sqlmodel import select
+
+def label_flight(start_time, end_time, label):
+    with Session(engine) as session:
+        # Finde alle Logs zwischen Start und Ende
+        statement = select(DroneCommandLog).where(
+            DroneCommandLog.timestamp >= start_time,
+            DroneCommandLog.timestamp <= end_time
+        )
+        results = session.exec(statement).all()
+
+        for log in results:
+            log.flight_name = label  # Namen zuweisen
+            session.add(log)
+
+        session.commit()
