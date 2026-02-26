@@ -1,3 +1,5 @@
+import asyncio
+
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 import Services.drohneService as ds
 from datetime import datetime
@@ -6,7 +8,8 @@ from Services.controlServices import ControlSession
 from Services.keyboardSteuerung import set_key
 from Services.input_ps5 import set_gamepad
 from Services.input_touch import set_touch
-from connect import log_command, label_flight
+from Services.replayService import play_flight
+from connect import log_command, label_flight, get_all_flight_names
 
 router = APIRouter()
 
@@ -163,3 +166,18 @@ async def save_flight_name(data: dict):
         return {"ok": True, "message": f"Flug als '{name}' gespeichert."}
 
     return {"ok": False, "message": "Keine Flugdaten zum Speichern gefunden."}
+
+@router.get("/flights")
+async def list_flights():
+    try:
+        names = get_all_flight_names()
+        return {"ok": True, "flights": names}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
+@router.post("/play-flight")
+async def play_flight_route(data: dict):
+    name = data.get("name")
+    # Wir starten das Replay als Hintergrundaufgabe, damit die Website nicht einfriert
+    asyncio.create_task(play_flight(name))
+    return {"ok": True, "message": f"Replay von '{name}' gestartet."}

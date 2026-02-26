@@ -1,6 +1,8 @@
 import json
 from sqlmodel import create_engine, SQLModel, Session
 from Models.commands import DroneCommandLog  # Importiert dein Model
+from sqlmodel import select, Session, func
+from Models.commands import DroneCommandLog
 
 # Verbindung zu MariaDB (Werte müssen mit docker-compose.yml übereinstimmen)
 # Format: mysql+mysqlconnector://USER:PASSWORD@HOST:PORT/DATABASE
@@ -58,3 +60,19 @@ def label_flight(start_time, end_time, label):
             session.add(log)
 
         session.commit()
+
+def get_all_flight_names():
+    with Session(engine) as session:
+        # Wir wählen nur die Spalte flight_name aus und filtern Duplikate sowie NULL-Werte aus
+        statement = select(DroneCommandLog.flight_name).where(
+            DroneCommandLog.flight_name != None
+        ).distinct()
+        results = session.exec(statement).all()
+        return results
+
+def get_commands_by_name(flight_name: str):
+    with Session(engine) as session:
+        statement = select(DroneCommandLog).where(
+            DroneCommandLog.flight_name == flight_name
+        ).order_by(DroneCommandLog.timestamp) # Chronologische Reihenfolge!
+        return session.exec(statement).all()
