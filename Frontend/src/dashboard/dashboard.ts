@@ -29,7 +29,9 @@ export class Dashboard implements OnDestroy , OnInit {
   private readonly SEND_HZ = 20;
   private readonly SEND_DT_MS = 1000 / this.SEND_HZ;
   private controllerLoopId: any = null;
-  private lastXPressed = true;
+  private lastXPressed = false;
+  gamepadConnected: boolean = false;
+  gamepadName: string = '';
 
   private readonly allowedKeys = new Set([
     "w", "a", "s", "d", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " ", "Space"
@@ -165,17 +167,32 @@ export class Dashboard implements OnDestroy , OnInit {
   //CONTROLLER LOGIK
 
   private startControllerLoop() {
-    this.stopControllerLoop(); // Sicherstellen, dass kein alter Loop läuft
+    this.stopControllerLoop();
+
     const loop = () => {
-      if (!this.isFlying || this.droneService.selectedMode !== 'controlps') return;
+      this.controllerLoopId = setTimeout(loop, this.SEND_DT_MS);
+
+      if (!this.isFlying) return;
+      if (this.droneService.selectedMode !== 'controlps') return;
 
       const gp = this.getFirstGamepad();
-      if (gp) {
-        this.processGamepadData(gp);
-      }
-      this.controllerLoopId = setTimeout(loop, this.SEND_DT_MS);
+      if (gp) this.processGamepadData(gp);
     };
+
     loop();
+  }
+
+  @HostListener('window:gamepadconnected', ['$event'])
+  onGamepadConnected(event: GamepadEvent) {
+    this.gamepadConnected = true;
+    this.gamepadName = event.gamepad.id;
+    console.log('Gamepad connected:', event.gamepad.id, 'index', event.gamepad.index);
+  }
+
+  @HostListener('window:gamepaddisconnected', ['$event'])
+  onGamepadDisconnected(event: GamepadEvent): void {
+    this.gamepadConnected = false;
+    this.gamepadName = '';
   }
 
   private stopControllerLoop() {
@@ -186,7 +203,7 @@ export class Dashboard implements OnDestroy , OnInit {
   }
 
   private getFirstGamepad(): Gamepad | null {
-    const gamepads = navigator.getGamepads();
+    const gamepads = navigator.getGamepads?.() ?? [];
     for (const gp of gamepads) {
       if (gp && gp.connected) return gp;
     }
@@ -194,24 +211,23 @@ export class Dashboard implements OnDestroy , OnInit {
   }
 
   private processGamepadData(gp: Gamepad) {
-    // Hilfsfunktionen für Deadzone und Clamp
+
     const dz = (v: number) => Math.abs(v) < this.DEADZONE ? 0 : v;
     const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 
-    // Mapping
     const lx = dz(gp.axes[0] ?? 0);
     const ly = dz(gp.axes[1] ?? 0);
     const rx = dz(gp.axes[2] ?? 0);
 
-    // Trigger (L2 / R2)
     const l2 = clamp01(gp.buttons[6]?.value ?? 0);
     const r2 = clamp01(gp.buttons[7]?.value ?? 0);
 
-    // X (Cross) Button für Takeoff/Land (Flankenerkennung)
     const xNow = !!gp.buttons[0]?.pressed;
     let takeoffLand = false;
     if (xNow && !this.lastXPressed) takeoffLand = true;
     this.lastXPressed = xNow;
+
+
 
     this.sendData({ lx, ly, rx, l2, r2, takeoffLand });
   }

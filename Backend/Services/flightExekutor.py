@@ -21,7 +21,6 @@ def _apply_rc():
     if ds.ep_drone is None:
         return
 
-    # während takeoff/land oder am Boden: nur 0 senden
     if _in_transition or not _airborne:
         ds.ep_drone.flight.rc(a=0, b=0, c=0, d=0)
         return

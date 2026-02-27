@@ -64,11 +64,26 @@
 
     </div>
   }
-
   <!-- INFO / EMERGENCY -->
   <div class="test-steuerung">
     <h2>Steuerungs-Zentrale</h2>
+    @if (droneService.selectedMode === 'controlps'){
+      <div style="margin-top:20px; padding:15px; background:#f4f4f4; border-radius:8px;">
 
+        <h3>Controller Status</h3>
+
+        @if (gamepadConnected) {
+          <p style="color:green;">
+            ✅ Verbunden: {{ gamepadName }}
+          </p>
+        } @else {
+          <p style="color:red;">
+            ❌ Kein Controller verbunden
+          </p>
+        }
+
+      </div>
+    }
     <p style="color: #666; font-size: 0.9rem;">
       Aktiver Modus:
       <strong>{{ droneService.selectedMode }}</strong>
