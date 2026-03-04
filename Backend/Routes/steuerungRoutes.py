@@ -130,7 +130,7 @@ async def ws_touch(ws: WebSocket):
         while True:
             msg = await ws.receive_json()
 
-            # optional: Takeoff/Land vom Handy-UI Button
+            #optional: Takeoff/Land vom Handy-UI Button
             if msg.get("takeoffLand") is True:
                 ok = await session.takeoff_land()
                 log_command("FLIGHT_EVENT", "takeoff_land", source="touch")
