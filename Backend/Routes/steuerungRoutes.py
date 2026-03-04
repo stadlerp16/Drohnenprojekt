@@ -1,10 +1,4 @@
-import asyncio
-import json
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
-from datetime import datetime
-from pydantic import BaseModel
-from sqlmodel import Session
-
 import Services.drohneService as ds
 import Services.replayService as rs
 from Services.controlServices import ControlSession
@@ -63,6 +57,7 @@ async def ws_keyboard(ws: WebSocket):
 
             if key in _ALLOWED_KEYS:
                 set_key(key, pressed)
+                # LOG: Nur loggen, wenn die Taste gedrückt wird (nicht beim Loslassen)
                 if pressed:
                     log_command("KEYBOARD_MOVE", key, source="keyboard")
 
@@ -88,19 +83,28 @@ async def ws_ps5(ws: WebSocket):
     try:
         while True:
             msg = await ws.receive_json()
+
             if msg.get("takeoffLand") is True:
                 ok = await session.takeoff_land()
                 log_command("FLIGHT_EVENT", "takeoff_land", source="ps5")
                 await ws.send_json({"ok": ok})
                 continue
 
+            # Werte extrahieren
             coords = {
-                "lx": float(msg.get("lx", 0.0)), "ly": float(msg.get("ly", 0.0)),
-                "rx": float(msg.get("rx", 0.0)), "l2": float(msg.get("l2", 0.0)), "r2": float(msg.get("r2", 0.0)),
+                "lx": float(msg.get("lx", 0.0)),
+                "ly": float(msg.get("ly", 0.0)),
+                "rx": float(msg.get("rx", 0.0)),
+                "l2": float(msg.get("l2", 0.0)),
+                "r2": float(msg.get("r2", 0.0)),
             }
+
             set_gamepad(**coords)
+
+            # LOG: Nur loggen, wenn mindestens ein Stick/Trigger bewegt wird
             if any(v != 0.0 for v in coords.values()):
                 log_command("PS5_MOVE", coords, source="ps5")
+
             await ws.send_json({"ok": True})
     except WebSocketDisconnect:
         pass
@@ -108,9 +112,11 @@ async def ws_ps5(ws: WebSocket):
         last_flight_times["end"] = datetime.now()
         await session.stop()
 
+
 @router.websocket("/controltouch")
 async def ws_touch(ws: WebSocket):
     await ws.accept()
+
     if ds.ep_drone is None:
         await ws.send_json({"ok": False, "error": "Drone not connected"})
         await ws.close()
@@ -123,6 +129,8 @@ async def ws_touch(ws: WebSocket):
     try:
         while True:
             msg = await ws.receive_json()
+
+            # optional: Takeoff/Land vom Handy-UI Button
             if msg.get("takeoffLand") is True:
                 ok = await session.takeoff_land()
                 log_command("FLIGHT_EVENT", "takeoff_land", source="touch")
@@ -137,6 +145,7 @@ async def ws_touch(ws: WebSocket):
             if any(v != 0.0 for v in coords.values()):
                 log_command("TOUCH_MOVE", coords, source="touch")
             await ws.send_json({"ok": True})
+
     except WebSocketDisconnect:
         pass
     finally:

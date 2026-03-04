@@ -35,6 +35,13 @@
               (click)="selectMode('controlps')">
               Controller
             </button>
+            <button
+              type="button"
+              class="mode-btn"
+              [class.active]="droneService.selectedMode === 'controltouch'"
+              (click)="selectMode('controltouch')">
+              Joysticks
+            </button>
           </div>
 
           <div class="button-row">
