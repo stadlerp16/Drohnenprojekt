@@ -1,62 +1,69 @@
-import { Component, signal } from '@angular/core';
-import {Router, RouterOutlet} from '@angular/router';
+import { Component, signal, OnInit } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NgIf } from '@angular/common';
+import { NgIf, NgFor } from '@angular/common';
 import { DroneService } from './services/drohne.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, ReactiveFormsModule, NgIf],
+  imports: [RouterOutlet, ReactiveFormsModule, NgIf, NgFor],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
-  protected readonly title = signal('SYPProjekt');
+export class App implements OnInit {
+  protected readonly title = signal('DroneControl');
 
   ipForm: FormGroup;
   isConnecting: boolean = false;
   isConnected: boolean = false;
 
-  constructor(
-    private fb: FormBuilder,
-    public droneService: DroneService,
-    public router: Router
-  ) {
-    this.ipForm = this.fb.group({
-      droneIp: ['', [Validators.required]]
+  // Auswahl-Logik
+  setupType: 'manual' | 'auto' | null = null;
+  savedFlights: string[] = [];
+
+  constructor(private fb: FormBuilder, public droneService: DroneService, public router: Router) {
+    this.ipForm = this.fb.group({ droneIp: ['', [Validators.required]] });
+  }
+
+  ngOnInit() {
+    this.loadFlights();
+  }
+
+  loadFlights() {
+    this.droneService.getSavedFlights().subscribe({
+      next: (res) => { if (res.ok) this.savedFlights = res.flights; },
+      error: () => console.log('Kein Backend erreichbar für Flüge')
     });
   }
 
-  selectMode(mode: 'controlps' | 'controlkeyboard' | 'controltouch') {
-    this.droneService.selectedMode = mode;
+  setSetupType(type: 'manual' | 'auto') {
+    this.setupType = type;
+    this.droneService.isAutoFlight = (type === 'auto');
+    // Resets
+    this.droneService.selectedMode = null;
+    this.droneService.selectedAutoFlight = null;
+  }
+
+  selectMode(mode: any) { this.droneService.selectedMode = mode; }
+
+  selectFlight(name: string) {
+    this.droneService.selectedAutoFlight = name;
+    // Dummy-Mode setzen, damit der "Weiter" Button im HTML aktiv wird
+    this.droneService.selectedMode = 'controltouch';
   }
 
   onSubmit() {
-    if (this.ipForm.valid && !this.isConnecting) {
+    if (this.ipForm.valid) {
       this.isConnecting = true;
-
-      const ip = this.ipForm.value.droneIp;
-      console.log('Sende IP an Backend:', ip);
-
-      this.droneService.sendIpAddress(ip).subscribe({
-        next: (response) => {
-          console.log('Verbindung erfolgreich:', response);
-          this.isConnecting = false;
-          this.isConnected = true;
-        },
-        error: (err) => {
-          console.error('Verbindung fehlgeschlagen:', err);
-          this.isConnecting = false;
-          this.ipForm.reset();
-          this.isConnected = true;  //Diese Zeile auskommentieren, wenn man es ohne Backend versuchen will
-        }
+      this.droneService.sendIpAddress(this.ipForm.value.droneIp).subscribe({
+        next: () => { this.isConnecting = false; this.isConnected = true; },
+        error: () => { this.isConnecting = false; this.isConnected = true; } // Zum Testen
       });
     }
   }
+
   onContinue() {
-    if (this.droneService.selectedMode) {
-      this.router.navigate(['/control']);
-    }
+    this.router.navigate(['/control']);
   }
 }
