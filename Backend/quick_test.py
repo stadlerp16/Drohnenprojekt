@@ -1,88 +1,54 @@
-import datetime
-import time
-import json
 import asyncio
-from connect import log_command, label_flight, get_all_flight_names
+import json
+from datetime import datetime
 from Services.replayService import play_flight
+from Services.input_ps5 import set_gamepad
+from connect import log_command, get_commands_by_name
 
+async def run_diagnostics(flight_name: str):
+    print("=" * 50)
+    print(f"🔍 DIAGNOSE-TEST FÜR FLUG: {flight_name}")
+    print("=" * 50)
 
-async def simulate_flight(mode: str):
-    """
-    Simuliert einen Flug für einen spezifischen Modus.
-    mode: 'keyboard', 'ps5' oder 'touch'
-    """
-    print(f"\n--- Starte Simulation für Modus: {mode.upper()} ---")
+    # 1. LIVE-EINGABE SIMULIEREN (Was passiert normalerweise?)
+    print("\n[STEP 1] Simuliere LIVE-Eingabe (Controller)...")
+    test_coords = {"lx": 0.5, "ly": -0.5, "rx": 0.0, "l2": 0.0, "r2": 1.0}
+    print(f"Sende an set_gamepad: {test_coords}")
+    # Hier rufen wir die Funktion direkt auf
+    set_gamepad(**test_coords)
+    print("✅ Live-Simulation abgeschlossen.")
 
-    # 1. Startzeitpunkt mit Puffer
-    start_zeit = datetime.datetime.now() - datetime.timedelta(seconds=1)
+    print("-" * 30)
 
-    # 2. Befehle je nach Modus loggen
-    if mode == "keyboard":
-        log_command("FLIGHT_EVENT", "takeoff", source="keyboard")
-        time.sleep(0.5)
-        log_command("KEYBOARD_MOVE", "w", source="keyboard")
-        time.sleep(0.5)
-        log_command("FLIGHT_EVENT", "land", source="keyboard")
+    # 2. DATENBANK-CHECK
+    print("[STEP 2] Lese Befehle aus der Datenbank...")
+    commands = get_commands_by_name(flight_name)
 
+    if not commands:
+        print(f"❌ FEHLER: Kein Flug mit Name '{flight_name}' gefunden!")
+        return
 
-    elif mode == "ps5":
+    print(f"Gefunden: {len(commands)} Befehle.")
+    sample = commands[0]
+    print(f"Beispiel-Befehl aus DB: Typ={sample.command_type}, Wert={sample.intensity_value}")
 
-        log_command("FLIGHT_EVENT", "takeoff", source="ps5")
+    print("-" * 30)
 
-        time.sleep(0.5)
+    # 3. REPLAY STARTEN & WERTE VERGLEICHEN
+    print("[STEP 3] Starte Replay-Prozess...")
+    print("Achte jetzt auf die Terminal-Ausgabe von 'set_rc'!")
 
-        # Sende alle Standard-Werte mit, damit set_gamepad zufrieden ist
+    try:
+        # Wir starten das echte Replay
+        await play_flight(flight_name)
+    except Exception as e:
+        print(f"❌ Fehler während des Replays: {e}")
 
-        ps5_coords = {
-
-            "lx": 0.0, "ly": 1.0, "rx": 0.0,
-
-            "l2": 0.0, "r2": 0.0  # Jetzt sind l2 und r2 dabei!
-
-        }
-
-        log_command("PS5_MOVE", ps5_coords, source="ps5")
-
-        time.sleep(0.5)
-
-        log_command("FLIGHT_EVENT", "land", source="ps5")
-    elif mode == "touch":
-        log_command("FLIGHT_EVENT", "takeoff", source="touch")
-        time.sleep(0.5)
-        # Touch (Joystick) sendet ebenfalls Koordinaten
-        log_command("TOUCH_MOVE", {"lx": 0.5, "ly": 0.5, "rx": 0.0, "ry": 0.0}, source="touch")
-        time.sleep(0.5)
-        log_command("FLIGHT_EVENT", "land", source="touch")
-
-    # 3. Endzeitpunkt
-    end_zeit = datetime.datetime.now() + datetime.timedelta(seconds=1)
-
-    # 4. Flug benennen
-    flug_name = f"Test_{mode}_{datetime.datetime.now().strftime('%H%M%S')}"
-    print(f"Speichere '{mode}'-Flug unter: {flug_name}")
-    label_flight(start_zeit, end_zeit, flug_name)
-
-    return flug_name
-
-
-async def run_ordered_tests():
-    # Wir testen die Modi nacheinander
-    for mode in ["keyboard", "ps5", "touch"]:
-        name = await simulate_flight(mode)
-
-        print(f"Prüfe Replay für {name}...")
-        await play_flight(name)
-
-        print(f"--- Modus {mode} erfolgreich abgeschlossen ---")
-
-    # Am Ende die Liste aller Flüge ausgeben
-    print("\n--- Finale Flugliste in der DB ---")
-    fluege = get_all_flight_names()
-    print(fluege)
+    print("\n" + "=" * 50)
+    print("DIAGNOSE BEENDET")
+    print("=" * 50)
 
 
 if __name__ == "__main__":
-    try:
-        asyncio.run(run_ordered_tests())
-    except KeyboardInterrupt:
-        print("\nTest unterbrochen.")
+    # Ersetze 'MeinTestFlug' mit einem echten Namen aus deiner DB
+    asyncio.run(run_diagnostics("test"))
