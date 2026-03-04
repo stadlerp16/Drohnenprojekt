@@ -16,6 +16,7 @@ export class Dashboard implements OnDestroy , OnInit {
   @ViewChild('rightJoy') rightJoy?: ElementRef;
 
   isFlying: boolean = true;
+  isFlightActive: boolean = false;
   private socket: WebSocket | null = null;
 
   // JOYSTICK STATE
@@ -38,7 +39,19 @@ export class Dashboard implements OnDestroy , OnInit {
   constructor(protected droneService: DroneService, private router: Router) {}
 
   ngOnInit(){
-    this.connectWebSocket();
+    if (this.droneService.isAutoFlight && this.droneService.selectedAutoFlight) {
+      this.startAutoFlightFromSetup();
+    } else {
+      this.connectWebSocket();
+    }
+  }
+
+  startAutoFlightFromSetup() {
+    this.isFlightActive = true;
+    this.droneService.playSavedFlight(this.droneService.selectedAutoFlight!).subscribe({
+      next: () => this.emergencyStop(), // Zurück zur Startseite wenn fertig
+      error: () => this.emergencyStop()
+    });
   }
   //WEBSOCKET LOGIK
 
