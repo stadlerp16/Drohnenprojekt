@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 export class DroneService {
   private baseUrl = 'http://localhost:8000/drone';
 
+  // Zentraler Status
   isConnected = false;
   selectedMode: 'controlkeyboard' | 'controlps' | 'controltouch' | null = null;
 
@@ -18,6 +19,11 @@ export class DroneService {
     return this.http.post(`${this.baseUrl}/connect`, { ip });
   }
 
+  disconnect(): Observable<any> {
+    console.log('Service: Sende Disconnect-Anfrage an Backend...');
+    // Wir senden einen POST-Request ohne Body an den disconnect-Endpunkt
+    return this.http.post(`${this.baseUrl}/disconnect`, {});
+  }
 
   getSavedFlights(): Observable<{ ok: boolean, flights: string[] }> {
     return this.http.get<{ ok: boolean, flights: string[] }>(`${this.baseUrl}/flights`);
@@ -26,6 +32,11 @@ export class DroneService {
 
   playSavedFlight(flightName: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/play`, { name: flightName });
+  }
+
+  // --- Methode zum Speichern des Flugkurses ---
+  saveFlight(payload: { ip: string, courseName: string }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/save-course`, payload);
   }
 
   startDrone(): Observable<any> { return this.http.post(`${this.baseUrl}/start`, {}); }

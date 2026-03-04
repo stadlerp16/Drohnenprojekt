@@ -92,6 +92,13 @@ button:disabled {
   touch-action: none;
 }
 
+.joystick,
+.stick,
+.joystick-main-container {
+  touch-action: none;
+}
+
+
 .stick {
   position: absolute;
   width: 60px;
