@@ -2,6 +2,7 @@ from fastapi import APIRouter, Body, HTTPException
 import ipaddress
 
 import Services.drohneService as drohne_service
+import Services.drohneService as ds
 
 router = APIRouter()
 
@@ -37,3 +38,22 @@ def connect_drone(ip: str = Body(..., embed=True)):
         "status": "ok",
         "message": f"Drohne erfolgreich verbunden ({ip_obj})"
     }
+
+@router.post("/disconnect")
+def disconnect_drone():
+    if(ds.ep_drone is None):
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "status": "error",
+                "message" : "Keine Drohne Verbunden"
+            }
+        )
+
+    drohne_service.close()
+    return {
+        "status": "ok",
+    }
+
+
+

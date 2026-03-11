@@ -20,6 +20,7 @@ def buildconnection(drone_ip: str) -> bool:
     global ep_drone
     close()
     print("2")
+
     try:
         robomaster.config.ROBOT_IP_STR = drone_ip
 
@@ -27,7 +28,6 @@ def buildconnection(drone_ip: str) -> bool:
         ok = ep_drone.initialize(conn_type="sta")
         print("3")
         if not ok:
-            close()
             return False
         print("4")
         return True
