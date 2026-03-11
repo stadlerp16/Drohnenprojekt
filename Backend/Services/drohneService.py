@@ -28,7 +28,6 @@ def buildconnection(drone_ip: str) -> bool:
         ok = ep_drone.initialize(conn_type="sta")
         print("3")
         if not ok:
-            close()
             return False
         print("4")
         return True

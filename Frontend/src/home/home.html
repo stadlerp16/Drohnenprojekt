@@ -2,38 +2,60 @@
   <div class="content" *ngIf="!router.url.includes('control')">
     <div class="setup-wrapper">
 
-      <form [formGroup]="ipForm" (ngSubmit)="onSubmit()">
-        <label>Drohnen IP-Adresse</label>
-        <input type="text" formControlName="droneIp">
-        <button type="submit" [disabled]="isConnected">VERBINDEN</button>
-      </form>
+      <div class="header-bar">
+        <span class="header-title">Gerät hinzufügen</span>
 
-      <button
-        type="button"
-        class="btn-disconnect"
-        *ngIf="isConnected"
-        (click)="onDisconnect()">
-        TRENNEN
-      </button>
+        <form [formGroup]="ipForm" (ngSubmit)="onAddNewDevice()" class="header-form">
+          <input
+            type="text"
+            formControlName="droneIp"
+            placeholder="IP-Adresse der neuen Drohne (z.B. 192.168...)">
 
-      <div class="landing-section" *ngIf="isLanded">
-        <hr>
-        <label for="courseName">Flug abgeschlossen: Kursname vergeben</label>
-        <input
-          id="courseName"
-          type="text"
-          formControlName="courseName"
-          placeholder="z.B. Rundflug_Alpen_01">
-        <div class="error-message" *ngIf="ipForm.get('courseName')?.touched && ipForm.get('courseName')?.invalid">
-          <small>Bitte gib einen Namen zum Speichern an.</small>
+          <button
+            type="submit"
+            class="btn-primary-windows"
+            [disabled]="isConnecting || ipForm.invalid">
+            {{ isConnecting ? 'Suche...' : 'Hinzufügen' }}
+          </button>
+        </form>
+      </div>
+
+      <div class="device-list" *ngIf="savedDrones.length > 0">
+        <div class="device-item" *ngFor="let drone of savedDrones">
+          <div class="device-info">
+            <img src="telloDrone.svg" alt="Tello Drohne" class="drone-svg">
+            <div class="device-details">
+              <span class="device-name">{{ drone.name || 'Tello Drohne' }}</span>
+              <span class="device-status">
+                IP: {{ drone.ip }} |
+                <span [style.color]="isConnected && activeIp === drone.ip ? '#28a745' : '#666'">
+                  {{ isConnected && activeIp === drone.ip ? 'Verbunden' : 'Bereit' }}
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="device-actions">
+            <button
+              type="button"
+              class="btn-connect-list"
+              [class.active-conn]="isConnected && activeIp === drone.ip"
+              (click)="handleConnection(drone.ip)">
+              {{ isConnected && activeIp === drone.ip ? 'Trennen' : 'Verbinden' }}
+            </button>
+          </div>
         </div>
-        <button type="button" class="btn-save" (click)="saveFlightCourse()">
-          IN DATENBANK SPEICHERN
-        </button>
+      </div>
+
+      <div class="device-list" *ngIf="savedDrones.length === 0">
+        <div class="device-item" style="justify-content: center; color: #666; font-style: italic; padding: 20px;">
+          Keine gespeicherten Drohnen gefunden. Bitte fügen Sie oben eine neue hinzu.
+        </div>
       </div>
 
       <div class="test-steuerung" *ngIf="isConnected">
         <label>Wie möchtest du fliegen?</label>
+
         <div class="mode-section">
           <button class="mode-btn" [class.active]="setupType === 'manual'" (click)="setSetupType('manual')">Manuelle Steuerung</button>
           <button class="mode-btn" [class.active]="setupType === 'auto'" (click)="setSetupType('auto')">Flugkurs abspielen</button>
@@ -45,12 +67,11 @@
           <button class="mode-btn" [class.active]="droneService.selectedMode === 'controltouch'" (click)="selectMode('controltouch')">Joysticks</button>
         </div>
 
-        <div class="flight-list" *ngIf="setupType === 'auto'" style="width: 100%;">
+        <div class="flight-list" *ngIf="setupType === 'auto'">
           <div *ngFor="let f of savedFlights"
-               class="mode-btn"
+               class="mode-btn flight-item"
                [class.active]="droneService.selectedAutoFlight === f"
-               (click)="selectFlight(f)"
-               style="display: block; margin: 5px; text-align: center; border: 1px solid #ddd;">
+               (click)="selectFlight(f)">
             {{f}}
           </div>
         </div>
@@ -62,6 +83,7 @@
           WEITER ZUM FLUG
         </button>
       </div>
+
     </div>
   </div>
 </main>
