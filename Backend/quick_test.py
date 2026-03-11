@@ -1,54 +1,46 @@
 import asyncio
 import json
+import time
 from datetime import datetime
 from Services.replayService import play_flight
-from Services.input_ps5 import set_gamepad
-from connect import log_command, get_commands_by_name
+from connect import log_command, get_commands_by_name, label_flight
+
 
 async def run_diagnostics(flight_name: str):
     print("=" * 50)
-    print(f"🔍 DIAGNOSE-TEST FÜR FLUG: {flight_name}")
+    print(f"🔍 FINALE DIAGNOSE: {flight_name}")
     print("=" * 50)
 
-    # 1. LIVE-EINGABE SIMULIEREN (Was passiert normalerweise?)
-    print("\n[STEP 1] Simuliere LIVE-Eingabe (Controller)...")
-    test_coords = {"lx": 0.5, "ly": -0.5, "rx": 0.0, "l2": 0.0, "r2": 1.0}
-    print(f"Sende an set_gamepad: {test_coords}")
-    # Hier rufen wir die Funktion direkt auf
-    set_gamepad(**test_coords)
-    print("✅ Live-Simulation abgeschlossen.")
+    # STEP 0: Testdaten erzeugen
+    print("\n[STEP 0] Erzeuge Testdaten...")
+    log_command("FLIGHT_EVENT", "takeoff_land", source="diag")
 
-    print("-" * 30)
+    # Simuliere 'w' drücken und loslassen
+    log_command("KEYBOARD_MOVE", json.dumps({"key": "w", "pressed": True}), source="diag")
+    time.sleep(1)
+    log_command("KEYBOARD_MOVE", json.dumps({"key": "w", "pressed": False}), source="diag")
 
-    # 2. DATENBANK-CHECK
-    print("[STEP 2] Lese Befehle aus der Datenbank...")
+    log_command("FLIGHT_EVENT", "takeoff_land", source="diag")
+
+    # Alle neuen Logs auf den Testnamen labeln
+    label_flight(datetime.min, datetime.max, flight_name)
+    print("✅ Testdaten gespeichert.")
+
+    # STEP 1: Datenbank-Check
+    print("\n[STEP 1] DB-Format prüfen...")
     commands = get_commands_by_name(flight_name)
+    for c in commands:
+        if c.command_type == "KEYBOARD_MOVE":
+            print(f"DB-Wert: {c.intensity_value}")  # Hier sollten die Backslashes sichtbar sein
 
-    if not commands:
-        print(f"❌ FEHLER: Kein Flug mit Name '{flight_name}' gefunden!")
-        return
-
-    print(f"Gefunden: {len(commands)} Befehle.")
-    sample = commands[0]
-    print(f"Beispiel-Befehl aus DB: Typ={sample.command_type}, Wert={sample.intensity_value}")
-
-    print("-" * 30)
-
-    # 3. REPLAY STARTEN & WERTE VERGLEICHEN
-    print("[STEP 3] Starte Replay-Prozess...")
-    print("Achte jetzt auf die Terminal-Ausgabe von 'set_rc'!")
-
-    try:
-        # Wir starten das echte Replay
-        await play_flight(flight_name)
-    except Exception as e:
-        print(f"❌ Fehler während des Replays: {e}")
+    # STEP 2: Replay-Check (Der wichtigste Teil)
+    print("\n[STEP 2] Replay startet...")
+    await play_flight(flight_name)
 
     print("\n" + "=" * 50)
     print("DIAGNOSE BEENDET")
-    print("=" * 50)
 
 
 if __name__ == "__main__":
-    # Ersetze 'MeinTestFlug' mit einem echten Namen aus deiner DB
-    asyncio.run(run_diagnostics("test"))
+    test_id = f"test_{int(time.time())}"
+    asyncio.run(run_diagnostics(test_id))
