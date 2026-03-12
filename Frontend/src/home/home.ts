@@ -15,15 +15,20 @@ export class Home implements OnInit {
   ipForm: FormGroup;
   isConnecting = false;
   isConnected = false;
-  isLanded = false;
+  static isLanded = true;
   activeIp: string | null = null;
 
   setupType: 'manual' | 'auto' | null = null;
   savedFlights: string[] = [];
 
   // Diese Liste würde normalerweise von droneService.getSavedDrones() kommen
-  savedDrones: any[] = [
-  ];
+  savedDrones: any[] = [];
+
+
+
+  static getIsLanded(): boolean {
+    return this.isLanded;
+  }
 
   constructor(
     private fb: FormBuilder,
@@ -77,7 +82,7 @@ export class Home implements OnInit {
     this.activeIp = ip;
 
     if (isNew && !this.savedDrones.find(d => d.ip === ip)) {
-      this.savedDrones.push({ name: 'Neue Drohne', ip: ip });
+      this.savedDrones.push({name: 'Neue Drohne', ip: ip});
       // Hier optional: this.droneService.saveDeviceToDb({ip}).subscribe();
     }
     this.ipForm.reset();
@@ -102,7 +107,9 @@ export class Home implements OnInit {
     this.droneService.selectedAutoFlight = null;
   }
 
-  selectMode(mode: any) { this.droneService.selectedMode = mode; }
+  selectMode(mode: any) {
+    this.droneService.selectedMode = mode;
+  }
 
   selectFlight(name: string) {
     this.droneService.selectedAutoFlight = name;
@@ -119,5 +126,20 @@ export class Home implements OnInit {
     if (this.droneService.selectedMode) this.router.navigate(['/control']);
   }
 
-  saveFlightCourse() { /* ... wie bisher ... */ }
+  saveFlightCourse() {
+    const name = this.ipForm.get('courseName')?.value;
+    if (name && this.droneService.activeIp) {
+
+      this.droneService.saveFlight({
+        ip: this.droneService.activeIp,
+        courseName: name
+      }).subscribe({
+        next: () => {
+          this.droneService.setLanded(false); // Status über Service ändern
+          this.ipForm.get('courseName')?.reset();
+          this.loadFlights();
+        }
+      });
+    }
+  }
 }

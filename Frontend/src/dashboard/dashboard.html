@@ -1,97 +1,96 @@
 <div class="dashboard-page">
 
   @if (droneService.selectedMode === 'controltouch') {
-
     <div class="joystick-main-container">
-
       <div class="joystick-wrapper">
 
-        <!-- LINKER JOYSTICK -->
         <div class="joystick-container">
           <span class="joystick-label">Throttle / Yaw</span>
-
-          <div class="joystick"
-               #leftJoy
-               (pointerdown)="startJoystick($event, 'left')">
-
+          <div class="joystick" #leftJoy (pointerdown)="startJoystick($event, 'left')">
             <div class="stick" #leftStick></div>
-
           </div>
         </div>
 
-
-        <!-- MITTLERE BUTTONS -->
         <div class="joystick-controls">
-
           <button
             class="btn-joy start"
             [disabled]="isFlying"
-            (click)="startDrone()">
+            (click)="stopJoystick()">
             START
           </button>
 
-          <!-- NUR EIN EVENT -->
           <button
             class="btn-joy space-btn"
-            (pointerdown)="handleSpaceAction(true)">
-            TAKEOFF / LAND
+            (click)="beendeFlugUndSpeichere()">
+            LANDEN & SPEICHERN
           </button>
 
           <button
             class="btn-joy stop"
             [disabled]="!isFlying"
-            (click)="stopDrone()">
-            STOP
+            (click)="stopJoystick()">
+            STOP MOTORS
           </button>
-
         </div>
 
-
-        <!-- RECHTER JOYSTICK -->
         <div class="joystick-container">
           <span class="joystick-label">Pitch / Roll</span>
-
-          <div class="joystick"
-               #rightJoy
-               (pointerdown)="startJoystick($event, 'right')">
-
+          <div class="joystick" #rightJoy (pointerdown)="startJoystick($event, 'right')">
             <div class="stick" #rightStick></div>
-
           </div>
         </div>
 
       </div>
-
     </div>
   }
-  <!-- INFO / EMERGENCY -->
+
   <div class="test-steuerung">
     <h2>Steuerungs-Zentrale</h2>
+
     @if (droneService.selectedMode === 'controlps'){
       <div style="margin-top:20px; padding:15px; background:#f4f4f4; border-radius:8px;">
-
         <h3>Controller Status</h3>
-
         @if (gamepadConnected) {
-          <p style="color:green;">
-            ✅ Verbunden: {{ gamepadName }}
-          </p>
+          <p style="color:green;">✅ Verbunden: {{ gamepadName }}</p>
         } @else {
-          <p style="color:red;">
-            ❌ Kein Controller verbunden
-          </p>
+          <p style="color:red;">❌ Kein Controller verbunden</p>
         }
-
       </div>
     }
+
     <p style="color: #666; font-size: 0.9rem;">
-      Aktiver Modus:
-      <strong>{{ droneService.selectedMode }}</strong>
+      Aktiver Modus: <strong>{{ droneService.selectedMode }}</strong>
     </p>
 
     <button class="btn-emergency" (click)="emergencyStop()">
       EMERGENCY STOP
     </button>
+  </div>
+
+  <div class="save-course-section" *ngIf="droneService.isLanded$ | async">
+    <hr>
+    <div class="save-card">
+      <h3>Flugkurs speichern</h3>
+      <p>Die Drohne ist sicher gelandet. Gib dem Flug einen Namen:</p>
+
+      <form [formGroup]="saveForm" (ngSubmit)="onSaveFlight()" class="header-form">
+        <input
+          type="text"
+          formControlName="courseName"
+          placeholder="z.B. Testflug Wohnzimmer">
+
+        <button
+          type="submit"
+          class="btn-primary-windows"
+          [disabled]="saveForm.invalid">
+          Speichern & Beenden
+        </button>
+      </form>
+
+      <button class="btn-link" (click)="droneService.setLanded(false)">
+        Abbrechen
+      </button>
+    </div>
   </div>
 
 </div>

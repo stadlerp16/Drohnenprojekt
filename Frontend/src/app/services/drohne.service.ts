@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {BehaviorSubject, Observable, tap} from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class DroneService {
@@ -12,8 +12,20 @@ export class DroneService {
 
   isAutoFlight = false;
   selectedAutoFlight: string | null = null;
+  public isLanded$ = new BehaviorSubject<boolean>(false);
+  public activeIp: string | null = null;
+
 
   constructor(private http: HttpClient) {}
+
+  saveFlightCourse(payload: any) {
+    // Die eigentliche API-Logik bleibt hier
+    return this.http.post('deine-api/save-flight', payload);
+  }
+
+  setLanded(value: boolean) {
+    this.isLanded$.next(value);
+  }
 
   sendIpAddress(ip: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/connect`, { ip });
@@ -35,7 +47,7 @@ export class DroneService {
   }
 
   // --- Methode zum Speichern des Flugkurses ---
-  saveFlight(payload: { ip: string, courseName: string }): Observable<any> {
+  saveFlight(payload: { ip: string | null; courseName: string }): Observable<any> {
     return this.http.post(`${this.baseUrl}/save-course`, payload);
   }
 

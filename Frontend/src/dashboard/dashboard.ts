@@ -1,31 +1,42 @@
-import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DroneService } from '../app/services/drohne.service';
 import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AsyncPipe, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [],
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    NgIf,
+    AsyncPipe
+  ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
-export class Dashboard implements OnDestroy , OnInit {
+export class Dashboard implements OnDestroy, OnInit {
   @ViewChild('leftStick') leftStick?: ElementRef;
   @ViewChild('rightStick') rightStick?: ElementRef;
   @ViewChild('leftJoy') leftJoy?: ElementRef;
   @ViewChild('rightJoy') rightJoy?: ElementRef;
 
+  // Flug-Status
   isFlying: boolean = true;
   isFlightActive: boolean = false;
   private socket: WebSocket | null = null;
+
+  // Formular für das Speichern des Namens
+  saveForm: FormGroup;
 
   // JOYSTICK STATE
   private left = { x: 0, y: 0 };
   private right = { x: 0, y: 0 };
   private draggingSide: 'left' | 'right' | null = null;
-  private readonly RADIUS = 50; // Bewegungsradius in Pixeln
+  private readonly RADIUS = 50;
 
-  //CONTROLLER KONFIGURATION
+  // CONTROLLER KONFIGURATION
   private readonly DEADZONE = 0.08;
   private readonly SEND_HZ = 20;
   private readonly SEND_DT_MS = 1000 / this.SEND_HZ;
@@ -38,35 +49,93 @@ export class Dashboard implements OnDestroy , OnInit {
     "w", "a", "s", "d", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " ", "Space"
   ]);
 
-  constructor(protected droneService: DroneService, private router: Router) {}
+  constructor(
+    protected droneService: DroneService,
+    private router: Router,
+    private fb: FormBuilder
+  ) {
+    // Initialisierung des Formulars für die Namenseingabe nach der Landung
+    this.saveForm = this.fb.group({
+      courseName: ['', [Validators.required, Validators.minLength(2)]]
+    });
+  }
 
-  ngOnInit(){
+  ngOnInit() {
+    // Falls ein automatischer Flugkurs gewählt wurde, starte diesen
     if (this.droneService.isAutoFlight && this.droneService.selectedAutoFlight) {
       this.startAutoFlightFromSetup();
     } else {
+      // Ansonsten starte die normale WebSocket-Verbindung für manuelle Steuerung
       this.connectWebSocket();
     }
   }
 
+  // --- LANDEN & SPEICHERN LOGIK ---
+
+  /**
+   * Beendet den Flug physisch und triggert das UI zum Speichern des Namens
+   */
+  beendeFlugUndSpeichere() {
+    this.droneService.stopDrone().subscribe({
+      next: () => {
+        this.cleanUp(); // Verbindung trennen
+        this.droneService.setLanded(true); // Overlay in HTML anzeigen
+        console.log("Landung erfolgreich. Name für Flugkurs kann eingegeben werden.");
+      },
+      error: (err) => {
+        console.error("Fehler beim Landebefehl:", err);
+        // Fallback: Trotzdem Speichern-Dialog zeigen
+        this.cleanUp();
+        this.droneService.setLanded(true);
+      }
+    });
+  }
+
+  /**
+   * Sendet den eingegebenen Namen und die IP an das Backend
+   */
+  onSaveFlight() {
+    if (this.saveForm.invalid) return;
+
+    const courseName = this.saveForm.value.courseName;
+    const ip = this.droneService.activeIp;
+
+    if (ip) {
+      this.droneService.saveFlight({ ip, courseName }).subscribe({
+        next: () => {
+          console.log("Flugkurs erfolgreich gespeichert");
+          this.droneService.setLanded(false);
+          this.router.navigate(['/']); // Zurück zur Home-Seite
+        },
+        error: (err) => {
+          console.error("Speichern fehlgeschlagen", err);
+          alert("Fehler beim Speichern des Kurses.");
+        }
+      });
+    }
+  }
+
+  // --- FLUG MODI ---
+
   startAutoFlightFromSetup() {
     this.isFlightActive = true;
     this.droneService.playSavedFlight(this.droneService.selectedAutoFlight!).subscribe({
-      next: () => this.emergencyStop(), // Zurück zur Startseite wenn fertig
+      next: () => {
+        this.beendeFlugUndSpeichere(); // Nach Autopilot Speichern anbieten
+      },
       error: () => this.emergencyStop()
     });
   }
-  //WEBSOCKET LOGIK
 
   private connectWebSocket() {
-    const mode = this.droneService.selectedMode;
-    // Dynamischer Pfad: /keyboard oder /controller
+    const mode = this.droneService.selectedMode || 'controltouch';
     const WS_URL = `ws://localhost:8000/drone/${mode}`;
 
     this.socket = new WebSocket(WS_URL);
     this.socket.onopen = () => {
       console.log(`WS verbunden: ${mode}`);
       if (mode === 'controlps') {
-        this.startControllerLoop(); // Starte Polling wenn Controller gewählt
+        this.startControllerLoop();
       }
     };
     this.socket.onclose = () => this.stopControllerLoop();
@@ -77,6 +146,8 @@ export class Dashboard implements OnDestroy , OnInit {
       this.socket.send(JSON.stringify(data));
     }
   }
+
+  // --- JOYSTICK LOGIK ---
 
   startJoystick(event: MouseEvent | TouchEvent, side: 'left' | 'right') {
     event.preventDefault();
@@ -110,20 +181,16 @@ export class Dashboard implements OnDestroy , OnInit {
       dy *= this.RADIUS / dist;
     }
 
-    // Visuelle Bewegung
     stick.nativeElement.style.left = 50 + (dx / this.RADIUS) * 50 + "%";
     stick.nativeElement.style.top = 50 + (dy / this.RADIUS) * 50 + "%";
 
-    // Werte für Backend (-1 bis 1)
     state.x = dx / this.RADIUS;
     state.y = dy / this.RADIUS;
 
     if (this.droneService.selectedMode === 'controltouch') {
       this.sendData({
-        lx: this.left.x,
-        ly: this.left.y,
-        rx: this.right.x,
-        ry: this.right.y
+        lx: this.left.x, ly: this.left.y,
+        rx: this.right.x, ry: this.right.y
       });
     }
   }
@@ -141,22 +208,15 @@ export class Dashboard implements OnDestroy , OnInit {
       stick.nativeElement.style.top = "50%";
     }
 
-    state.x = 0;
-    state.y = 0;
+    state.x = 0; state.y = 0;
     this.draggingSide = null;
 
     if (this.droneService.selectedMode === 'controltouch') {
       this.sendData({ lx: 0, ly: 0, rx: 0, ry: 0 });
     }
   }
-  handleSpaceAction(isPressed: boolean) {
-    if (this.droneService.selectedMode !== 'controltouch') return;
-    if (!isPressed) return;
-    this.sendData({ takeoffLand: true });
-  }
 
-
-  //TASTATUR LOGIK
+  // --- TASTATUR LOGIK ---
 
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
@@ -164,7 +224,13 @@ export class Dashboard implements OnDestroy , OnInit {
       if (!this.allowedKeys.has(event.key)) return;
       event.preventDefault();
       if (event.repeat) return;
-      this.sendData({ key: event.key, pressed: true });
+
+      // Space-Taste zum Landen & Speichern nutzen
+      if (event.key === ' ' || event.key === 'Space') {
+        this.beendeFlugUndSpeichere();
+      } else {
+        this.sendData({ key: event.key, pressed: true });
+      }
     }
   }
 
@@ -177,61 +243,26 @@ export class Dashboard implements OnDestroy , OnInit {
     }
   }
 
-  //CONTROLLER LOGIK
+  // --- CONTROLLER LOGIK ---
 
   private startControllerLoop() {
     this.stopControllerLoop();
-
     const loop = () => {
       this.controllerLoopId = setTimeout(loop, this.SEND_DT_MS);
-
       if (!this.isFlying) return;
-      if (this.droneService.selectedMode !== 'controlps') return;
-
       const gp = this.getFirstGamepad();
       if (gp) this.processGamepadData(gp);
     };
-
     loop();
   }
 
-  @HostListener('window:gamepadconnected', ['$event'])
-  onGamepadConnected(event: GamepadEvent) {
-    this.gamepadConnected = true;
-    this.gamepadName = event.gamepad.id;
-    console.log('Gamepad connected:', event.gamepad.id, 'index', event.gamepad.index);
-  }
-
-  @HostListener('window:gamepaddisconnected', ['$event'])
-  onGamepadDisconnected(event: GamepadEvent): void {
-    this.gamepadConnected = false;
-    this.gamepadName = '';
-  }
-
-  private stopControllerLoop() {
-    if (this.controllerLoopId) {
-      clearTimeout(this.controllerLoopId);
-      this.controllerLoopId = null;
-    }
-  }
-
-  private getFirstGamepad(): Gamepad | null {
-    const gamepads = navigator.getGamepads?.() ?? [];
-    for (const gp of gamepads) {
-      if (gp && gp.connected) return gp;
-    }
-    return null;
-  }
-
   private processGamepadData(gp: Gamepad) {
-
     const dz = (v: number) => Math.abs(v) < this.DEADZONE ? 0 : v;
     const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 
     const lx = dz(gp.axes[0] ?? 0);
     const ly = dz(gp.axes[1] ?? 0);
     const rx = dz(gp.axes[2] ?? 0);
-
     const l2 = clamp01(gp.buttons[6]?.value ?? 0);
     const r2 = clamp01(gp.buttons[7]?.value ?? 0);
 
@@ -240,34 +271,42 @@ export class Dashboard implements OnDestroy , OnInit {
     if (xNow && !this.lastXPressed) takeoffLand = true;
     this.lastXPressed = xNow;
 
-
-
-    this.sendData({ lx, ly, rx, l2, r2, takeoffLand });
+    if (takeoffLand) {
+      this.beendeFlugUndSpeichere();
+    } else {
+      this.sendData({ lx, ly, rx, l2, r2, takeoffLand });
+    }
   }
 
-
-  startDrone() {
-    this.droneService.startDrone().subscribe({
-      next: () => {
-        this.isFlying = true;
-        this.connectWebSocket();
-      },
-      error: (err) => console.error('Start fehlgeschlagen:', err)
-    });
+  @HostListener('window:gamepadconnected', ['$event'])
+  onGamepadConnected(event: GamepadEvent) {
+    this.gamepadConnected = true;
+    this.gamepadName = event.gamepad.id;
   }
 
-  stopDrone() {
-    this.droneService.stopDrone().subscribe({
-      next: () => this.cleanUp(),
-      error: (err) => console.error('Stop fehlgeschlagen:', err)
-    });
+  @HostListener('window:gamepaddisconnected')
+  onGamepadDisconnected() {
+    this.gamepadConnected = false;
   }
+
+  private getFirstGamepad(): Gamepad | null {
+    const gamepads = navigator.getGamepads?.() ?? [];
+    for (const gp of gamepads) { if (gp && gp.connected) return gp; }
+    return null;
+  }
+
+  private stopControllerLoop() {
+    if (this.controllerLoopId) clearTimeout(this.controllerLoopId);
+  }
+
+  // --- ALLGEMEINE AKTIONEN ---
 
   emergencyStop() {
     this.droneService.emergencyStop().subscribe();
     this.cleanUp();
     this.droneService.isConnected = false;
     this.droneService.selectedMode = null;
+    this.droneService.setLanded(false);
     this.router.navigate(['/']);
   }
 
