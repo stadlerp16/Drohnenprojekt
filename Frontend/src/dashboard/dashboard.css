@@ -140,3 +140,115 @@ button:disabled {
   gap: 10px;
   align-items: center;
 }
+
+/* Das Hintergrund-Overlay (macht den Rest der App etwas dunkler) */
+.save-course-section {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Halbtransparenter schwarzer Hintergrund */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Ganz nach vorne */
+  backdrop-filter: blur(4px); /* Schicker Weichzeichner-Effekt */
+}
+
+/* Die eigentliche Karte in der Mitte */
+.save-card {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 450px;
+  text-align: center;
+  animation: slideIn 0.3s ease-out; /* Kleiner Einblende-Effekt */
+}
+
+.save-card h3 {
+  margin-top: 0;
+  color: #0078d4; /* Dein Windows-Blau */
+  font-size: 1.5rem;
+}
+
+.save-card p {
+  color: #444;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* Das Formular-Layout */
+.header-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.header-form input {
+  padding: 12px 15px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.header-form input:focus {
+  outline: none;
+  border-color: #0078d4;
+}
+
+/* Der primäre Button */
+.btn-primary-windows {
+  background-color: #0078d4;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary-windows:hover:not(:disabled) {
+  background-color: #005a9e;
+}
+
+.btn-primary-windows:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Der Abbrechen-Link */
+.btn-link {
+  margin-top: 15px;
+  background: none;
+  border: none;
+  color: #666;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.btn-link:hover {
+  color: #333;
+}
+
+/* Animation für das Erscheinen */
+@keyframes slideIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Trennlinie entfernen oder dezent stylen */
+hr {
+  display: none; /* Im Modal meistens nicht nötig */
+}
