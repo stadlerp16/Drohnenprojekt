@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from Routes.drohnenRoutes import router as drohnen_router
-from Services.drohneService import close
+from Services.drohneService import close, test_reconnect
 from Routes.steuerungRoutes import router as steuer_router
 from connect import init_db  # <-- NEU: Importiere die DB-Initialisierung
 
@@ -16,6 +16,7 @@ async def lifecycle(app: FastAPI):
     # START: Wird ausgeführt, wenn die FastAPI App hochfährt
     print("Starte MariaDB Initialisierung...")
     init_db()
+    test_reconnect()
     print("Datenbank bereit.")
 
     yield
@@ -42,4 +43,4 @@ app.include_router(steuer_router, prefix="/drone")
 if __name__ == "__main__":
     import uvicorn
     # Hier starten wir uvicorn programmatisch
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=False)
