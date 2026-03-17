@@ -17,6 +17,7 @@
   gap: 15px;
 }
 
+/* HEADER BAR */
 .header-bar {
   background: white;
   padding: 12px 20px;
@@ -28,16 +29,8 @@
   box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
-.header-title {
-  font-weight: 500;
-  color: #202020;
-}
-
-.header-form {
-  display: flex;
-  gap: 10px;
-}
-
+.header-title { font-weight: 500; color: #202020; }
+.header-form { display: flex; gap: 10px; }
 .header-form input {
   padding: 7px 12px;
   border: 1px solid #ccc;
@@ -55,48 +48,45 @@
   cursor: pointer;
 }
 
-.btn-primary-windows:hover:not(:disabled) { background-color: #005da6; }
-
-.device-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+/* GERÄTELISTE */
+.device-list { display: flex; flex-direction: column; gap: 8px; }
 
 .device-item {
   background: white;
   border: 1px solid #e5e5e5;
   border-radius: 4px;
-  padding: 12px 20px;
+  padding: 10px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+.empty-state { justify-content: center; color: #666; font-style: italic; }
+
 .device-info { display: flex; align-items: center; gap: 15px; }
-/* 1. Den Container für das Icon begrenzen */
+
 .device-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 45px;  /* Feste Breite für den Icon-Platz */
+  width: 45px;
   height: 40px;
   flex-shrink: 0;
 }
 
 .drone-svg {
-  width: 100%;      /* Nutzt die Breite des Icons */
-  max-width: 40px;  /* Begrenzt die tatsächliche Größe der Drohne */
+  width: 100%;
+  max-width: 40px;
   height: auto;
-  max-height: 30px; /* Verhindert, dass die Zeile wegen des Bildes dick wird */
+  max-height: 28px;
   object-fit: contain;
 }
-.device-details { display: flex; flex-direction: column; }
+
+.device-details { display: flex; flex-direction: column; line-height: 1.3; }
 .device-name { font-weight: 600; font-size: 0.95rem; }
 .device-status { font-size: 0.8rem; color: #666; }
 
-.device-actions { display: flex; align-items: center; }
-
+/* VERBINDEN / TRENNEN BUTTON (GRAU) */
 .btn-connect-list {
   background-color: #fdfdfd;
   border: 1px solid #ccc;
@@ -104,20 +94,16 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.85rem;
-  min-width: 90px;
-  transition: all 0.2s;
-}
-
-.btn-connect-list:hover:not(.active-conn) {
-  background-color: #f0f0f0;
+  min-width: 95px;
 }
 
 .btn-connect-list.active-conn {
-  background-color: #ff4d4d;
-  color: white;
-  border-color: #cc0000;
+  background-color: #e0e0e0;
+  color: #333;
+  border-color: #bbbbbb;
 }
 
+/* FLUG-STEUERUNG SEKTION */
 .test-steuerung {
   background: white;
   padding: 25px;
@@ -127,8 +113,9 @@
   flex-direction: column;
   gap: 20px;
   margin-top: 10px;
-  animation: fadeIn 0.3s ease-in-out;
 }
+
+.section-label { font-weight: 500; color: #444; }
 
 .mode-section {
   display: flex;
@@ -145,6 +132,7 @@
   background: transparent;
   cursor: pointer;
   border-radius: 6px;
+  transition: all 0.2s;
 }
 
 .mode-btn.active {
@@ -154,8 +142,45 @@
   font-weight: bold;
 }
 
-.btn-gruen {
-  background: #28a745;
+/* FLUG-LISTE (Nur Text + Balken links) */
+.flight-selection-container {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.flight-list-header {
+  background: #f0f0f0;
+  padding: 8px 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #666;
+  border-bottom: 1px solid #ddd;
+}
+
+.flight-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  transition: background 0.2s;
+}
+
+.flight-row:last-child { border-bottom: none; }
+.flight-row:hover { background-color: #f5f9ff; }
+
+.flight-row.active-flight {
+  background-color: #e5f1fb;
+  border-left: 4px solid #0067c0;
+}
+
+.flight-name { font-size: 0.9rem; color: #333; }
+.active-flight .flight-name { font-weight: 600; color: #0067c0; }
+
+/* WEITER BUTTON (BLAU) */
+.btn-primary-action {
+  background: #0067c0;
   color: white;
   border: none;
   padding: 15px;
@@ -165,18 +190,5 @@
   width: 100%;
 }
 
-.flight-list {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.flight-item {
-  border: 1px solid #ddd !important;
-  text-align: center;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+.btn-primary-action:hover:not(:disabled) { background: #005da6; }
+.btn-primary-action:disabled { background: #ccc; cursor: not-allowed; }

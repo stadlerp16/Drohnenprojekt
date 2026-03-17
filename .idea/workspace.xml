@@ -5,10 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="test von Flugkurs">
-      <change afterPath="$PROJECT_DIR$/Frontend/public/telloDrone.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/Services/drohneService.py" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/Services/drohneService.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/src/home/home.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/home/home.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/src/home/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/home/home.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/src/home/home.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/home/home.ts" afterDir="false" />
@@ -34,7 +34,7 @@
     </favorite-branches>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="Mario" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />

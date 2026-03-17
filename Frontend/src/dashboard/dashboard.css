@@ -1,142 +1,110 @@
-.test-steuerung {
+/* Layout Basis */
+.dashboard-page {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 25px;
-  padding: 40px;
+  min-height: 100vh;
+  background-color: #f3f3f3;
+  padding: 0;
+  margin: 0;
+}
+
+/* Neuer Header Bereich */
+.dashboard-header {
+  width: 100%;
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  min-width: 400px;
+  padding: 30px 0;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
-/* Modus-Sektion */
-.mode-section {
-  display: flex;
-  gap: 10px;
-  background-color: #f8f9fa;
-  padding: 5px;
-  border-radius: 8px;
+.header-content h1 {
+  margin: 5px 0;
+  font-size: 2rem;
+  color: #202020;
 }
 
-.mode-btn {
-  padding: 10px 25px !important;
-  font-size: 14px !important;
-  background-color: transparent !important;
-  color: #666 !important;
-  border-radius: 6px !important;
-  transition: all 0.2s ease;
+.flight-title {
+  color: #007bff !important; /* Blau für den Flugkurs */
+  font-weight: 800;
 }
 
-.mode-btn.active {
-  background-color: white !important;
-  color: #007bff !important;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+.mode-label, .mode-text {
+  font-size: 0.9rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Autopilot Badge */
+.status-badge {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 5px 15px;
+  background: #e7f3ff;
+  color: #007bff;
+  border-radius: 20px;
   font-weight: bold;
+  font-size: 0.8rem;
 }
 
-.button-row {
+.pulse {
+  animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+/* Joysticks (bleiben gleich) */
+.joystick-main-container {
+  flex: 1;
   display: flex;
+  align-items: center;
+}
+
+/* Unterer Bereich (Emergency etc) */
+.bottom-section {
+  padding: 40px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 20px;
 }
 
-.test-steuerung button {
-  padding: 18px 45px;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  border: none;
-  border-radius: 10px;
-  color: white;
-  transition: opacity 0.2s, transform 0.1s;
-}
-
-.test-steuerung button:active {
-  transform: scale(0.98);
-}
-
-.btn-gruen { background-color: #28a745; }
-.btn-rot { background-color: #dc3545; }
 .btn-emergency {
-  background-color: #6c757d;
-  font-size: 14px !important;
-  padding: 10px 20px !important;
-  margin-top: 10px;
+  background-color: #dc3545 !important; /* Rot für Notfall */
+  padding: 15px 40px !important;
+  font-size: 16px !important;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
-/* Disabled State */
-button:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-  filter: grayscale(1);
+/* Hilfsklassen für Controller Status */
+.controller-status {
+  background: white;
+  padding: 15px 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  text-align: center;
 }
 
-.joystick-wrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 100px;
-  width: 100%;
-  margin: 40px 0;
-  padding: 20px;
-}
+.status-ok { color: #28a745; font-weight: bold; }
+.status-err { color: #dc3545; font-weight: bold; }
 
-.joystick {
-  position: relative;
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  border: 3px solid #dee2e6;
-  background: #f8f9fa;
-  touch-action: none;
-}
-
-.joystick,
-.stick,
-.joystick-main-container {
-  touch-action: none;
-}
-
-
-.stick {
-  position: absolute;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: #0a84ff;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  cursor: grab;
-  z-index: 10;
-}
-
-.stick:active {
-  cursor: grabbing;
-  background: #007aff;
-}
-
-/* Der Takeoff/Land Button (simuliert Leertaste) */
-.space-btn {
-  background-color: #f39c12 !important; /* Orange/Gold Farbe */
-  height: 60px;
-  font-size: 14px;
-  border: 2px solid rgba(0,0,0,0.1);
-  box-shadow: 0 4px 0 #d35400; /* Kleiner 3D-Effekt */
-}
-
-.space-btn:active {
-  transform: translateY(2px);
-  box-shadow: 0 2px 0 #d35400;
-  background-color: #e67e22 !important;
-}
-
-/* Anpassung der Steuerungssäule */
-.joystick-controls {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: center;
-}
+/* DEINE BESTEHENDEN JOYSTICK STYLES (hier einfügen oder beibehalten) */
+.joystick-wrapper { display: flex; gap: 100px; }
+.joystick { position: relative; width: 160px; height: 160px; border-radius: 50%; border: 3px solid #dee2e6; background: #f8f9fa; touch-action: none; }
+.stick { position: absolute; width: 60px; height: 60px; border-radius: 50%; background: #0a84ff; left: 50%; top: 50%; transform: translate(-50%, -50%); cursor: grab; }
+.space-btn { background-color: #f39c12 !important; height: 60px; color: white; border-radius: 8px; font-weight: bold; }
+.joystick-controls { display: flex; flex-direction: column; gap: 10px; }
+.btn-joy { padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; color: white; }
+.btn-joy.start { background-color: #28a745; }
+.btn-joy.stop { background-color: #dc3545; }

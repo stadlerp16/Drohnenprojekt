@@ -50,9 +50,16 @@ export class Dashboard implements OnDestroy , OnInit {
 
   startAutoFlightFromSetup() {
     this.isFlightActive = true;
+    // Wir rufen nur das Backend auf, ohne das Ergebnis direkt mit emergencyStop zu verknüpfen
     this.droneService.playSavedFlight(this.droneService.selectedAutoFlight!).subscribe({
-      next: () => this.emergencyStop(), // Zurück zur Startseite wenn fertig
-      error: () => this.emergencyStop()
+      next: (res) => {
+        console.log('Autopilot gestartet:', res);
+        // HIER NICHT emergencyStop() aufrufen!
+      },
+      error: (err) => {
+        console.error('Fehler beim Start der Route:', err);
+        // Optional: Hier eine Fehlermeldung anzeigen, statt direkt abzubrechen
+      }
     });
   }
   //WEBSOCKET LOGIK
