@@ -1,9 +1,25 @@
 <div class="dashboard-page">
 
-  @if (droneService.selectedMode === 'controltouch') {
+  <div class="dashboard-header">
+    @if (droneService.isAutoFlight) {
+      <div class="header-content autopilot">
+        <span class="mode-label">Aktiver Modus: Flugkurs</span>
+        <h1 class="flight-title">{{ droneService.selectedAutoFlight }}</h1>
+        <div class="status-badge pulse">Autopilot aktiv</div>
+      </div>
+    } @else {
+      <div class="header-content manual">
+        <h1>Steuerungs-Zentrale</h1>
+        <p class="mode-text">
+          Aktiver Modus: <strong>{{ droneService.selectedMode }}</strong>
+        </p>
+      </div>
+    }
+  </div>
+
+  @if (!droneService.isAutoFlight && droneService.selectedMode === 'controltouch') {
     <div class="joystick-main-container">
       <div class="joystick-wrapper">
-
         <div class="joystick-container">
           <span class="joystick-label">Throttle / Yaw</span>
           <div class="joystick" #leftJoy (pointerdown)="startJoystick($event, 'left')">
@@ -12,25 +28,9 @@
         </div>
 
         <div class="joystick-controls">
-          <button
-            class="btn-joy start"
-            [disabled]="isFlying"
-            (click)="startJoystick($event, 'left')">
-            START
-          </button>
-
-          <button
-            class="btn-joy space-btn"
-            (click)="beendeFlugUndSpeichere()">
-            LANDEN & SPEICHERN
-          </button>
-
-          <button
-            class="btn-joy stop"
-            [disabled]="!isFlying"
-            (click)="stopJoystick()">
-            STOP MOTORS
-          </button>
+          <button class="btn-joy start" [disabled]="isFlying" (click)="startDrone()">START</button>
+          <button class="btn-joy space-btn" (pointerdown)="handleSpaceAction(true)">TAKEOFF / LAND</button>
+          <button class="btn-joy stop" [disabled]="!isFlying" (click)="stopDrone()">STOP</button>
         </div>
 
         <div class="joystick-container">
@@ -39,28 +39,21 @@
             <div class="stick" #rightStick></div>
           </div>
         </div>
-
       </div>
     </div>
   }
 
-  <div class="test-steuerung">
-    <h2>Steuerungs-Zentrale</h2>
-
-    @if (droneService.selectedMode === 'controlps'){
-      <div style="margin-top:20px; padding:15px; background:#f4f4f4; border-radius:8px;">
+  <div class="bottom-section">
+    @if (!droneService.isAutoFlight && droneService.selectedMode === 'controlps'){
+      <div class="controller-status">
         <h3>Controller Status</h3>
         @if (gamepadConnected) {
-          <p style="color:green;">✅ Verbunden: {{ gamepadName }}</p>
+          <p class="status-ok">✅ Verbunden: {{ gamepadName }}</p>
         } @else {
-          <p style="color:red;">❌ Kein Controller verbunden</p>
+          <p class="status-err">❌ Kein Controller verbunden</p>
         }
       </div>
     }
-
-    <p style="color: #666; font-size: 0.9rem;">
-      Aktiver Modus: <strong>{{ droneService.selectedMode }}</strong>
-    </p>
 
     <button class="btn-emergency" (click)="emergencyStop()">
       EMERGENCY STOP

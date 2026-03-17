@@ -13,18 +13,23 @@ import { DroneService } from '../app/services/drohne.service';
 })
 export class Home implements OnInit {
   ipForm: FormGroup;
-  isConnecting = false;
+
+  isAddingNew = false;
+  connectingIp: string | null = null;
+
   isConnected = false;
   static isLanded = true;
   activeIp: string | null = null;
 
   setupType: 'manual' | 'auto' | null = null;
-  savedFlights: string[] = [];
 
-  // Diese Liste würde normalerweise von droneService.getSavedDrones() kommen
+
+  savedFlights: string[] = [
+    'Viereck-Parcours (Wohnzimmer)',
+    "Servus"
+  ];
   savedDrones: any[] = [];
-
-
+  // Diese Liste würde normalerweise von droneService.getSavedDrones() kommen
 
   static getIsLanded(): boolean {
     return this.isLanded;
@@ -51,6 +56,7 @@ export class Home implements OnInit {
   onAddNewDevice() {
     if (this.ipForm.invalid) return;
     const ip = this.ipForm.value.droneIp;
+    this.isAddingNew = true;
     this.connectDrone(ip, true);
   }
 
@@ -58,18 +64,15 @@ export class Home implements OnInit {
     if (this.isConnected && this.activeIp === ip) {
       this.onDisconnect();
     } else {
+      this.connectingIp = ip;
       this.connectDrone(ip, false);
     }
   }
 
   private connectDrone(ip: string, isNew: boolean) {
-    this.isConnecting = true;
     this.droneService.sendIpAddress(ip).subscribe({
-      next: () => {
-        this.finishConnection(ip, isNew);
-      },
+      next: () => this.finishConnection(ip, isNew),
       error: () => {
-        // Fallback für Testzwecke
         console.warn('Backend nicht erreichbar - Simuliere Verbindung');
         this.finishConnection(ip, isNew);
       }
@@ -77,13 +80,13 @@ export class Home implements OnInit {
   }
 
   private finishConnection(ip: string, isNew: boolean) {
-    this.isConnecting = false;
+    this.isAddingNew = false;
+    this.connectingIp = null;
     this.isConnected = true;
     this.activeIp = ip;
 
     if (isNew && !this.savedDrones.find(d => d.ip === ip)) {
-      this.savedDrones.push({name: 'Neue Drohne', ip: ip});
-      // Hier optional: this.droneService.saveDeviceToDb({ip}).subscribe();
+      this.savedDrones.push({ name: 'Neue Tello Drohne', ip: ip });
     }
     this.ipForm.reset();
   }
@@ -103,8 +106,12 @@ export class Home implements OnInit {
   setSetupType(type: 'manual' | 'auto') {
     this.setupType = type;
     this.droneService.isAutoFlight = (type === 'auto');
-    this.droneService.selectedMode = null;
-    this.droneService.selectedAutoFlight = null;
+
+    if (type === 'auto') {
+      this.droneService.selectedMode = null;
+    } else {
+      this.droneService.selectedAutoFlight = null;
+    }
   }
 
   selectMode(mode: any) {
@@ -113,17 +120,46 @@ export class Home implements OnInit {
 
   selectFlight(name: string) {
     this.droneService.selectedAutoFlight = name;
-    this.droneService.selectedMode = 'controltouch';
+    this.droneService.selectedMode = null;
   }
 
   loadFlights() {
     this.droneService.getSavedFlights().subscribe(res => {
-      if (res?.ok) this.savedFlights = res.flights;
+      if (res?.ok && res.flights) {
+        // Bestehende Dummies behalten und neue vom Backend hinzufügen (ohne Dopplungen)
+        const combined = [...this.savedFlights, ...res.flights];
+        this.savedFlights = [...new Set(combined)];
+      }
     });
   }
 
   onContinue() {
-    if (this.droneService.selectedMode) this.router.navigate(['/control']);
+    if (this.setupType === 'manual') {
+      if (this.droneService.selectedMode) {
+        this.droneService.isAutoFlight = false;
+        this.droneService.isConnected = true;
+        this.router.navigate(['/control']);
+      }
+    }
+    else if (this.setupType === 'auto') {
+      const flightName = this.droneService.selectedAutoFlight;
+
+      if (flightName) {
+        this.droneService.isAutoFlight = true;
+        this.droneService.isConnected = true;
+
+        this.droneService.playSavedFlight(flightName).subscribe({
+          next: () => {
+            console.log('Route erfolgreich gestartet');
+            this.router.navigate(['/control']);
+          },
+          error: (err) => {
+            console.error('Backend Fehler beim Play, navigiere trotzdem...', err);
+            this.router.navigate(['/control']);
+          }
+        });
+      }
+    }
   }
 
   saveFlightCourse() {

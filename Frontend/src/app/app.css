@@ -14,7 +14,7 @@
 .setup-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 40px; /* Erzeugt den Abstand nach unten zwischen den Karten */
+  gap: 40px;
   align-items: center;
 }
 
@@ -57,7 +57,6 @@ form button {
   font-weight: bold;
 }
 
-/* --- DESIGN FÜR MODUS-WAHL & WEITER BUTTON --- */
 .test-steuerung {
   display: flex;
   flex-direction: column;
@@ -96,7 +95,6 @@ form button {
   color: #333;
 }
 
-/* Modus-Sektion (Umschalter Design) */
 .mode-section {
   display: flex;
   gap: 15px;
@@ -123,7 +121,7 @@ form button {
   font-weight: bold;
 }
 
-/* Weiter-Button Design */
+
 .button-row {
   width: 100%;
   display: flex;
@@ -147,7 +145,7 @@ form button {
   transform: scale(0.97);
 }
 
-/* Globaler Disabled-State für alle Buttons */
+
 button:disabled {
   background-color: #ccc !important;
   opacity: 0.5;
@@ -161,7 +159,7 @@ button:disabled {
   margin-top: -10px;
 }
 
-/* Sanftes Einblenden der zweiten Karte */
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
