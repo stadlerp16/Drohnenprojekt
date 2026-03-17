@@ -131,26 +131,20 @@ export class Home implements OnInit {
       if (this.droneService.selectedMode) {
         this.droneService.isAutoFlight = false;
         this.droneService.isConnected = true;
+        // WICHTIG: Prüfe ob deine Route '/control' oder '/dashboard' heißt!
         this.router.navigate(['/control']);
       }
     }
     else if (this.setupType === 'auto') {
       const flightName = this.droneService.selectedAutoFlight;
-
       if (flightName) {
+        // Wir setzen NUR die Variablen im Service
         this.droneService.isAutoFlight = true;
         this.droneService.isConnected = true;
 
-        this.droneService.playSavedFlight(flightName).subscribe({
-          next: () => {
-            console.log('Route erfolgreich gestartet');
-            this.router.navigate(['/control']);
-          },
-          error: (err) => {
-            console.error('Backend Fehler beim Play, navigiere trotzdem...', err);
-            this.router.navigate(['/control']);
-          }
-        });
+        // Wir navigieren NUR. Der Befehl wird erst im Dashboard gefeuert.
+        console.log('Navigiere zum Dashboard, Autopilot wird dort gestartet...');
+        this.router.navigate(['/control']);
       }
     }
   }

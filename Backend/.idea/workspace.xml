@@ -5,13 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="26b6f950-785b-47a4-9c2f-9295330bdc85" name="Changes" comment="test">
-      <change afterPath="$PROJECT_DIR$/../Frontend/public/telloDrone.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/drohneService.py" beforeDir="false" afterPath="$PROJECT_DIR$/Services/drohneService.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/home/home.css" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/home/home.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/home/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/home/home.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/home/home.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/home/home.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,12 +34,12 @@
     &quot;assignee&quot;: &quot;SimLan16&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/stadlerp16/Drohnenprojekt.git",
-    "accountId": "1978b089-0d8e-42b3-96e0-deda842a48c7"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/stadlerp16/Drohnenprojekt.git&quot;,
+    &quot;accountId&quot;: &quot;1978b089-0d8e-42b3-96e0-deda842a48c7&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
