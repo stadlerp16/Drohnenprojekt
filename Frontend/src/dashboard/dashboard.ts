@@ -104,7 +104,7 @@ export class Dashboard implements OnDestroy , OnInit {
         next: () => {
           console.log("Flugkurs erfolgreich gespeichert");
           this.droneService.setLanded(false);
-          this.router.navigate(['/']); // Zurück zur Home-Seite
+          this.router.navigate(['']); // Zurück zur Home-Seite
         },
         error: (err) => {
           console.error("Speichern fehlgeschlagen", err);
@@ -125,18 +125,13 @@ export class Dashboard implements OnDestroy , OnInit {
       },
       error: (err) => {
         console.error('Fehler beim Start der Route:', err);
-      },
-      next: () => {
-        this.beendeFlugUndSpeichere(); // Nach Autopilot Speichern anbieten
-      },
-      error: () => this.emergencyStop()
+      }
     });
   }
 
   //WEBSOCKET LOGIK
 
   private connectWebSocket() {
-    const mode = this.droneService.selectedMode;
     // Dynamischer Pfad: /keyboard oder /controller oder Joysticks
     const mode = this.droneService.selectedMode || 'controltouch';
     const WS_URL = `ws://localhost:8000/drone/${mode}`;
@@ -287,11 +282,7 @@ export class Dashboard implements OnDestroy , OnInit {
     console.log('Gamepad connected:', event.gamepad.id, 'index', event.gamepad.index);
   }
 
-  @HostListener('window:gamepaddisconnected', ['$event'])
-  onGamepadDisconnected(event: GamepadEvent): void {
-    this.gamepadConnected = false;
-    this.gamepadName = '';
-  }
+
 
   private stopControllerLoop() {
     if (this.controllerLoopId) {
@@ -332,11 +323,6 @@ export class Dashboard implements OnDestroy , OnInit {
     }
   }
 
-  @HostListener('window:gamepadconnected', ['$event'])
-  onGamepadConnected(event: GamepadEvent) {
-    this.gamepadConnected = true;
-    this.gamepadName = event.gamepad.id;
-  }
 
   startDrone() {
     this.droneService.startDrone().subscribe({
@@ -353,10 +339,7 @@ export class Dashboard implements OnDestroy , OnInit {
       next: () => this.cleanUp(),
       error: (err) => console.error('Stop fehlgeschlagen:', err)
     });
-  }
-
-  private stopControllerLoop() {
-    if (this.controllerLoopId) clearTimeout(this.controllerLoopId);
+    this.droneService.setLanded(true);
   }
 
   // --- ALLGEMEINE AKTIONEN ---

@@ -31,6 +31,7 @@
           <button class="btn-joy start" [disabled]="isFlying" (click)="startDrone()">START</button>
           <button class="btn-joy space-btn" (pointerdown)="handleSpaceAction(true)">TAKEOFF / LAND</button>
           <button class="btn-joy stop" [disabled]="!isFlying" (click)="stopDrone()">STOP</button>
+
         </div>
 
         <div class="joystick-container">
