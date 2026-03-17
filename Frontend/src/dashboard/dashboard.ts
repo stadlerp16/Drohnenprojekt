@@ -40,23 +40,30 @@ export class Dashboard implements OnDestroy , OnInit {
 
   constructor(protected droneService: DroneService, private router: Router) {}
 
-  ngOnInit(){
-    if (this.droneService.isAutoFlight && this.droneService.selectedAutoFlight) {
-      this.startAutoFlightFromSetup();
-    } else {
-      this.connectWebSocket();
-    }
+  ngOnInit() {
+    // Wir warten einen winzigen Moment, bis die Seite stabil geladen ist
+    setTimeout(() => {
+      if (this.droneService.isAutoFlight && this.droneService.selectedAutoFlight) {
+        this.startAutoFlightFromSetup();
+      } else {
+        this.connectWebSocket();
+      }
+    }, 300);
   }
 
   startAutoFlightFromSetup() {
+    console.log('Autopilot-Sequenz wird jetzt gefeuert...');
     this.isFlightActive = true;
-    // Wir rufen nur das Backend auf, ohne das Ergebnis direkt mit emergencyStop zu verknüpfen
+    this.isFlying = true; // Damit die UI den Flug-Status anzeigt
+
     this.droneService.playSavedFlight(this.droneService.selectedAutoFlight!).subscribe({
       next: (res) => {
-        console.log('Autopilot gestartet:', res);
+        console.log('Backend hat Flug erfolgreich gestartet:', res);
       },
       error: (err) => {
-        console.error('Fehler beim Start der Route:', err);
+        console.error('Konnte Route nicht starten:', err);
+        this.isFlying = false; // Zurücksetzen bei Fehler
+        this.isFlightActive = false;
       }
     });
   }
