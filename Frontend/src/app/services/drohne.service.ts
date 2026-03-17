@@ -18,9 +18,9 @@ export class DroneService {
 
   constructor(private http: HttpClient) {}
 
-  saveFlightCourse(payload: any) {
+  saveFlightCourse(name: any) {
     // Die eigentliche API-Logik bleibt hier
-    return this.http.post('deine-api/save-flight', payload);
+    return this.http.post(`${this.baseUrl}/save-flight`, { name });
   }
 
   setLanded(value: boolean) {
