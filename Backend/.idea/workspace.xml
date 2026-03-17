@@ -4,8 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26b6f950-785b-47a4-9c2f-9295330bdc85" name="Changes" comment="speicherung und abspielen der route">
+    <list default="true" id="26b6f950-785b-47a4-9c2f-9295330bdc85" name="Changes" comment="test">
+      <change afterPath="$PROJECT_DIR$/../Frontend/public/telloDrone.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/drohneService.py" beforeDir="false" afterPath="$PROJECT_DIR$/Services/drohneService.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/src/home/home.css" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/home/home.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/src/home/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/home/home.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/src/home/home.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/home/home.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,12 +39,12 @@
     &quot;assignee&quot;: &quot;SimLan16&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/stadlerp16/Drohnenprojekt.git&quot;,
-    &quot;accountId&quot;: &quot;833642a4-41db-4f43-a67c-8f86849f90e4&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/stadlerp16/Drohnenprojekt.git",
+    "accountId": "1978b089-0d8e-42b3-96e0-deda842a48c7"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -49,17 +55,13 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Docker.docker-compose.yml: Compose Deployment.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "Python.connect.executor": "Run",
     "Python.main.executor": "Run",
-    "Python.quick_test.executor": "Run",
-    "Python.replayService.executor": "Run",
-    "Python.setup_drone_wifi.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "Mario",
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "C:/Users/RechenzentrumGastein/Projekte/SYP/DrohnenProjekt/Drohnenprojekt/Backend",
     "node.js.detected.package.eslint": "true",
@@ -68,18 +70,8 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
-  },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mariadb"
-    ]
   }
 }]]></component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\RechenzentrumGastein\Projekte\SYP\DrohnenProjekt\Drohnenprojekt\Backend" />
-    </key>
-  </component>
   <component name="RunManager">
     <configuration default="true" type="DjangoTestsConfigurationType">
       <module name="Backend" />
@@ -100,6 +92,20 @@
       <option name="CUSTOM_SETTINGS" value="false" />
       <option name="USE_OPTIONS" value="false" />
       <option name="OPTIONS" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="Python.FlaskServer">
+      <module name="Backend" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="launchJavascriptDebuger" value="false" />
       <method v="2" />
     </configuration>
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
@@ -123,20 +129,6 @@
       <option name="MODULE_MODE" value="false" />
       <option name="REDIRECT_INPUT" value="false" />
       <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="Python.FlaskServer">
-      <module name="Backend" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="launchJavascriptDebuger" value="false" />
       <method v="2" />
     </configuration>
     <configuration default="true" type="Tox" factoryName="Tox">
@@ -226,7 +218,6 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-b598e85cdad2-JavaScript-PY-252.25557.178" />
         <option value="bundled-python-sdk-ce6832f46686-7b97d883f26b-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.25557.178" />
       </set>
     </attachedChunks>
@@ -265,28 +256,13 @@
       <workItem from="1770192064485" duration="1868000" />
       <workItem from="1770193957841" duration="7000" />
       <workItem from="1770194014010" duration="287000" />
-      <workItem from="1770195154466" duration="257000" />
-      <workItem from="1770195441514" duration="167000" />
-      <workItem from="1770195640529" duration="799000" />
-      <workItem from="1770196454360" duration="471000" />
-      <workItem from="1770281725635" duration="371000" />
-      <workItem from="1770282113879" duration="1532000" />
-      <workItem from="1770283674767" duration="1659000" />
-      <workItem from="1770285362731" duration="482000" />
-      <workItem from="1770285869017" duration="242000" />
-      <workItem from="1770286133654" duration="89000" />
-      <workItem from="1770667212994" duration="383000" />
-      <workItem from="1770667609043" duration="430000" />
-      <workItem from="1771168872013" duration="1139000" />
-      <workItem from="1771170117351" duration="93000" />
-      <workItem from="1771492616378" duration="3654000" />
-      <workItem from="1771502254575" duration="594000" />
-      <workItem from="1771580261015" duration="7000" />
-      <workItem from="1772002765789" duration="3662000" />
-      <workItem from="1772091670801" duration="6021000" />
-      <workItem from="1772108844394" duration="215000" />
-      <workItem from="1773066244276" duration="11000" />
-      <workItem from="1773214333504" duration="5698000" />
+      <workItem from="1771493862767" duration="2403000" />
+      <workItem from="1771580316225" duration="19000" />
+      <workItem from="1771944327333" duration="1695000" />
+      <workItem from="1772002092096" duration="3355000" />
+      <workItem from="1772092003487" duration="5389000" />
+      <workItem from="1772178400267" duration="44000" />
+      <workItem from="1772208544195" duration="1736000" />
     </task>
     <task id="LOCAL-00001" summary="Grundlegende Ordnerstrukur und routing von main.py in die anderen Routes">
       <option name="closed" value="true" />
@@ -312,31 +288,7 @@
       <option name="project" value="LOCAL" />
       <updated>1769681839977</updated>
     </task>
-    <task id="LOCAL-00004" summary="DB speichert Flugrouten mit Namen">
-      <option name="closed" value="true" />
-      <created>1772092214719</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1772092214719</updated>
-    </task>
-    <task id="LOCAL-00005" summary="flugroute speichern und abspielen">
-      <option name="closed" value="true" />
-      <created>1772094642976</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1772094642976</updated>
-    </task>
-    <task id="LOCAL-00006" summary="speicherung und abspielen der route">
-      <option name="closed" value="true" />
-      <created>1772612045143</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1772612045143</updated>
-    </task>
-    <option name="localTasksCounter" value="7" />
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -346,16 +298,10 @@
     <MESSAGE value="Grundlegende Ordnerstrukur und routing von main.py in die anderen Routes" />
     <MESSAGE value="x" />
     <MESSAGE value="test" />
-    <MESSAGE value="DB speichert Flugrouten mit Namen" />
-    <MESSAGE value="flugroute speichern und abspielen" />
-    <MESSAGE value="speicherung und abspielen der route" />
-    <option name="LAST_COMMIT_MESSAGE" value="speicherung und abspielen der route" />
+    <option name="LAST_COMMIT_MESSAGE" value="test" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Backend$main.coverage" NAME="main Coverage Results" MODIFIED="1769077331138" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Backend$setup_drone_wifi.coverage" NAME="setup_drone_wifi Coverage Results" MODIFIED="1771168071455" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Backend$replayService.coverage" NAME="replayService Coverage Results" MODIFIED="1772610553405" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Services" />
-    <SUITE FILE_PATH="coverage/Backend$quick_test.coverage" NAME="quick_test Coverage Results" MODIFIED="1773218850041" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Backend$connect.coverage" NAME="connect Coverage Results" MODIFIED="1770285071005" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Backend$connect.coverage" NAME="connect Coverage Results" MODIFIED="1769592039458" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
