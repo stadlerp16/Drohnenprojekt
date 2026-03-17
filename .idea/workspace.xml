@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="verbesserung des Frontends und Struktur">
+    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="aufruf verbesserung">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/home/home.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/home/home.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -152,7 +149,7 @@
       <workItem from="1772749161402" duration="86000" />
       <workItem from="1772786555708" duration="23000" />
       <workItem from="1773214252939" duration="999000" />
-      <workItem from="1773760363552" duration="1551000" />
+      <workItem from="1773760363552" duration="2203000" />
     </task>
     <task id="LOCAL-00001" summary="Create Backend">
       <option name="closed" value="true" />
@@ -242,7 +239,15 @@
       <option name="project" value="LOCAL" />
       <updated>1773742034062</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="aufruf verbesserung">
+      <option name="closed" value="true" />
+      <created>1773761954884</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1773761954884</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -258,6 +263,7 @@
     <MESSAGE value="db weg" />
     <MESSAGE value="Frontend wieder herstellung, farben, dummy routen, auf autopilot" />
     <MESSAGE value="verbesserung des Frontends und Struktur" />
-    <option name="LAST_COMMIT_MESSAGE" value="verbesserung des Frontends und Struktur" />
+    <MESSAGE value="aufruf verbesserung" />
+    <option name="LAST_COMMIT_MESSAGE" value="aufruf verbesserung" />
   </component>
 </project>
