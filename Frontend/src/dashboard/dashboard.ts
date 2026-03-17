@@ -50,23 +50,28 @@ export class Dashboard implements OnDestroy , OnInit {
 
   startAutoFlightFromSetup() {
     this.isFlightActive = true;
+    // Wir rufen nur das Backend auf, ohne das Ergebnis direkt mit emergencyStop zu verknüpfen
     this.droneService.playSavedFlight(this.droneService.selectedAutoFlight!).subscribe({
-      next: () => this.emergencyStop(), // Zurück zur Startseite wenn fertig
-      error: () => this.emergencyStop()
+      next: (res) => {
+        console.log('Autopilot gestartet:', res);
+      },
+      error: (err) => {
+        console.error('Fehler beim Start der Route:', err);
+      }
     });
   }
-  //WEBSOCKET LOGIK
 
+  //WEBSOCKET LOGIK
   private connectWebSocket() {
     const mode = this.droneService.selectedMode;
-    // Dynamischer Pfad: /keyboard oder /controller
+    // Dynamischer Pfad: /keyboard oder /controller oder Joysticks
     const WS_URL = `ws://localhost:8000/drone/${mode}`;
 
     this.socket = new WebSocket(WS_URL);
     this.socket.onopen = () => {
       console.log(`WS verbunden: ${mode}`);
       if (mode === 'controlps') {
-        this.startControllerLoop(); // Starte Polling wenn Controller gewählt
+        this.startControllerLoop();
       }
     };
     this.socket.onclose = () => this.stopControllerLoop();

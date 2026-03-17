@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="db weg">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="verbesserung des Frontends und Struktur">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,6 +61,7 @@
     &quot;JavaScript Debug.app.html.executor&quot;: &quot;Run&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;Node.js.app.ts.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.dashboard.ts.executor&quot;: &quot;Run&quot;,
     &quot;Node.js.main.ts.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
@@ -68,7 +69,7 @@
     &quot;Vitest.app.spec.ts.executor&quot;: &quot;Run&quot;,
     &quot;git-widget-placeholder&quot;: &quot;Mario&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Mario/Projekt/Drohnenprojekt&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Mario/Projekt/Drohnenprojekt/Frontend/src/home&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -78,6 +79,14 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Mario\Projekt\Drohnenprojekt\Frontend\src\home" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Mario\Projekt\Drohnenprojekt\Frontend\public" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="Drohnenprojekt" />
@@ -131,6 +140,15 @@
       <workItem from="1771059446365" duration="3680000" />
       <workItem from="1771235639324" duration="5715000" />
       <workItem from="1771322160014" duration="1634000" />
+      <workItem from="1771577577029" duration="2320000" />
+      <workItem from="1772001685142" duration="1989000" />
+      <workItem from="1772092471611" duration="6200000" />
+      <workItem from="1772180394871" duration="21000" />
+      <workItem from="1772606571635" duration="1185000" />
+      <workItem from="1772607773950" duration="1259000" />
+      <workItem from="1772749161402" duration="86000" />
+      <workItem from="1772786555708" duration="23000" />
+      <workItem from="1773214252939" duration="999000" />
     </task>
     <task id="LOCAL-00001" summary="Create Backend">
       <option name="closed" value="true" />
@@ -204,7 +222,23 @@
       <option name="project" value="LOCAL" />
       <updated>1771323768115</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Frontend wieder herstellung, farben, dummy routen, auf autopilot">
+      <option name="closed" value="true" />
+      <created>1773741492144</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1773741492144</updated>
+    </task>
+    <task id="LOCAL-00011" summary="verbesserung des Frontends und Struktur">
+      <option name="closed" value="true" />
+      <created>1773742034062</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1773742034062</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -218,6 +252,8 @@
     <MESSAGE value="Verbesserung, des layouts und Änderung der Inhalten der Pfade" />
     <MESSAGE value="Hinzufügen von joySticks" />
     <MESSAGE value="db weg" />
-    <option name="LAST_COMMIT_MESSAGE" value="db weg" />
+    <MESSAGE value="Frontend wieder herstellung, farben, dummy routen, auf autopilot" />
+    <MESSAGE value="verbesserung des Frontends und Struktur" />
+    <option name="LAST_COMMIT_MESSAGE" value="verbesserung des Frontends und Struktur" />
   </component>
 </project>
