@@ -14,7 +14,6 @@ import { DroneService } from '../app/services/drohne.service';
 export class Home implements OnInit {
   ipForm: FormGroup;
 
-  // Getrennte Zustände für die Buttons
   isAddingNew = false;
   connectingIp: string | null = null;
 
@@ -24,7 +23,6 @@ export class Home implements OnInit {
 
   setupType: 'manual' | 'auto' | null = null;
 
-  // Deine Liste mit Dummies (wird durch loadFlights ergänzt)
   savedFlights: string[] = [
     'Viereck-Parcours (Wohnzimmer)',
     "Servus"
@@ -46,7 +44,7 @@ export class Home implements OnInit {
     this.loadFlights();
   }
 
-  // --- LOGIK FÜR GERÄTE ---
+  //LOGIK FÜR GERÄTE
 
   onAddNewDevice() {
     if (this.ipForm.invalid) return;
@@ -96,13 +94,12 @@ export class Home implements OnInit {
     });
   }
 
-  // --- NAVIGATION & FLUG-LOGIK ---
+  //NAVIGATION & FLUG-LOGIK
 
   setSetupType(type: 'manual' | 'auto') {
     this.setupType = type;
     this.droneService.isAutoFlight = (type === 'auto');
 
-    // Reset der Auswahl beim Umschalten
     if (type === 'auto') {
       this.droneService.selectedMode = null;
     } else {
@@ -116,7 +113,6 @@ export class Home implements OnInit {
 
   selectFlight(name: string) {
     this.droneService.selectedAutoFlight = name;
-    // WICHTIG: Kein selectedMode mehr setzen, damit wir wissen, dass es Auto ist!
     this.droneService.selectedMode = null;
   }
 
@@ -131,25 +127,20 @@ export class Home implements OnInit {
   }
 
   onContinue() {
-    // 1. MANUELLER MODUS
     if (this.setupType === 'manual') {
       if (this.droneService.selectedMode) {
         this.droneService.isAutoFlight = false;
-        // Wir setzen zur Sicherheit nochmal isConnected auf true,
-        // damit die Zielseite uns nicht direkt wieder rauswirft.
         this.droneService.isConnected = true;
         this.router.navigate(['/control']);
       }
     }
-    // 2. AUTOMATISCHER MODUS
     else if (this.setupType === 'auto') {
       const flightName = this.droneService.selectedAutoFlight;
 
       if (flightName) {
         this.droneService.isAutoFlight = true;
-        this.droneService.isConnected = true; // WICHTIG gegen den Redirect!
+        this.droneService.isConnected = true;
 
-        // Backend-Call: Wir sagen der Drohne, sie soll JETZT losfliegen
         this.droneService.playSavedFlight(flightName).subscribe({
           next: () => {
             console.log('Route erfolgreich gestartet');
@@ -157,7 +148,6 @@ export class Home implements OnInit {
           },
           error: (err) => {
             console.error('Backend Fehler beim Play, navigiere trotzdem...', err);
-            // Wir navigieren trotzdem, damit du siehst, ob es am Frontend liegt
             this.router.navigate(['/control']);
           }
         });

@@ -9,7 +9,6 @@
   margin: 0;
 }
 
-/* Neuer Header Bereich */
 .dashboard-header {
   width: 100%;
   background: white;
@@ -26,7 +25,7 @@
 }
 
 .flight-title {
-  color: #007bff !important; /* Blau für den Flugkurs */
+  color: #007bff !important;
   font-weight: 800;
 }
 
@@ -37,7 +36,6 @@
   letter-spacing: 1px;
 }
 
-/* Autopilot Badge */
 .status-badge {
   display: inline-block;
   margin-top: 10px;
@@ -59,14 +57,12 @@
   100% { opacity: 1; }
 }
 
-/* Joysticks (bleiben gleich) */
 .joystick-main-container {
   flex: 1;
   display: flex;
   align-items: center;
 }
 
-/* Unterer Bereich (Emergency etc) */
 .bottom-section {
   padding: 40px;
   width: 100%;
@@ -77,7 +73,7 @@
 }
 
 .btn-emergency {
-  background-color: #dc3545 !important; /* Rot für Notfall */
+  background-color: #dc3545 !important;
   padding: 15px 40px !important;
   font-size: 16px !important;
   color: white;
@@ -87,7 +83,6 @@
   font-weight: bold;
 }
 
-/* Hilfsklassen für Controller Status */
 .controller-status {
   background: white;
   padding: 15px 30px;
@@ -96,15 +91,70 @@
   text-align: center;
 }
 
-.status-ok { color: #28a745; font-weight: bold; }
-.status-err { color: #dc3545; font-weight: bold; }
+.status-ok {
+  color: #28a745;
+  font-weight: bold;
+}
 
-/* DEINE BESTEHENDEN JOYSTICK STYLES (hier einfügen oder beibehalten) */
-.joystick-wrapper { display: flex; gap: 100px; }
-.joystick { position: relative; width: 160px; height: 160px; border-radius: 50%; border: 3px solid #dee2e6; background: #f8f9fa; touch-action: none; }
-.stick { position: absolute; width: 60px; height: 60px; border-radius: 50%; background: #0a84ff; left: 50%; top: 50%; transform: translate(-50%, -50%); cursor: grab; }
-.space-btn { background-color: #f39c12 !important; height: 60px; color: white; border-radius: 8px; font-weight: bold; }
-.joystick-controls { display: flex; flex-direction: column; gap: 10px; }
-.btn-joy { padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; color: white; }
-.btn-joy.start { background-color: #28a745; }
-.btn-joy.stop { background-color: #dc3545; }
+.status-err {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.joystick-wrapper {
+  display: flex;
+  gap: 100px;
+}
+
+.joystick {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 3px solid #dee2e6;
+  background: #f8f9fa;
+  touch-action: none;
+}
+
+.stick {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #0a84ff;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  cursor: grab;
+}
+
+.space-btn {
+  background-color: #f39c12 !important;
+  height: 60px;
+  color: white;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+.joystick-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-joy {
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
+}
+
+.btn-joy.start {
+  background-color: #28a745;
+}
+
+.btn-joy.stop {
+  background-color: #dc3545;
+}
