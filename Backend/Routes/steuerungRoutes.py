@@ -1,30 +1,44 @@
+import asyncio
+import json
+from datetime import datetime, timedelta
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
-import Services.drohneService as ds
+from pydantic import BaseModel
 
+import Services.drohneService as ds
+import Services.replayService as rs
 from Services.controlServices import ControlSession
 from Services.keyboardSteuerung import set_key
 from Services.input_ps5 import set_gamepad
 from Services.input_touch import set_touch
-from connect import log_command  # <-- Import der Log-Funktion
+from connect import log_command, label_flight, get_all_flight_names
 
 router = APIRouter()
 
-_ALLOWED_KEYS = {
-    "w","a","s","d",
-    "ArrowUp","ArrowDown",
-    "ArrowLeft","ArrowRight",
-    "up","down","left","right",
-}
+# --- Status-Management ---
+is_logging_allowed = False
+current_flight_start = None
+last_completed_flight = {"start": None, "end": None}
+key_press_times = {}
 
+async def start_takeoff_timer(duration: float = 2.0):
+    global is_logging_allowed
+    is_logging_allowed = False
+    await asyncio.sleep(duration)
+    is_logging_allowed = True
+    print("[SYSTEM] Aufnahme gestartet!")
+
+class FlightRequest(BaseModel):
+    name: str
+
+_ALLOWED_KEYS = {"w", "a", "s", "d", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "up", "down", "left", "right"}
 _SPACE_KEYS = {" ", "Space", "Spacebar"}
 
 @router.websocket("/controlkeyboard")
 async def ws_keyboard(ws: WebSocket):
+    global is_logging_allowed, current_flight_start, last_completed_flight
     await ws.accept()
     if ds.ep_drone is None:
-        await ws.send_json({"ok": False, "error": "Drone not connected"})
-        await ws.close()
-        return
+        await ws.send_json({"ok": False, "error": "Drone not connected"}); await ws.close(); return
 
     session = ControlSession(hz=20)
     await session.start()
@@ -32,103 +46,110 @@ async def ws_keyboard(ws: WebSocket):
     try:
         while True:
             msg = await ws.receive_json()
-            key = msg.get("key")
-            pressed = bool(msg.get("pressed", False))
+            key, pressed = msg.get("key"), bool(msg.get("pressed", False))
 
             if key in _SPACE_KEYS and pressed:
                 ok = await session.takeoff_land()
-                # LOG: Takeoff/Land Event
-                log_command("FLIGHT_EVENT", "takeoff_land", source="keyboard")
-                await ws.send_json({"ok": ok})
+                if ok:
+                    log_command("FLIGHT_EVENT", "takeoff_land", source="keyboard")
+                    if not is_logging_allowed:
+                        current_flight_start = datetime.now()
+                        asyncio.create_task(start_takeoff_timer(2.0))
+                    else:
+                        is_logging_allowed = False
+                        last_completed_flight = {"start": current_flight_start, "end": datetime.now()}
+                        current_flight_start = None
                 continue
 
             if key in _ALLOWED_KEYS:
                 set_key(key, pressed)
-                # LOG: Nur loggen, wenn die Taste gedrückt wird (nicht beim Loslassen)
-                if pressed:
-                    log_command("KEYBOARD_MOVE", key, source="keyboard")
-
+                if is_logging_allowed:
+                    if pressed:
+                        if key not in key_press_times: key_press_times[key] = datetime.now()
+                    else:
+                        start_t = key_press_times.pop(key, None)
+                        if start_t:
+                            dur = (datetime.now() - start_t).total_seconds()
+                            log_command("KEYBOARD_DURATION", json.dumps({"key": key, "duration": dur}), source="keyboard")
             await ws.send_json({"ok": True})
-    except WebSocketDisconnect:
-        pass
-    finally:
-        await session.stop()
+    except WebSocketDisconnect: pass
+    finally: is_logging_allowed = False; await session.stop()
 
 @router.websocket("/controlps")
 async def ws_ps5(ws: WebSocket):
+    global is_logging_allowed, current_flight_start, last_completed_flight
     await ws.accept()
-    if ds.ep_drone is None:
-        await ws.send_json({"ok": False, "error": "Drone not connected"})
-        await ws.close()
-        return
-
-    session = ControlSession(hz=20)
-    await session.start()
-
+    session = ControlSession(hz=20); await session.start()
     try:
         while True:
             msg = await ws.receive_json()
-
             if msg.get("takeoffLand") is True:
                 ok = await session.takeoff_land()
-                log_command("FLIGHT_EVENT", "takeoff_land", source="ps5")
-                await ws.send_json({"ok": ok})
+                if ok:
+                    log_command("FLIGHT_EVENT", "takeoff_land", source="ps5")
+                    if not is_logging_allowed:
+                        current_flight_start = datetime.now()
+                        asyncio.create_task(start_takeoff_timer(2.0))
+                    else:
+                        is_logging_allowed = False
+                        last_completed_flight = {"start": current_flight_start, "end": datetime.now()}
+                        current_flight_start = None
                 continue
-
-            # Werte extrahieren
-            coords = {
-                "lx": float(msg.get("lx", 0.0)),
-                "ly": float(msg.get("ly", 0.0)),
-                "rx": float(msg.get("rx", 0.0)),
-                "l2": float(msg.get("l2", 0.0)),
-                "r2": float(msg.get("r2", 0.0)),
-            }
-
+            coords = {k: float(msg.get(k, 0.0)) for k in ["lx", "ly", "rx", "l2", "r2"]}
             set_gamepad(**coords)
-
-            # LOG: Nur loggen, wenn mindestens ein Stick/Trigger bewegt wird
-            if any(v != 0.0 for v in coords.values()):
+            if is_logging_allowed and any(abs(v) > 0.05 for v in coords.values()):
                 log_command("PS5_MOVE", coords, source="ps5")
-
-            await ws.send_json({"ok": True})
-    except WebSocketDisconnect:
-        pass
-    finally:
-        await session.stop()
-
+    except WebSocketDisconnect: pass
+    finally: await session.stop()
 
 @router.websocket("/controltouch")
 async def ws_touch(ws: WebSocket):
+    global is_logging_allowed, current_flight_start, last_completed_flight
     await ws.accept()
-
-    if ds.ep_drone is None:
-        await ws.send_json({"ok": False, "error": "Drone not connected"})
-        await ws.close()
-        return
-
-    session = ControlSession(hz=20)
-    await session.start()
-
+    session = ControlSession(hz=20); await session.start()
     try:
         while True:
             msg = await ws.receive_json()
-
-            #optional: Takeoff/Land vom Handy-UI Button
             if msg.get("takeoffLand") is True:
                 ok = await session.takeoff_land()
-                await ws.send_json({"ok": ok})
+                if ok:
+                    log_command("FLIGHT_EVENT", "takeoff_land", source="touch")
+                    if not is_logging_allowed:
+                        current_flight_start = datetime.now()
+                        asyncio.create_task(start_takeoff_timer(2.0))
+                    else:
+                        is_logging_allowed = False
+                        last_completed_flight = {"start": current_flight_start, "end": datetime.now()}
+                        current_flight_start = None
                 continue
+            coords = {k: float(msg.get(k, 0.0)) for k in ["lx", "ly", "rx", "ry"]}
+            set_touch(**coords)
+            if is_logging_allowed and any(abs(v) > 0.05 for v in coords.values()):
+                log_command("TOUCH_MOVE", coords, source="touch")
+    except WebSocketDisconnect: pass
+    finally: await session.stop()
 
-            set_touch(
-                lx=float(msg.get("lx", 0.0)),
-                ly=float(msg.get("ly", 0.0)),
-                rx=float(msg.get("rx", 0.0)),
-                ry=float(msg.get("ry", 0.0)),
-            )
+@router.post("/save-flight-name")
+async def save_flight_name(req: FlightRequest):
+    global last_completed_flight
+    s, e = last_completed_flight["start"], last_completed_flight["end"]
+    if s and e:
+        label_flight(s - timedelta(seconds=5), e + timedelta(seconds=1), req.name)
+        last_completed_flight = {"start": None, "end": None}
+        return {"ok": True, "message": f"Flug '{req.name}' gespeichert."}
+    return {"ok": False, "message": "Kein abgeschlossener Flug gefunden."}
 
-            await ws.send_json({"ok": True})
+@router.get("/flights")
+async def list_flights(): return {"ok": True, "flights": get_all_flight_names()}
 
-    except WebSocketDisconnect:
-        pass
-    finally:
-        await session.stop()
+@router.post("/play-flight")
+async def start_replay(req: FlightRequest):
+    if rs.active_replay_task and not rs.active_replay_task.done(): return {"ok": False}
+    rs.active_replay_task = asyncio.create_task(rs.play_flight(req.name))
+    return {"ok": True}
+
+@router.post("/emergency-stop")
+async def emergency():
+    if rs.active_replay_task: rs.active_replay_task.cancel()
+    rs.stop_drone_immediately()
+    return {"ok": True}
