@@ -4,14 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="Frontend wieder herstellung, farben, dummy routen, auf autopilot">
+    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="verbesserung des Frontends und Struktur">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/app/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/app/app.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/app/services/drohne.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/app/services/drohne.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/home/home.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/home/home.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/home/home.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/home/home.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -236,7 +230,15 @@
       <option name="project" value="LOCAL" />
       <updated>1773741492144</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="verbesserung des Frontends und Struktur">
+      <option name="closed" value="true" />
+      <created>1773742034062</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1773742034062</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -251,6 +253,7 @@
     <MESSAGE value="Hinzufügen von joySticks" />
     <MESSAGE value="db weg" />
     <MESSAGE value="Frontend wieder herstellung, farben, dummy routen, auf autopilot" />
-    <option name="LAST_COMMIT_MESSAGE" value="Frontend wieder herstellung, farben, dummy routen, auf autopilot" />
+    <MESSAGE value="verbesserung des Frontends und Struktur" />
+    <option name="LAST_COMMIT_MESSAGE" value="verbesserung des Frontends und Struktur" />
   </component>
 </project>
