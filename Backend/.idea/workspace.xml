@@ -213,6 +213,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
+        <option value="bundled-js-predefined-d6986cc7102b-b598e85cdad2-JavaScript-PY-252.25557.178" />
         <option value="bundled-python-sdk-ce6832f46686-7b97d883f26b-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.25557.178" />
       </set>
     </attachedChunks>
@@ -262,6 +263,7 @@
       <workItem from="1773398906155" duration="7000" />
       <workItem from="1773774068264" duration="1120000" />
       <workItem from="1773819637529" duration="604000" />
+      <workItem from="1773823982307" duration="1040000" />
     </task>
     <task id="LOCAL-00001" summary="Grundlegende Ordnerstrukur und routing von main.py in die anderen Routes">
       <option name="closed" value="true" />
