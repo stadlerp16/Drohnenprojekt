@@ -43,7 +43,7 @@ export class DroneService {
 
 
   playSavedFlight(flightName: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/play`, { name: flightName });
+    return this.http.post(`${this.baseUrl}/play-flight`, { name: flightName });
   }
 
   // --- Methode zum Speichern des Flugkurses ---

@@ -22,7 +22,6 @@ export class Dashboard implements OnDestroy , OnInit {
   @ViewChild('leftJoy') leftJoy?: ElementRef;
   @ViewChild('rightJoy') rightJoy?: ElementRef;
 
-  // Flug-Status
   isFlying: boolean = true;
   isFlightActive: boolean = false;
   private socket: WebSocket | null = null;
@@ -60,13 +59,15 @@ export class Dashboard implements OnDestroy , OnInit {
     });
   }
 
-  ngOnInit(){
-    if (this.droneService.isAutoFlight && this.droneService.selectedAutoFlight) {
-      this.startAutoFlightFromSetup();
-    } else {
-      // Ansonsten starte die normale WebSocket-Verbindung für manuelle Steuerung
-      this.connectWebSocket();
-    }
+  ngOnInit() {
+    // Wir warten einen winzigen Moment, bis die Seite stabil geladen ist
+    setTimeout(() => {
+      if (this.droneService.isAutoFlight && this.droneService.selectedAutoFlight) {
+        this.startAutoFlightFromSetup();
+      } else {
+        this.connectWebSocket();
+      }
+    }, 300);
   }
 
   // --- LANDEN & SPEICHERN LOGIK ---
@@ -117,21 +118,25 @@ export class Dashboard implements OnDestroy , OnInit {
   // --- FLUG MODI ---
 
   startAutoFlightFromSetup() {
+    console.log('Autopilot-Sequenz wird jetzt gefeuert...');
     this.isFlightActive = true;
-    // Wir rufen nur das Backend auf, ohne das Ergebnis direkt mit emergencyStop zu verknüpfen
+    this.isFlying = true; // Damit die UI den Flug-Status anzeigt
+
     this.droneService.playSavedFlight(this.droneService.selectedAutoFlight!).subscribe({
       next: (res) => {
-        console.log('Autopilot gestartet:', res);
+        console.log('Backend hat Flug erfolgreich gestartet:', res);
       },
       error: (err) => {
-        console.error('Fehler beim Start der Route:', err);
+        console.error('Konnte Route nicht starten:', err);
+        this.isFlying = false; // Zurücksetzen bei Fehler
+        this.isFlightActive = false;
       }
     });
   }
 
   //WEBSOCKET LOGIK
-
   private connectWebSocket() {
+
     // Dynamischer Pfad: /keyboard oder /controller oder Joysticks
     const mode = this.droneService.selectedMode || 'controltouch';
     const WS_URL = `ws://localhost:8000/drone/${mode}`;
@@ -282,7 +287,11 @@ export class Dashboard implements OnDestroy , OnInit {
     console.log('Gamepad connected:', event.gamepad.id, 'index', event.gamepad.index);
   }
 
-
+  @HostListener('window:gamepaddisconnected', ['$event'])
+  onGamepadDisconnected(event: GamepadEvent): void {
+    this.gamepadConnected = false;
+    this.gamepadName = '';
+  }
 
   private stopControllerLoop() {
     if (this.controllerLoopId) {
@@ -341,8 +350,6 @@ export class Dashboard implements OnDestroy , OnInit {
     });
     this.droneService.setLanded(true);
   }
-
-  // --- ALLGEMEINE AKTIONEN ---
 
   emergencyStop() {
     this.droneService.emergencyStop().subscribe();
