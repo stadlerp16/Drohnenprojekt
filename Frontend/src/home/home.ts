@@ -20,7 +20,7 @@ export class Home implements OnInit {
   isConnected = false;
   isLanded = false;
   activeIp: string | null = null;
-
+  ledMatrix: boolean[][] = Array.from({ length: 8 }, () => Array(8).fill(false));
   setupType: 'manual' | 'auto' | null = null;
 
   savedFlights: string[] = [
@@ -42,6 +42,17 @@ export class Home implements OnInit {
 
   ngOnInit() {
     this.loadFlights();
+  }
+
+  toggleLed(row: number, col: number) {
+    // Lokalen Status umschalten
+    this.ledMatrix[row][col] = !this.ledMatrix[row][col];
+
+    // Ans Backend senden
+    this.droneService.sendLedUpdate(row, col, this.ledMatrix[row][col]).subscribe({
+      next: () => console.log(`LED [${row},${col}] ist jetzt ${this.ledMatrix[row][col]}`),
+      error: (err) => console.error('Fehler beim Senden der LED-Daten', err)
+    });
   }
 
   //LOGIK FÜR GERÄTE
