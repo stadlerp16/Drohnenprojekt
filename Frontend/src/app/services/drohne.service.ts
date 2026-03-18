@@ -49,4 +49,8 @@ export class DroneService {
   emergencyStop(): Observable<any> {
     return this.http.post(`${this.baseUrl}/emergency`, {});
   }
+
+  updateLED(row: number, col: number, state: boolean): Observable<any> {
+    return this.http.post(`${this.baseUrl}/led`, { row, col, active: state });
+  }
 }

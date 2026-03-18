@@ -11,7 +11,7 @@
 
 .setup-wrapper {
   max-width: 1000px;
-  margin: 0 auto;
+  /*margin: 0 auto;*/
   display: flex;
   flex-direction: column;
   gap: 15px;

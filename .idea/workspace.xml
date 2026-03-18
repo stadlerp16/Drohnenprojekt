@@ -6,6 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="aufruf verbesserung">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/app/services/drohne.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/app/services/drohne.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/home/home.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/home/home.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -150,6 +152,8 @@
       <workItem from="1772786555708" duration="23000" />
       <workItem from="1773214252939" duration="999000" />
       <workItem from="1773760363552" duration="2203000" />
+      <workItem from="1773766450772" duration="1304000" />
+      <workItem from="1773823087591" duration="1382000" />
     </task>
     <task id="LOCAL-00001" summary="Create Backend">
       <option name="closed" value="true" />
