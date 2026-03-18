@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Body, HTTPException
 import ipaddress
 
+from starlette.websockets import WebSocket
+
 import Services.drohneService as drohne_service
 
 router = APIRouter()
