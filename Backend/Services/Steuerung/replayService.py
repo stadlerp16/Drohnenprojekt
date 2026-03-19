@@ -1,11 +1,11 @@
 import asyncio
 import json
 import Services.drohneService as ds
-from Services.keyboardSteuerung import set_key
-from Services.input_ps5 import set_gamepad
-from Services.input_touch import set_touch
-from Services.flightExekutor import set_rc
-from Services.controlServices import ControlSession
+from Services.Steuerung.keyboardSteuerung import set_key
+from Services.Steuerung.input_ps5 import set_gamepad
+from Services.Steuerung.input_touch import set_touch
+from Services.Steuerung.flightExekutor import set_rc
+from Services.Steuerung.controlServices import ControlSession
 from connect import get_commands_by_name
 
 active_replay_task = None
