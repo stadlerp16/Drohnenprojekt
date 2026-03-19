@@ -5,11 +5,11 @@ from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel
 
 import Services.drohneService as ds
-import Services.replayService as rs
-from Services.controlServices import ControlSession
-from Services.keyboardSteuerung import set_key
-from Services.input_ps5 import set_gamepad
-from Services.input_touch import set_touch
+import Services.Steuerung.replayService as rs
+from Services.Steuerung.controlServices import ControlSession
+from Services.Steuerung.keyboardSteuerung import set_key
+from Services.Steuerung.input_ps5 import set_gamepad
+from Services.Steuerung.input_touch import set_touch
 from connect import log_command, label_flight, get_all_flight_names
 
 router = APIRouter()

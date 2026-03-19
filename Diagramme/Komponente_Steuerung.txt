@@ -1,0 +1,86 @@
+@startuml
+title Komponentendiagramm - Drohnensteuerung Backend (final)
+
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam defaultTextAlignment center
+
+actor "Benutzer" as User
+
+package "Routes" {
+  component "Steuerung" as RoutesComp
+  node "steuerungRoutes.py\n(APIRouter + WebSocket)" as RoutesNode
+  RoutesComp --> RoutesNode
+}
+
+package "Services" {
+
+  package "steuerung" {
+
+    component "Replay" as Replay
+    node "replayService.py" as ReplayNode
+    Replay --> ReplayNode
+
+    component "ControlSession" as ControlSession
+    node "controlServices.py" as ControlNode
+    ControlSession --> ControlNode
+
+    component "Keyboardsteuerung" as Keyboard
+    node "keyboardSteuerung.py" as KeyboardNode
+    Keyboard --> KeyboardNode
+
+    component "PS5-Steuerung" as PS5
+    node "input_ps5.py" as PS5Node
+    PS5 --> PS5Node
+
+    component "Touch-Steuerung" as Touch
+    node "input_touch.py" as TouchNode
+    Touch --> TouchNode
+
+    component "FlightExecutor" as FlightExec
+    node "flightExekutor.py" as FlightNode
+    FlightExec --> FlightNode
+
+  }
+
+  component "DrohnenService" as DroneService
+  node "drohneService.py" as DroneServiceNode
+  DroneService --> DroneServiceNode
+}
+
+package "Persistenz" {
+  component "Logging" as Connect
+  node "connect.py\n(log_command,\nlabel_flight,\nget_all_flight_names)" as ConnectNode
+  Connect --> ConnectNode
+}
+
+database "Flugdatenbank" as DB
+component "Drohne" as Drone
+
+' --- Verbindungen ---
+User --> RoutesComp
+
+RoutesComp --> Keyboard
+RoutesComp --> PS5
+RoutesComp --> Touch
+RoutesComp --> ControlSession
+RoutesComp --> Replay
+RoutesComp --> Connect
+
+Replay --> ControlSession
+Replay --> Keyboard
+Replay --> PS5
+Replay --> Touch
+
+Keyboard --> FlightExec
+PS5 --> FlightExec
+Touch --> FlightExec
+ControlSession --> FlightExec
+
+FlightExec --> DroneService
+DroneService --> Drone
+
+Connect --> DB
+Replay --> DB
+
+@enduml

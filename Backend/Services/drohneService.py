@@ -4,6 +4,7 @@ import sys
 import threading
 import time
 from typing import Optional
+import math
 
 import robomaster
 from robomaster import robot
@@ -14,11 +15,10 @@ _restart_lock = threading.Lock()
 
 HOST = "127.0.0.1"
 PORT = 8000
-
 watchdog_running = False
 count = 0
 restart_in_progress = False
-
+current_drone_ip = None
 # Nur einmal beim Start auslesen und direkt entfernen
 AUTO_DRONE_IP = os.environ.pop("AUTOCONNECT_DRONE_IP", None)
 
@@ -137,11 +137,10 @@ def delayed_restart(target_drone_ip: Optional[str] = None, delay: float = 0.5):
 
 
 def buildconnection(drone_ip: str) -> bool:
-    global ep_drone, watchdog_running, count
+    global ep_drone, watchdog_running, count, current_drone_ip
 
     print("1")
 
-    # altes Verhalten beibehalten: zuerst sauber schließen
     close()
     print("2")
 
@@ -163,6 +162,7 @@ def buildconnection(drone_ip: str) -> bool:
             return False
 
         ep_drone = new_drone
+        current_drone_ip = drone_ip
         count = 0
 
         print("4")
@@ -180,24 +180,25 @@ def buildconnection(drone_ip: str) -> bool:
             print(f"Cleanup-Fehler: {cleanup_error}")
 
         ep_drone = None
+        current_drone_ip = None
         watchdog_running = False
         return False
 
 
 def close():
-    global ep_drone, watchdog_running
+    global ep_drone, watchdog_running, current_drone_ip
 
     print("5")
 
-    # verhindert parallele close()-Aufrufe
     with _close_lock:
         if ep_drone is None:
+            current_drone_ip = None
             return
 
         finished = threading.Event()
 
         def close_worker(drone_ref):
-            global ep_drone, watchdog_running
+            global ep_drone, watchdog_running, current_drone_ip
             try:
                 drone_ref.close()
                 watchdog_running = False
@@ -207,12 +208,12 @@ def close():
             finally:
                 if ep_drone is drone_ref:
                     ep_drone = None
+                current_drone_ip = None
                 finished.set()
 
         drone_ref = ep_drone
         threading.Thread(target=close_worker, args=(drone_ref,), daemon=True).start()
 
-    # wait außerhalb vom Lock
     if not finished.wait(timeout=5):
         print("close() hängt länger als 5 Sekunden -> restart_server()")
         restart_server()
@@ -286,3 +287,62 @@ def test_reconnect():
             print(f"[Startup] Auto reconnect Ergebnis: {success}")
         except Exception as e:
             print(f"Auto reconnect fehlgeschlagen: {e}")
+
+
+
+def get_telemetry() -> dict:
+    global ep_drone, current_drone_ip
+
+    if ep_drone is None:
+        return {
+            "connected": False,
+            "ip": None,
+            "battery": None,
+            "height": None,
+            "speed": None,
+            "pitch": None,
+            "roll": None,
+            "yaw": None,
+            "error": "Keine Drohne verbunden"
+        }
+
+    drone = ep_drone
+
+    def safe_status(name: str, default=None):
+        try:
+            return drone.get_status(name=name)
+        except Exception as e:
+            print(f"[Telemetry] Fehler bei {name}: {e}")
+            return default
+
+    battery = safe_status("bat")
+    height = safe_status("h")
+
+    pitch = safe_status("pitch")
+    roll = safe_status("roll")
+    yaw = safe_status("yaw")
+
+    vgx = safe_status("vgx", 0)
+    vgy = safe_status("vgy", 0)
+    vgz = safe_status("vgz", 0)
+
+    try:
+        speed = round(math.sqrt((vgx or 0) ** 2 + (vgy or 0) ** 2 + (vgz or 0) ** 2), 2)
+    except Exception:
+        speed = None
+
+    return {
+        "connected": True,
+        "ip": current_drone_ip,
+        "battery": battery,
+        "height": height,
+        "speed": speed,
+        "pitch": pitch,
+        "roll": roll,
+        "yaw": yaw,
+
+
+        "vgx": vgx,
+        "vgy": vgy,
+        "vgz": vgz
+    }

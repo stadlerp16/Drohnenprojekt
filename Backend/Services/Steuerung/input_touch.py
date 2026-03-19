@@ -1,4 +1,4 @@
-from Services.flightExekutor import set_rc
+from Services.Steuerung.flightExekutor import set_rc
 
 MOVE_SPEED = 40
 UP_SPEED = 40
