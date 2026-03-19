@@ -40,33 +40,45 @@ export class Dashboard implements OnDestroy , OnInit {
 
   constructor(protected droneService: DroneService, private router: Router) {}
 
-  ngOnInit(){
-    if (this.droneService.isAutoFlight && this.droneService.selectedAutoFlight) {
-      this.startAutoFlightFromSetup();
-    } else {
-      this.connectWebSocket();
-    }
+  ngOnInit() {
+    // Wir warten einen winzigen Moment, bis die Seite stabil geladen ist
+    setTimeout(() => {
+      if (this.droneService.isAutoFlight && this.droneService.selectedAutoFlight) {
+        this.startAutoFlightFromSetup();
+      } else {
+        this.connectWebSocket();
+      }
+    }, 300);
   }
 
   startAutoFlightFromSetup() {
+    console.log('Autopilot-Sequenz wird jetzt gefeuert...');
     this.isFlightActive = true;
+    this.isFlying = true; // Damit die UI den Flug-Status anzeigt
+
     this.droneService.playSavedFlight(this.droneService.selectedAutoFlight!).subscribe({
-      next: () => this.emergencyStop(), // Zurück zur Startseite wenn fertig
-      error: () => this.emergencyStop()
+      next: (res) => {
+        console.log('Backend hat Flug erfolgreich gestartet:', res);
+      },
+      error: (err) => {
+        console.error('Konnte Route nicht starten:', err);
+        this.isFlying = false; // Zurücksetzen bei Fehler
+        this.isFlightActive = false;
+      }
     });
   }
-  //WEBSOCKET LOGIK
 
+  //WEBSOCKET LOGIK
   private connectWebSocket() {
     const mode = this.droneService.selectedMode;
-    // Dynamischer Pfad: /keyboard oder /controller
+    // Dynamischer Pfad: /keyboard oder /controller oder Joysticks
     const WS_URL = `ws://localhost:8000/drone/${mode}`;
 
     this.socket = new WebSocket(WS_URL);
     this.socket.onopen = () => {
       console.log(`WS verbunden: ${mode}`);
       if (mode === 'controlps') {
-        this.startControllerLoop(); // Starte Polling wenn Controller gewählt
+        this.startControllerLoop();
       }
     };
     this.socket.onclose = () => this.stopControllerLoop();

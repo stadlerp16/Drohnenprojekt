@@ -31,15 +31,22 @@ export class DroneService {
 
 
   playSavedFlight(flightName: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/play`, { name: flightName });
+    return this.http.post(`${this.baseUrl}/play-flight`, { name: flightName });
   }
 
-  // --- Methode zum Speichern des Flugkurses ---
   saveFlight(payload: { ip: string, courseName: string }): Observable<any> {
     return this.http.post(`${this.baseUrl}/save-course`, payload);
   }
 
-  startDrone(): Observable<any> { return this.http.post(`${this.baseUrl}/start`, {}); }
-  stopDrone(): Observable<any> { return this.http.post(`${this.baseUrl}/stop`, {}); }
-  emergencyStop(): Observable<any> { return this.http.post(`${this.baseUrl}/emergency`, {}); }
+  startDrone(): Observable<any> {
+    return this.http.post(`${this.baseUrl}/start`, {});
+  }
+
+  stopDrone(): Observable<any> {
+    return this.http.post(`${this.baseUrl}/stop`, {});
+  }
+
+  emergencyStop(): Observable<any> {
+    return this.http.post(`${this.baseUrl}/emergency`, {});
+  }
 }
