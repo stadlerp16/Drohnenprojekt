@@ -30,8 +30,8 @@ export class Dashboard implements OnDestroy , OnInit {
   saveForm: FormGroup;
 
   // JOYSTICK STATE
-  private left = { x: 0, y: 0 };
-  private right = { x: 0, y: 0 };
+  private left = {x: 0, y: 0};
+  private right = {x: 0, y: 0};
   private draggingSide: 'left' | 'right' | null = null;
   private readonly RADIUS = 50; // Bewegungsradius in Pixeln
 
@@ -234,13 +234,14 @@ export class Dashboard implements OnDestroy , OnInit {
     this.draggingSide = null;
 
     if (this.droneService.selectedMode === 'controltouch') {
-      this.sendData({ lx: 0, ly: 0, rx: 0, ry: 0 });
+      this.sendData({lx: 0, ly: 0, rx: 0, ry: 0});
     }
   }
+
   handleSpaceAction(isPressed: boolean) {
     if (this.droneService.selectedMode !== 'controltouch') return;
     if (!isPressed) return;
-    this.sendData({ takeoffLand: true });
+    this.sendData({takeoffLand: true});
   }
 
 
@@ -248,6 +249,10 @@ export class Dashboard implements OnDestroy , OnInit {
 
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
+    // 1. WICHTIG: Wenn das Speicher-Pop-up offen ist, Steuerung ignorieren!
+    // Sonst löst jedes Leerzeichen im Namen eine Landung aus.
+    if (this.droneService.isLanded$.value) return;
+
     if (this.droneService.selectedMode !== 'controlkeyboard') return;
     if (!this.allowedKeys.has(event.key)) return;
 
@@ -256,31 +261,27 @@ export class Dashboard implements OnDestroy , OnInit {
 
     // SPACE LOGIK
     if (event.key === ' ' || event.key === 'Space') {
-
       if (!this.isFlying) {
-        // START
-        console.log("Starte Drohne");
-        this.sendData({ takeoffLand: true });
+        console.log("Starte Drohne...");
+        this.sendData({takeoffLand: true});
         this.isFlying = true;
-
       } else {
-        // LANDUNG
-        console.log("Lande Drohne");
-        this.sendData({ takeoffLand: true });
+        console.log("Lande Drohne...");
+        this.sendData({takeoffLand: true});
+        this.isFlying = false;
 
-        // kurze Verzögerung für echte Landung
+        // Verzögerung für echte Landung, dann Pop-up
         setTimeout(() => {
           this.beendeFlugUndSpeichere();
-        }, 2000); // ggf. anpassen
-
-        this.isFlying = false;
+        }, 2000);
       }
-
+      // WICHTIG: Hier beenden, damit kein zweiter Befehl gesendet wird!
       return;
     }
 
-    // normale Steuerung
-    this.sendData({ key: event.key, pressed: true });
+    // Normale Flug-Steuerung (w, a, s, d...)
+    // Das wird NUR ausgeführt, wenn es NICHT die Leertaste war
+    this.sendData({key: event.key, pressed: true});
   }
 
   @HostListener('window:keyup', ['$event'])
