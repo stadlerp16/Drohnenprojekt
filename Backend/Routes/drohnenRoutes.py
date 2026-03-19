@@ -1,5 +1,11 @@
+import asyncio
+
 from fastapi import APIRouter, Body, HTTPException
 import ipaddress
+
+from starlette.websockets import WebSocket, WebSocketDisconnect
+
+from starlette.websockets import WebSocket
 
 import Services.drohneService as drohne_service
 
@@ -66,3 +72,24 @@ def disconnect_drone():
         "status": "ok",
         "message": "Drohne wurde getrennt"
     }
+@router.websocket("/telemetrie")
+async def gettelemetrie(ws: WebSocket):
+    await ws.accept()
+    print("[WebSocket] Telemetrie verbunden")
+
+    try:
+        while True:
+            data = drohne_service.get_telemetry()
+            await ws.send_json(data)
+            await asyncio.sleep(0.5)  # alle 500 ms aktualisieren
+
+    except WebSocketDisconnect:
+        print("[WebSocket] Telemetrie getrennt")
+
+    except Exception as e:
+        print(f"[WebSocket] Fehler: {e}")
+        try:
+            await ws.close()
+        except Exception:
+            pass
+
