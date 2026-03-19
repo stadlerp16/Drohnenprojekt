@@ -20,12 +20,19 @@ export class Home implements OnInit {
   isConnected = false;
   isLanded = false;
   activeIp: string | null = null;
-  ledMatrix: boolean[][] = Array.from({ length: 8 }, () => Array(8).fill(false));
   setupType: 'manual' | 'auto' | null = null;
+  ledMatrix: boolean[][] = [
+    [true,  true,  true,  true,  true,  false,  false,  false],
+    [false, false, true,  false, false, false,  false, false],
+    [false, false, true,  true, true, true,  true, true],
+    [false, false, true,  false, false, true,  false, false],
+    [false, false, true,  false, false, true,  false, false],
+    [false, false, false, false, false, true, false, false],
+    [false, false, false, false, false, true, false, false],
+    [false, false, false, false, false, false, false, false]
+  ];
 
   savedFlights: string[] = [
-    'Viereck-Parcours (Wohnzimmer)',
-    "Servus"
   ];
   savedDrones: any[] = [];
 
@@ -53,6 +60,10 @@ export class Home implements OnInit {
       next: () => console.log(`LED [${row},${col}] ist jetzt ${this.ledMatrix[row][col]}`),
       error: (err) => console.error('Fehler beim Senden der LED-Daten', err)
     });
+  }
+  clearMatrix() {
+    // Geht durch jede Zeile und setzt alle Spalten auf false
+    this.ledMatrix.forEach(row => row.fill(false));
   }
 
   //LOGIK FÜR GERÄTE

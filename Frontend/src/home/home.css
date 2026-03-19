@@ -9,11 +9,9 @@
   box-sizing: border-box;
 }
 
-/* --- LAYOUT STEUERUNG --- */
-
 .main-layout {
   display: flex;
-  justify-content: center; /* Am Anfang zentriert */
+  justify-content: center;
   align-items: flex-start;
   gap: 30px;
   width: 100%;
@@ -22,21 +20,20 @@
 
 .setup-wrapper {
   width: 100%;
-  max-width: 1000px; /* Begrenzte Breite im zentrierten Modus */
+  max-width: 1000px;
   display: flex;
   flex-direction: column;
   gap: 15px;
   transition: all 0.5s ease-in-out;
 }
 
-/* Wenn verbunden: Split 75/25 */
 .main-layout.connected-view {
-  justify-content: flex-start; /* Schiebt alles nach links */
+  justify-content: flex-start;
 }
 
 .main-layout.connected-view .setup-wrapper {
   flex: 0 0 calc(75% - 30px);
-  max-width: none; /* Hebt Zentrierungs-Begrenzung auf */
+  max-width: none;
 }
 
 .led-area {
@@ -45,11 +42,15 @@
 }
 
 @keyframes slideIn {
-  from { opacity: 0; transform: translateX(30px); }
-  to { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
-
-/* --- KOMPONENTEN --- */
 
 .header-bar {
   background: white;
@@ -62,8 +63,16 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.header-title { font-weight: 500; color: #202020; }
-.header-form { display: flex; gap: 10px; }
+.header-title {
+  font-weight: 500;
+  color: #202020;
+}
+
+.header-form {
+  display: flex;
+  gap: 10px;
+}
+
 .header-form input {
   padding: 7px 12px;
   border: 1px solid #ccc;
@@ -81,8 +90,12 @@
   cursor: pointer;
 }
 
-/* GERÄTELISTE */
-.device-list { display: flex; flex-direction: column; gap: 8px; }
+.device-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .device-item {
   background: white;
   border: 1px solid #e5e5e5;
@@ -92,14 +105,50 @@
   justify-content: space-between;
   align-items: center;
 }
-.empty-state { justify-content: center; color: #666; font-style: italic; }
 
-.device-info { display: flex; align-items: center; gap: 15px; }
-.device-icon { width: 45px; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.drone-svg { width: 100%; max-width: 40px; height: auto; object-fit: contain; }
-.device-details { display: flex; flex-direction: column; line-height: 1.3; }
-.device-name { font-weight: 600; font-size: 0.95rem; }
-.device-status { font-size: 0.8rem; color: #666; }
+.empty-state {
+  justify-content: center;
+  color: #666;
+  font-style: italic;
+}
+
+.device-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.device-icon {
+  width: 45px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.drone-svg {
+  width: 100%;
+  max-width: 40px;
+  height: auto;
+  object-fit: contain;
+}
+
+.device-details {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+
+.device-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.device-status {
+  font-size: 0.8rem;
+  color: #666;
+}
 
 .btn-connect-list {
   background-color: #fdfdfd;
@@ -109,9 +158,12 @@
   cursor: pointer;
   min-width: 95px;
 }
-.btn-connect-list.active-conn { background-color: #e0e0e0; border-color: #bbbbbb; }
 
-/* STEUERUNG SEKTION */
+.btn-connect-list.active-conn {
+  background-color: #e0e0e0;
+  border-color: #bbbbbb;
+}
+
 .test-steuerung {
   background: white;
   padding: 25px;
@@ -123,11 +175,31 @@
   margin-top: 10px;
 }
 
-.mode-section { display: flex; gap: 10px; background: #f9f9f9; padding: 6px; border-radius: 8px; }
-.mode-btn { flex: 1; padding: 12px; border: none; background: transparent; cursor: pointer; border-radius: 6px; transition: all 0.2s; }
-.mode-btn.active { background: white; color: #0067c0; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); font-weight: bold; }
+.mode-section {
+  display: flex;
+  gap: 10px;
+  background: #f9f9f9;
+  padding: 6px;
+  border-radius: 8px;
+}
 
-/* --- LED MATRIX --- */
+.mode-btn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.mode-btn.active {
+  background: white;
+  color: #0067c0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+}
+
 .led-card {
   background: white;
   padding: 20px;
@@ -138,9 +210,26 @@
   box-sizing: border-box;
 }
 
-.led-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
-.led-badge { background: #eee; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
-.led-subtitle { font-size: 0.75rem; color: #888; margin-bottom: 15px; }
+.led-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.led-badge {
+  background: #eee;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+.led-subtitle {
+  font-size: 0.75rem;
+  color: #888;
+  margin-bottom: 15px;
+}
 
 .matrix-grid {
   display: flex;
@@ -151,7 +240,10 @@
   border-radius: 4px;
 }
 
-.matrix-row { display: flex; gap: 4px; }
+.matrix-row {
+  display: flex;
+  gap: 4px;
+}
 
 .led-pixel {
   flex: 1;
@@ -162,7 +254,6 @@
   transition: all 0.2s;
 }
 
-/* HOVER LOGIK */
 .led-pixel:hover {
   background-color: #ccc;
   transform: scale(1.1);
@@ -174,23 +265,86 @@
   box-shadow: 0 0 5px rgba(0, 103, 192, 0.5);
 }
 
-/* FIX: Wenn aktiv (blau), dann bleibt es beim Hovern blau (etwas heller) */
 .led-pixel.active:hover {
   background-color: #0078d4;
   box-shadow: 0 0 10px rgba(0, 103, 192, 0.8);
 }
 
-.matrix-footer { margin-top: 15px; font-size: 0.7rem; color: #999; }
-
-/* BUTTONS & LISTEN */
-.btn-primary-action {
-  background: #0067c0; color: white; border: none;
-  padding: 15px; border-radius: 6px; font-weight: bold;
-  cursor: pointer; width: 100%;
+.matrix-footer {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between; /* Schiebt Text nach links und Button nach rechts */
+  align-items: center;
+  font-size: 0.7rem;
+  color: #999;
 }
-.btn-primary-action:disabled { background: #ccc; cursor: not-allowed; }
 
-.flight-selection-container { border: 1px solid #ddd; border-radius: 4px; overflow: hidden; }
-.flight-list-header { background: #f0f0f0; padding: 8px 15px; font-size: 0.8rem; font-weight: 600; border-bottom: 1px solid #ddd; }
-.flight-row { display: flex; align-items: center; padding: 12px 15px; cursor: pointer; border-bottom: 1px solid #eee; }
-.flight-row.active-flight { background-color: #e5f1fb; border-left: 4px solid #0067c0; color: #0067c0; font-weight: 600; }
+.btn-primary-action {
+  background: #0067c0;
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn-primary-action:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.flight-selection-container {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.flight-list-header {
+  background: #f0f0f0;
+  padding: 8px 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-bottom: 1px solid #ddd;
+}
+
+.flight-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+.flight-row.active-flight {
+  background-color: #e5f1fb;
+  border-left: 4px solid #0067c0;
+  color: #0067c0;
+  font-weight: 600;
+}
+
+.btn-clear-matrix {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.btn-clear-matrix:hover {
+  background-color: #fee2e2; /* Sanftes Rot beim Hover */
+  border-color: #ef4444;
+  color: #ef4444;
+  transform: scale(1.05);
+}
+
+.trash-icon {
+  font-size: 14px;
+}
