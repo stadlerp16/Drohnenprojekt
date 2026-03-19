@@ -3,12 +3,12 @@ import asyncio
 from fastapi import APIRouter, Body, HTTPException
 import ipaddress
 
-from starlette.websockets import WebSocket, WebSocketDisconnect
+from starlette.websockets import WebSocketDisconnect
 
 from starlette.websockets import WebSocket
 
-import Services.drohneService as drohne_service
-
+import Services.DrohneVerwaltung.drohneService as drohne_service
+import Services.DrohneVerwaltung.telemtrieService as telemtrie_service
 router = APIRouter()
 
 
@@ -79,7 +79,7 @@ async def gettelemetrie(ws: WebSocket):
 
     try:
         while True:
-            data = drohne_service.get_telemetry()
+            data = telemtrie_service.get_telemetry()
             await ws.send_json(data)
             await asyncio.sleep(0.5)  # alle 500 ms aktualisieren
 
@@ -92,4 +92,3 @@ async def gettelemetrie(ws: WebSocket):
             await ws.close()
         except Exception:
             pass
-

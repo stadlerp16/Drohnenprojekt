@@ -1,5 +1,5 @@
 import time
-import Services.drohneService as ds
+import Services.DrohneVerwaltung.drohneService as ds
 
 # RC Werte: a=right/strafe, b=forward, c=up, d=yaw
 _state = {"a": 0, "b": 0, "c": 0, "d": 0}

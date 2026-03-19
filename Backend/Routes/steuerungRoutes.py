@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel
 
-import Services.drohneService as ds
+import Services.DrohneVerwaltung.drohneService as ds
 import Services.Steuerung.replayService as rs
 from Services.Steuerung.controlServices import ControlSession
 from Services.Steuerung.keyboardSteuerung import set_key
