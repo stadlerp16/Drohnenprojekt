@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from Routes.drohnenRoutes import router as drohnen_router
-from Services.drohneService import close, test_reconnect
+from Services.DrohneVerwaltung.drohneService import close, test_reconnect
 from Routes.steuerungRoutes import router as steuer_router
 from connect import init_db  # <-- NEU: Importiere die DB-Initialisierung
 
