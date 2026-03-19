@@ -1,6 +1,6 @@
 import asyncio
 import json
-import Services.drohneService as ds
+import Services.DrohneVerwaltung.drohneService as ds
 from Services.Steuerung.keyboardSteuerung import set_key
 from Services.Steuerung.input_ps5 import set_gamepad
 from Services.Steuerung.input_touch import set_touch
