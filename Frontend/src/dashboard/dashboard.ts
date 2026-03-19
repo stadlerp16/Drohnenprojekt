@@ -249,39 +249,57 @@ export class Dashboard implements OnDestroy , OnInit {
 
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
-    // 1. WICHTIG: Wenn das Speicher-Pop-up offen ist, Steuerung ignorieren!
-    // Sonst löst jedes Leerzeichen im Namen eine Landung aus.
-    if (this.droneService.isLanded$.value) return;
+    // 1. SPERRE: Wenn das Speicher-Pop-up offen ist, keine Steuerung zulassen!
+    // Das verhindert, dass die Leertaste im Textfeld die Drohne landet/startet.
+    if (this.droneService.isLanded$.value) {
+      return;
+    }
 
+    // 2. MODUS-CHECK: Nur reagieren, wenn Tastatur-Modus aktiv ist
     if (this.droneService.selectedMode !== 'controlkeyboard') return;
+
+    // 3. TASTEN-FILTER: Nur erlaubte Tasten verarbeiten
     if (!this.allowedKeys.has(event.key)) return;
 
+    // Standard-Browser-Verhalten (Scrollen bei Space) verhindern
     event.preventDefault();
+
+    // Verhindert Dauerfeuer beim Gedrückthalten der Taste
     if (event.repeat) return;
 
-    // SPACE LOGIK
+    // --- SPACE / LEERTASTE LOGIK ---
     if (event.key === ' ' || event.key === 'Space') {
       if (!this.isFlying) {
-        console.log("Starte Drohne...");
-        this.sendData({takeoffLand: true});
-        this.isFlying = true;
+        console.log("Leertaste gedrückt: Starte Drohne via API...");
+
+        // Wir rufen die zentrale Methode auf, die auch der Button nutzt.
+        // Das stellt sicher, dass HTTP POST UND WebSocket-Verbindung stimmen.
+        this.startDrone();
+
       } else {
-        console.log("Lande Drohne...");
-        this.sendData({takeoffLand: true});
+        console.log("Leertaste gedrückt: Landung wird eingeleitet...");
+
+        // Befehl an Drohne senden
+        this.sendData({ takeoffLand: true });
+
+        // Status sofort auf false, damit keine Steuerbefehle mehr gesendet werden
         this.isFlying = false;
 
-        // Verzögerung für echte Landung, dann Pop-up
+        // Kurze Verzögerung für den physischen Landevorgang, dann Pop-up zeigen
         setTimeout(() => {
           this.beendeFlugUndSpeichere();
         }, 2000);
       }
-      // WICHTIG: Hier beenden, damit kein zweiter Befehl gesendet wird!
+
+      // WICHTIG: Nach Space sofort beenden, damit kein Steuer-Befehl hinterhergeschickt wird
       return;
     }
 
-    // Normale Flug-Steuerung (w, a, s, d...)
-    // Das wird NUR ausgeführt, wenn es NICHT die Leertaste war
-    this.sendData({key: event.key, pressed: true});
+    // --- NORMALE STEUERUNG (w, a, s, d, Pfeiltasten) ---
+    // Wird nur erreicht, wenn es NICHT die Leertaste war
+    if (this.isFlying) {
+      this.sendData({ key: event.key, pressed: true });
+    }
   }
 
   @HostListener('window:keyup', ['$event'])

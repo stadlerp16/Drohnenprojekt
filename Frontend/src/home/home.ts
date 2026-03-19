@@ -136,21 +136,24 @@ export class Home implements OnInit {
 
   onContinue() {
     if (this.setupType === 'manual') {
+      // WICHTIG: Prüfe, ob ein Modus gewählt wurde (z.B. 'controlkeyboard')
       if (this.droneService.selectedMode) {
         this.droneService.isAutoFlight = false;
         this.droneService.isConnected = true;
-        // WICHTIG: Prüfe ob deine Route '/control' oder '/dashboard' heißt!
+
+        console.log('Navigiere zum Dashboard mit Modus:', this.droneService.selectedMode);
         this.router.navigate(['/control']);
+      } else {
+        alert("Bitte wähle zuerst einen Steuerungs-Modus aus!");
       }
-    } else if (this.setupType === 'auto') {
+    }
+    else if (this.setupType === 'auto') {
       const flightName = this.droneService.selectedAutoFlight;
       if (flightName) {
-        // Wir setzen NUR die Variablen im Service
         this.droneService.isAutoFlight = true;
         this.droneService.isConnected = true;
 
-        // Wir navigieren NUR. Der Befehl wird erst im Dashboard gefeuert.
-        console.log('Navigiere zum Dashboard, Autopilot wird dort gestartet...');
+        console.log('Starte Autopilot-Modus für:', flightName);
         this.router.navigate(['/control']);
       }
     }
