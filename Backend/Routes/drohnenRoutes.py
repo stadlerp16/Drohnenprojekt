@@ -6,7 +6,6 @@ import ipaddress
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
 import Services.drohneService as drohne_service
-from Services.controlServices import ControlSession
 
 router = APIRouter()
 

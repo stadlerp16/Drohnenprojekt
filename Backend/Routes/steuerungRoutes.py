@@ -1,10 +1,10 @@
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 import Services.drohneService as ds
 
-from Services.controlServices import ControlSession
-from Services.keyboardSteuerung import set_key
-from Services.input_ps5 import set_gamepad
-from Services.input_touch import set_touch
+from Services.Steuerung.controlServices import ControlSession
+from Services.Steuerung.keyboardSteuerung import set_key
+from Services.Steuerung.input_ps5 import set_gamepad
+from Services.Steuerung.input_touch import set_touch
 from connect import log_command  # <-- Import der Log-Funktion
 
 router = APIRouter()
