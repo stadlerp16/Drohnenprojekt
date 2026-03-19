@@ -22,7 +22,7 @@ export class Dashboard implements OnDestroy , OnInit {
   @ViewChild('leftJoy') leftJoy?: ElementRef;
   @ViewChild('rightJoy') rightJoy?: ElementRef;
 
-  isFlying: boolean = true;
+  isFlying: boolean = false;
   isFlightActive: boolean = false;
   private socket: WebSocket | null = null;
 
@@ -95,24 +95,33 @@ export class Dashboard implements OnDestroy , OnInit {
    * Sendet den eingegebenen Namen und die IP an das Backend
    */
   onSaveFlight() {
-    if (this.saveForm.invalid) return;
+    console.log("Speichern gestartet...");
 
-    const courseName = this.saveForm.value.courseName;
-    const ip = this.droneService.activeIp;
-
-    if (ip) {
-      this.droneService.saveFlight({ ip, courseName }).subscribe({
-        next: () => {
-          console.log("Flugkurs erfolgreich gespeichert");
-          this.droneService.setLanded(false);
-          this.router.navigate(['']); // Zurück zur Home-Seite
-        },
-        error: (err) => {
-          console.error("Speichern fehlgeschlagen", err);
-          alert("Fehler beim Speichern des Kurses.");
-        }
-      });
+    if (this.saveForm.invalid) {
+      return;
     }
+
+    const courseName = this.saveForm.get('courseName')?.value;
+
+    // Wir rufen die bereinigte Methode ohne IP auf
+    this.droneService.saveFlight(courseName).subscribe({
+      next: (res) => {
+        console.log("Erfolgreich gespeichert:", res);
+        this.finishAndGoHome();
+      },
+      error: (err) => {
+        console.error("Speichern fehlgeschlagen, navigiere trotzdem...", err);
+        // Auch bei Fehler (wie ERR_CONNECTION_REFUSED) gehen wir zurück
+        this.finishAndGoHome();
+      }
+    });
+  }
+
+// Hilfsfunktion zum Aufräumen und Navigieren
+  private finishAndGoHome() {
+    this.droneService.setLanded(false);
+    this.saveForm.reset();
+    this.router.navigate(['/']);
   }
 
   // --- FLUG MODI ---
@@ -239,18 +248,39 @@ export class Dashboard implements OnDestroy , OnInit {
 
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
-    if (this.isFlying && this.droneService.selectedMode === 'controlkeyboard') {
-      if (!this.allowedKeys.has(event.key)) return;
-      event.preventDefault();
-      if (event.repeat) return;
+    if (this.droneService.selectedMode !== 'controlkeyboard') return;
+    if (!this.allowedKeys.has(event.key)) return;
 
-      // Space-Taste zum Landen & Speichern nutzen
-      if (event.key === ' ' || event.key === 'Space') {
-        this.beendeFlugUndSpeichere();
+    event.preventDefault();
+    if (event.repeat) return;
+
+    // SPACE LOGIK
+    if (event.key === ' ' || event.key === 'Space') {
+
+      if (!this.isFlying) {
+        // START
+        console.log("Starte Drohne");
+        this.sendData({ takeoffLand: true });
+        this.isFlying = true;
+
       } else {
-        this.sendData({ key: event.key, pressed: true });
+        // LANDUNG
+        console.log("Lande Drohne");
+        this.sendData({ takeoffLand: true });
+
+        // kurze Verzögerung für echte Landung
+        setTimeout(() => {
+          this.beendeFlugUndSpeichere();
+        }, 2000); // ggf. anpassen
+
+        this.isFlying = false;
       }
+
+      return;
     }
+
+    // normale Steuerung
+    this.sendData({ key: event.key, pressed: true });
   }
 
   @HostListener('window:keyup', ['$event'])

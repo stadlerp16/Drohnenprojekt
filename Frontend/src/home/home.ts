@@ -29,6 +29,7 @@ export class Home implements OnInit {
     "Servus"
   ];
   savedDrones: any[] = [];
+
   // Diese Liste würde normalerweise von droneService.getSavedDrones() kommen
 
   static getIsLanded(): boolean {
@@ -86,7 +87,7 @@ export class Home implements OnInit {
     this.activeIp = ip;
 
     if (isNew && !this.savedDrones.find(d => d.ip === ip)) {
-      this.savedDrones.push({ name: 'Neue Tello Drohne', ip: ip });
+      this.savedDrones.push({name: 'Neue Tello Drohne', ip: ip});
     }
     this.ipForm.reset();
   }
@@ -141,8 +142,7 @@ export class Home implements OnInit {
         // WICHTIG: Prüfe ob deine Route '/control' oder '/dashboard' heißt!
         this.router.navigate(['/control']);
       }
-    }
-    else if (this.setupType === 'auto') {
+    } else if (this.setupType === 'auto') {
       const flightName = this.droneService.selectedAutoFlight;
       if (flightName) {
         // Wir setzen NUR die Variablen im Service
@@ -153,23 +153,6 @@ export class Home implements OnInit {
         console.log('Navigiere zum Dashboard, Autopilot wird dort gestartet...');
         this.router.navigate(['/control']);
       }
-    }
-  }
-
-  saveFlightCourse() {
-    const name = this.ipForm.get('courseName')?.value;
-    if (name && this.droneService.activeIp) {
-
-      this.droneService.saveFlight({
-        ip: this.droneService.activeIp,
-        courseName: name
-      }).subscribe({
-        next: () => {
-          this.droneService.setLanded(false); // Status über Service ändern
-          this.ipForm.get('courseName')?.reset();
-          this.loadFlights();
-        }
-      });
     }
   }
 }

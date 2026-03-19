@@ -18,16 +18,12 @@ export class DroneService {
 
   constructor(private http: HttpClient) {}
 
-  saveFlightCourse(name: any) {
-    // Die eigentliche API-Logik bleibt hier
-    return this.http.post(`${this.baseUrl}/save-flight`, { name });
-  }
-
   setLanded(value: boolean) {
     this.isLanded$.next(value);
   }
 
   sendIpAddress(ip: string): Observable<any> {
+    this.activeIp = ip;
     return this.http.post(`${this.baseUrl}/connect`, { ip });
   }
 
@@ -47,8 +43,9 @@ export class DroneService {
   }
 
   // --- Methode zum Speichern des Flugkurses ---
-  saveFlight(payload: { ip: string, courseName: string }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/save-course`, payload);
+  saveFlight(courseName: string): Observable<any> {
+    // Wir schicken jetzt nur noch ein Objekt mit dem Namen
+    return this.http.post(`${this.baseUrl}/save-flight-name`, { name: courseName });
   }
 
   startDrone(): Observable<any> {
