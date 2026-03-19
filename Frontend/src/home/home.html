@@ -1,19 +1,16 @@
 <main class="main">
   <div class="content" *ngIf="!router.url.includes('control')">
 
-    <div class="main-layout">
+    <div class="main-layout" [class.connected-view]="isConnected">
 
       <div class="setup-wrapper">
-
         <div class="header-bar">
           <span class="header-title">Gerät hinzufügen</span>
-
           <form [formGroup]="ipForm" (ngSubmit)="onAddNewDevice()" class="header-form">
             <input
               type="text"
               formControlName="droneIp"
               placeholder="IP-Adresse der neuen Drohne">
-
             <button
               type="submit"
               class="btn-primary-windows"
@@ -39,7 +36,6 @@
                 </span>
               </div>
             </div>
-
             <div class="device-actions">
               <button
                 type="button"
@@ -47,7 +43,6 @@
                 [class.active-conn]="isConnected && activeIp === drone.ip"
                 [disabled]="connectingIp !== null && connectingIp !== drone.ip"
                 (click)="handleConnection(drone.ip)">
-
                 <ng-container *ngIf="connectingIp === drone.ip; else buttonLabel">
                   Suche...
                 </ng-container>
@@ -60,25 +55,14 @@
         </div>
 
         <div class="device-list" *ngIf="savedDrones.length === 0">
-          <div class="device-item empty-state">
-            Keine gespeicherten Drohnen gefunden.
-          </div>
+          <div class="device-item empty-state">Keine gespeicherten Drohnen gefunden.</div>
         </div>
 
         <div class="test-steuerung" *ngIf="isConnected">
           <label class="section-label">Wie möchtest du fliegen?</label>
-
           <div class="mode-section">
-            <button class="mode-btn"
-                    [class.active]="setupType === 'manual'"
-                    (click)="setSetupType('manual')">
-              Manuelle Steuerung
-            </button>
-            <button class="mode-btn"
-                    [class.active]="setupType === 'auto'"
-                    (click)="setSetupType('auto')">
-              Flugkurs abspielen
-            </button>
+            <button class="mode-btn" [class.active]="setupType === 'manual'" (click)="setSetupType('manual')">Manuelle Steuerung</button>
+            <button class="mode-btn" [class.active]="setupType === 'auto'" (click)="setSetupType('auto')">Flugkurs abspielen</button>
           </div>
 
           <div class="mode-section" *ngIf="setupType === 'manual'">
@@ -90,10 +74,7 @@
           <div class="flight-selection-container" *ngIf="setupType === 'auto'">
             <div class="flight-list-header">Gespeicherte Kurse:</div>
             <div class="flight-list-body">
-              <div *ngFor="let f of savedFlights"
-                   class="flight-row"
-                   [class.active-flight]="droneService.selectedAutoFlight === f"
-                   (click)="selectFlight(f)">
+              <div *ngFor="let f of savedFlights" class="flight-row" [class.active-flight]="droneService.selectedAutoFlight === f" (click)="selectFlight(f)">
                 <span class="flight-name">{{f}}</span>
               </div>
             </div>
@@ -101,8 +82,7 @@
 
           <button class="btn-primary-action"
                   *ngIf="setupType"
-                  [disabled]="(setupType === 'manual' && !droneService.selectedMode) ||
-                             (setupType === 'auto' && !droneService.selectedAutoFlight)"
+                  [disabled]="(setupType === 'manual' && !droneService.selectedMode) || (setupType === 'auto' && !droneService.selectedAutoFlight)"
                   (click)="onContinue()">
             {{ setupType === 'auto' ? 'FLUGKURS STARTEN' : 'WEITER ZUM FLUG' }}
           </button>
@@ -114,7 +94,6 @@
           <span class="led-badge">8x8</span>
         </div>
         <p class="led-subtitle">Klicke Pixel zum Aktivieren</p>
-
         <div class="matrix-grid">
           <div *ngFor="let row of ledMatrix; let r = index" class="matrix-row">
             <div *ngFor="let led of row; let c = index"
@@ -124,7 +103,6 @@
             </div>
           </div>
         </div>
-
         <div class="matrix-footer">
           <span>Verbunden mit: <strong>{{ activeIp }}</strong></span>
         </div>

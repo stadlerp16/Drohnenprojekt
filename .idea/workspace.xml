@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="route zum backend für LED">
+    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="LED Test">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/app/services/drohne.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/app/services/drohne.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/src/home/home.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/home/home.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/src/home/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/home/home.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/home/home.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/home/home.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -155,7 +153,8 @@
       <workItem from="1773214252939" duration="999000" />
       <workItem from="1773760363552" duration="2203000" />
       <workItem from="1773766450772" duration="1304000" />
-      <workItem from="1773823087591" duration="2716000" />
+      <workItem from="1773823087591" duration="2739000" />
+      <workItem from="1773907909906" duration="649000" />
     </task>
     <task id="LOCAL-00001" summary="Create Backend">
       <option name="closed" value="true" />
@@ -261,7 +260,15 @@
       <option name="project" value="LOCAL" />
       <updated>1773824502038</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="LED Test">
+      <option name="closed" value="true" />
+      <created>1773825838858</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1773825838858</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -279,6 +286,7 @@
     <MESSAGE value="verbesserung des Frontends und Struktur" />
     <MESSAGE value="aufruf verbesserung" />
     <MESSAGE value="route zum backend für LED" />
-    <option name="LAST_COMMIT_MESSAGE" value="route zum backend für LED" />
+    <MESSAGE value="LED Test" />
+    <option name="LAST_COMMIT_MESSAGE" value="LED Test" />
   </component>
 </project>
