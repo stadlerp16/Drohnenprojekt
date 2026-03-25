@@ -9,6 +9,8 @@ from starlette.websockets import WebSocket
 
 import Services.DrohneVerwaltung.drohneService as drohne_service
 import Services.DrohneVerwaltung.telemtrieService as telemtrie_service
+from connect import get_all_flight_names
+
 router = APIRouter()
 
 
@@ -92,3 +94,6 @@ async def gettelemetrie(ws: WebSocket):
             await ws.close()
         except Exception:
             pass
+
+@router.get("/flights")
+async def list_flights(): return {"ok": True, "flights": get_all_flight_names()}

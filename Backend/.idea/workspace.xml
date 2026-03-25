@@ -5,15 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="26b6f950-785b-47a4-9c2f-9295330bdc85" name="Changes" comment="Merge branch 'main' of https://github.com/stadlerp16/Drohnenprojekt&#10;&#10;# Conflicts:&#10;#&#9;Backend/.idea/workspace.xml">
-      <change afterPath="$PROJECT_DIR$/Services/DrohneVerwaltung/telemtrieService.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Routes/drohnenRoutes.py" beforeDir="false" afterPath="$PROJECT_DIR$/Routes/drohnenRoutes.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Routes/steuerungRoutes.py" beforeDir="false" afterPath="$PROJECT_DIR$/Routes/steuerungRoutes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/Steuerung/flightExekutor.py" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Steuerung/flightExekutor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/Steuerung/replayService.py" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Steuerung/replayService.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/drohneService.py" beforeDir="false" afterPath="$PROJECT_DIR$/Services/DrohneVerwaltung/drohneService.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/telemtrieService.py" beforeDir="false" afterPath="$PROJECT_DIR$/Services/DrohneVerwaltung/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,7 +23,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="Simon" />
+        <entry key="$PROJECT_DIR$/.." value="Philipp" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
