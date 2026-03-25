@@ -53,4 +53,8 @@ export class DroneService {
   sendLedUpdate(row: number, col: number, state: boolean): Observable<any> {
     return this.http.post(`${this.baseUrl}/led`, { row, col, active: state });
   }
+
+  sendControlCommand(command: string) {
+    return this.http.post(`${this.baseUrl}/command`, { command: command });
+  }
 }

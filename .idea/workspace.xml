@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="layout verbesserung mit Led und Steuerung">
+    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="delte btton for matrix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/app/services/drohne.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/app/services/drohne.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/src/home/home.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/home/home.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/src/home/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/home/home.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/src/home/home.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/home/home.ts" afterDir="false" />
@@ -157,6 +158,8 @@
       <workItem from="1773766450772" duration="1304000" />
       <workItem from="1773823087591" duration="2739000" />
       <workItem from="1773907909906" duration="5574000" />
+      <workItem from="1773996324526" duration="10000" />
+      <workItem from="1774421251989" duration="2612000" />
     </task>
     <task id="LOCAL-00001" summary="Create Backend">
       <option name="closed" value="true" />

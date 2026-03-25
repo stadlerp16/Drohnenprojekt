@@ -66,6 +66,23 @@ export class Home implements OnInit {
     this.ledMatrix.forEach(row => row.fill(false));
   }
 
+
+  sendScrollingText(text: string) {
+    if (!text || !this.isConnected) return;
+
+    const command = `mled s b l 5 ${text}`;
+
+    this.droneService.sendControlCommand(command).subscribe({
+      next: () => {
+        console.log(`Laufschrift gesendet: ${text}`);
+        // Optional: Matrix in der UI leeren, da die Drohne nun Text anzeigt
+        this.clearMatrix();
+      },
+      error: (err: any) => console.error('Fehler beim Senden der Laufschrift', err)
+    });
+  }
+
+
   //LOGIK FÜR GERÄTE
 
   onAddNewDevice() {

@@ -110,6 +110,17 @@
           </button>
         </div>
       </div>
+      <div class="text-scroll-container">
+        <input type="text"
+               #scrollInput
+               placeholder="Nachricht eingeben..."
+               class="scroll-input"
+               (keyup.enter)="sendScrollingText(scrollInput.value)">
+
+        <button class="btn-send-text" (click)="sendScrollingText(scrollInput.value)">
+          Senden
+        </button>
+      </div>
     </div>
 
     </div> </div>
