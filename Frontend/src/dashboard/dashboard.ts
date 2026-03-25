@@ -249,53 +249,10 @@ export class Dashboard implements OnDestroy , OnInit {
 
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
-    // 1. SPERRE: Wenn das Speicher-Pop-up offen ist, keine Steuerung zulassen!
-    // Das verhindert, dass die Leertaste im Textfeld die Drohne landet/startet.
-    if (this.droneService.isLanded$.value) {
-      return;
-    }
-
-    // 2. MODUS-CHECK: Nur reagieren, wenn Tastatur-Modus aktiv ist
-    if (this.droneService.selectedMode !== 'controlkeyboard') return;
-
-    // 3. TASTEN-FILTER: Nur erlaubte Tasten verarbeiten
-    if (!this.allowedKeys.has(event.key)) return;
-
-    // Standard-Browser-Verhalten (Scrollen bei Space) verhindern
-    event.preventDefault();
-
-    // Verhindert Dauerfeuer beim Gedrückthalten der Taste
-    if (event.repeat) return;
-
-    // --- SPACE / LEERTASTE LOGIK ---
-    if (event.key === ' ' || event.key === 'Space') {
-      if (!this.isFlying) {
-        console.log("Leertaste gedrückt: Starte Drohne via API...");
-
-        this.startDrone();
-
-      } else {
-        console.log("Leertaste gedrückt: Landung wird eingeleitet...");
-
-        // Befehl an Drohne senden
-        this.sendData({ takeoffLand: true });
-
-        // Status sofort auf false, damit keine Steuerbefehle mehr gesendet werden
-        this.isFlying = false;
-
-        // Kurze Verzögerung für den physischen Landevorgang, dann Pop-up zeigen
-        setTimeout(() => {
-          this.beendeFlugUndSpeichere();
-        }, 2000);
-      }
-
-      // WICHTIG: Nach Space sofort beenden, damit kein Steuer-Befehl hinterhergeschickt wird
-      return;
-    }
-
-    // --- NORMALE STEUERUNG (w, a, s, d, Pfeiltasten) ---
-    // Wird nur erreicht, wenn es NICHT die Leertaste war
-    if (this.isFlying) {
+    if (this.isFlying && this.droneService.selectedMode === 'controlkeyboard') {
+      if (!this.allowedKeys.has(event.key)) return;
+      event.preventDefault();
+      if (event.repeat) return;
       this.sendData({ key: event.key, pressed: true });
     }
   }
