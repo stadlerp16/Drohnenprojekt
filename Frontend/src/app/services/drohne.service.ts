@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {interval, Observable, startWith, switchMap} from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class DroneService {
@@ -12,8 +12,20 @@ export class DroneService {
 
   isAutoFlight = false;
   selectedAutoFlight: string | null = null;
+  activeIp: string | null = null;
 
-  constructor(private http: HttpClient) {}
+  public telemetry: any = {
+    bat: 0,
+    speed: 0,
+    h: 0,
+    pitch: 0,
+    roll: 0,
+    yaw: 0
+  };
+
+  constructor(private http: HttpClient) {
+    this.startTelemetryPolling();
+  }
 
   sendIpAddress(ip: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/connect`, { ip });
@@ -56,5 +68,19 @@ export class DroneService {
 
   sendControlCommand(command: string) {
     return this.http.post(`${this.baseUrl}/command`, { command: command });
+  }
+
+  private startTelemetryPolling() {
+    interval(500).pipe(
+      startWith(0),
+      switchMap(() => this.http.get(`${this.baseUrl}/telemetry`))
+    ).subscribe({
+      next: (data: any) => {
+        if (data) {
+          this.telemetry = data;
+        }
+      },
+      error: (err) => console.log('Warten auf Telemetrie-Daten...')
+    });
   }
 }

@@ -33,6 +33,7 @@ export class Home implements OnInit {
   ];
 
   savedFlights: string[] = [
+    'hi'
   ];
   savedDrones: any[] = [];
 
