@@ -272,8 +272,6 @@ export class Dashboard implements OnDestroy , OnInit {
       if (!this.isFlying) {
         console.log("Leertaste gedrückt: Starte Drohne via API...");
 
-        // Wir rufen die zentrale Methode auf, die auch der Button nutzt.
-        // Das stellt sicher, dass HTTP POST UND WebSocket-Verbindung stimmen.
         this.startDrone();
 
       } else {
