@@ -56,3 +56,10 @@ def get_telemetry() -> dict:
         "vgz": vgz
     }
 
+##def set_matrix_pattern(pattern: list[list[int]]):
+    try:
+        matrix_str = "".join(str(pixel) for row in pattern for pixel in row)
+        drohne_service.ep_drone.led.set_mled_graph(matrix_str)
+        print("[LED-Matrix] Muster gesetzt")
+    except Exception as e:
+        print(f"[LED-Matrix] Fehler: {e}")
