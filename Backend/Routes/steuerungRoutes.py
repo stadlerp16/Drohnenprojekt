@@ -152,3 +152,4 @@ async def emergency():
     if rs.active_replay_task: rs.active_replay_task.cancel()
     rs.stop_drone_immediately()
     return {"ok": True}
+

@@ -55,3 +55,4 @@ def get_telemetry() -> dict:
         "vgy": vgy,
         "vgz": vgz
     }
+

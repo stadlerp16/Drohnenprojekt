@@ -97,3 +97,15 @@ async def gettelemetrie(ws: WebSocket):
 
 @router.get("/flights")
 async def list_flights(): return {"ok": True, "flights": get_all_flight_names()}
+
+@router.get("/led")
+def paint_led():
+    if not drohne_service.is_connected():
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "status": "error",
+                "message": "Keine Drohne verbunden"
+            }
+        )
+
