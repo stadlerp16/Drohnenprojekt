@@ -20,12 +20,20 @@ export class Home implements OnInit {
   isConnected = false;
   isLanded = false;
   activeIp: string | null = null;
-
   setupType: 'manual' | 'auto' | null = null;
+  ledMatrix: boolean[][] = [
+    [true,  true,  true,  true,  true,  false,  false,  false],
+    [false, false, true,  false, false, false,  false, false],
+    [false, false, true,  true, true, true,  true, true],
+    [false, false, true,  false, false, true,  false, false],
+    [false, false, true,  false, false, true,  false, false],
+    [false, false, false, false, false, true, false, false],
+    [false, false, false, false, false, true, false, false],
+    [false, false, false, false, false, false, false, false]
+  ];
 
   savedFlights: string[] = [
-    'Viereck-Parcours (Wohnzimmer)',
-    "Servus"
+    'hi'
   ];
   savedDrones: any[] = [];
 
@@ -43,6 +51,38 @@ export class Home implements OnInit {
   ngOnInit() {
     this.loadFlights();
   }
+
+  toggleLed(row: number, col: number) {
+    // Lokalen Status umschalten
+    this.ledMatrix[row][col] = !this.ledMatrix[row][col];
+
+    // Ans Backend senden
+    this.droneService.sendLedUpdate(row, col, this.ledMatrix[row][col]).subscribe({
+      next: () => console.log(`LED [${row},${col}] ist jetzt ${this.ledMatrix[row][col]}`),
+      error: (err) => console.error('Fehler beim Senden der LED-Daten', err)
+     });
+  }
+  clearMatrix() {
+    // Geht durch jede Zeile und setzt alle Spalten auf false
+    this.ledMatrix.forEach(row => row.fill(false));
+  }
+
+
+  sendScrollingText(text: string) {
+    if (!text || !this.isConnected) return;
+
+    const command = `mled s b l 5 ${text}`;
+
+    this.droneService.sendControlCommand(command).subscribe({
+      next: () => {
+        console.log(`Laufschrift gesendet: ${text}`);
+        // Optional: Matrix in der UI leeren, da die Drohne nun Text anzeigt
+        this.clearMatrix();
+      },
+      error: (err: any) => console.error('Fehler beim Senden der Laufschrift', err)
+    });
+  }
+
 
   //LOGIK FÜR GERÄTE
 
@@ -76,7 +116,9 @@ export class Home implements OnInit {
     this.isAddingNew = false;
     this.connectingIp = null;
     this.isConnected = true;
-    this.activeIp = ip;
+
+    this.droneService.activeIp = ip;
+    this.droneService.isConnected = true;
 
     if (isNew && !this.savedDrones.find(d => d.ip === ip)) {
       this.savedDrones.push({ name: 'Neue Tello Drohne', ip: ip });
