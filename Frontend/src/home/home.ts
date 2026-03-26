@@ -60,7 +60,7 @@ export class Home implements OnInit {
     this.droneService.sendLedUpdate(row, col, this.ledMatrix[row][col]).subscribe({
       next: () => console.log(`LED [${row},${col}] ist jetzt ${this.ledMatrix[row][col]}`),
       error: (err) => console.error('Fehler beim Senden der LED-Daten', err)
-    });
+     });
   }
   clearMatrix() {
     // Geht durch jede Zeile und setzt alle Spalten auf false
@@ -116,7 +116,9 @@ export class Home implements OnInit {
     this.isAddingNew = false;
     this.connectingIp = null;
     this.isConnected = true;
-    this.activeIp = ip;
+
+    this.droneService.activeIp = ip;
+    this.droneService.isConnected = true;
 
     if (isNew && !this.savedDrones.find(d => d.ip === ip)) {
       this.savedDrones.push({ name: 'Neue Tello Drohne', ip: ip });
