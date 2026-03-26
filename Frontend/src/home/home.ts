@@ -21,7 +21,7 @@ export class Home implements OnInit {
   isLanded = false;
   activeIp: string | null = null;
   setupType: 'manual' | 'auto' | null = null;
-  ledMatrix: boolean[][] = [
+  /*ledMatrix: boolean[][] = [
     [true,  true,  true,  true,  true,  false,  false,  false],
     [false, false, true,  false, false, false,  false, false],
     [false, false, true,  true, true, true,  true, true],
@@ -30,8 +30,9 @@ export class Home implements OnInit {
     [false, false, false, false, false, true, false, false],
     [false, false, false, false, false, true, false, false],
     [false, false, false, false, false, false, false, false]
-  ];
+  ];*/
 
+  public ledMatrix: number[][] = Array(8).fill(0).map(() => Array(8).fill(0));
   savedFlights: string[] = [
     'hi'
   ];
@@ -53,20 +54,26 @@ export class Home implements OnInit {
   }
 
   toggleLed(row: number, col: number) {
-    // Lokalen Status umschalten
-    this.ledMatrix[row][col] = !this.ledMatrix[row][col];
+    // 1. Lokalen Status umschalten (0 -> 1 oder 1 -> 0)
+    this.ledMatrix[row][col] = this.ledMatrix[row][col] === 0 ? 1 : 0;
 
-    // Ans Backend senden
-    this.droneService.sendLedUpdate(row, col, this.ledMatrix[row][col]).subscribe({
-      next: () => console.log(`LED [${row},${col}] ist jetzt ${this.ledMatrix[row][col]}`),
-      error: (err) => console.error('Fehler beim Senden der LED-Daten', err)
-     });
+    // 2. Die GESAMTE Matrix an den Service schicken
+    this.droneService.sendLedUpdate(this.ledMatrix).subscribe({
+      next: (res) => console.log('Matrix erfolgreich gesendet', res),
+      error: (err) => console.error('Fehler beim Senden der Matrix', err)
+    });
   }
-  clearMatrix() {
-    // Geht durch jede Zeile und setzt alle Spalten auf false
-    this.ledMatrix.forEach(row => row.fill(false));
-  }
+  /*clearMatrix() {
+    // Geht durch jede Zeile und setzt alle Spalten auf 0 (statt false)
+    this.ledMatrix.forEach(row => row.fill(0));
 
+    // OPTIONAL: Schicke die leere Matrix auch direkt ans Backend,
+    // damit die Drohne sofort dunkel wird:
+    this.droneService.sendLedUpdate(this.ledMatrix).subscribe({
+      next: () => console.log('Matrix auf Drohne gelöscht'),
+      error: (err) => console.error('Fehler beim Löschen der Matrix', err)
+    });
+  }*/
 
   sendScrollingText(text: string) {
     if (!text || !this.isConnected) return;
@@ -77,7 +84,7 @@ export class Home implements OnInit {
       next: () => {
         console.log(`Laufschrift gesendet: ${text}`);
         // Optional: Matrix in der UI leeren, da die Drohne nun Text anzeigt
-        this.clearMatrix();
+        //this.clearMatrix();
       },
       error: (err: any) => console.error('Fehler beim Senden der Laufschrift', err)
     });
