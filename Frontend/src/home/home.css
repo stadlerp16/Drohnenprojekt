@@ -9,6 +9,38 @@
   box-sizing: border-box;
 }
 
+.home-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding-top: 0; /* Bleibt bei 0 */
+}
+
+.home-header {
+  width: 100%;
+  padding: 0; /* Alles an Padding entfernen */
+  margin-top: -10px; /* <--- Zieht den gesamten Header nach oben */
+  text-align: center;
+}
+
+.main-title {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #1a1a1a;
+  margin-top: 0;      /* Entfernt den Browser-Standardabstand */
+  margin-bottom: 20px; /* Abstand nach unten zum Eingabefeld */
+  letter-spacing: -1.5px;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.main-title span {
+  color: #007bff;
+  font-weight: 300;
+}
+
 .main-layout {
   display: flex;
   justify-content: center;

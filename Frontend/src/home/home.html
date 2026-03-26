@@ -1,4 +1,9 @@
 <main class="main">
+
+  <header class="home-header">
+    <h1 class="main-title">Drohnen<span>Projekt</span></h1>
+  </header>
+
   <div class="content" *ngIf="!router.url.includes('control')">
 
     <div class="main-layout" [class.connected-view]="isConnected">
