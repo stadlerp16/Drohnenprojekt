@@ -71,7 +71,7 @@ export class Home implements OnInit {
   sendScrollingText(text: string) {
     if (!text || !this.isConnected) return;
 
-    const command = `mled s b l 5 ${text}`;
+    const command = `${text}`;
 
     this.droneService.sendControlCommand(command).subscribe({
       next: () => {
