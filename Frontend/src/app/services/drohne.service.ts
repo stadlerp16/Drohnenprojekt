@@ -40,13 +40,13 @@ export class DroneService {
     return this.http.post(`${this.baseUrl}/save-flight-name`, payload);
   }
 
-  startDrone(): Observable<any> {
+  /*startDrone(): Observable<any> {
     return this.http.post(`${this.baseUrl}/start`, {});
   }
 
   stopDrone(): Observable<any> {
     return this.http.post(`${this.baseUrl}/stop`, {});
-  }
+  }*/
 
   emergencyStop(): Observable<any> {
     return this.http.post(`${this.baseUrl}/emergency`, {});

@@ -16,7 +16,8 @@ export class Dashboard implements OnDestroy , OnInit {
   @ViewChild('leftJoy') leftJoy?: ElementRef;
   @ViewChild('rightJoy') rightJoy?: ElementRef;
 
-  isFlying: boolean = true;
+  isFlying: boolean = false;
+  isStarted: boolean = false;
   isFlightActive: boolean = false;
   private socket: WebSocket | null = null;
   showSaveModal: boolean = false;
@@ -175,6 +176,12 @@ export class Dashboard implements OnDestroy , OnInit {
 
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
+    if(event.key === "Space" || " "){
+      if(!this.isFlying) this.isFlying = true;
+      else this.isFlying = false;
+      if(this.isStarted) this.showSaveModal = true
+      if(!this.isStarted) this.isStarted = true;
+    }
     if (this.isFlying && this.droneService.selectedMode === 'controlkeyboard') {
       if (!this.allowedKeys.has(event.key)) return;
       event.preventDefault();
@@ -255,13 +262,11 @@ export class Dashboard implements OnDestroy , OnInit {
     if (xNow && !this.lastXPressed) takeoffLand = true;
     this.lastXPressed = xNow;
 
-
-
     this.sendData({ lx, ly, rx, l2, r2, takeoffLand });
   }
 
 
-  startDrone() {
+  /*startDrone() {
     this.droneService.startDrone().subscribe({
       next: () => {
         this.isFlying = true;
@@ -279,11 +284,11 @@ export class Dashboard implements OnDestroy , OnInit {
       },
       error: (err) => console.error('Stop fehlgeschlagen:', err)
     });
-  }
+  }*/
 
   saveFlightName() {
     if (!this.flightName.trim()) return;
-
+    this.isStarted = false;
     this.droneService.saveFlight({
       ip: this.droneService.connectedIp, // connectedIp muss im Service gespeichert sein
       courseName: this.flightName.trim()
