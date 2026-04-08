@@ -88,15 +88,35 @@
         <div class="led-card">
           <div class="led-header">
             <h3>Matrix Steuerung</h3>
-            <span class="led-badge">8x8</span>
+
+            <div class="color-picker">
+              <div class="color-dot red"
+                   [class.active]="droneService.selectedColor === 'r'"
+                   (click)="selectColor('r')"
+                   title="Rot"></div>
+              <div class="color-dot blue"
+                   [class.active]="droneService.selectedColor === 'b'"
+                   (click)="selectColor('b')"
+                   title="Blau"></div>
+              <div class="color-dot purple"
+                   [class.active]="droneService.selectedColor === 'p'"
+                   (click)="selectColor('p')"
+                   title="Lila"></div>
+              <span class="led-badge">8x8</span>
+            </div>
           </div>
-          <p class="led-subtitle">Klicke Pixel zum Aktivieren</p>
+
+          <p class="led-subtitle">Klicke Pixel zum Aktivieren (Farbe: {{ droneService.selectedColor.toUpperCase() }})</p>
 
           <div class="matrix-grid">
             <div *ngFor="let row of ledMatrix; let r = index" class="matrix-row">
               <div *ngFor="let led of row; let c = index"
                    class="led-pixel"
-                   [class.active]="ledMatrix[r][c]"
+                   [ngClass]="{
+               'active-red': ledMatrix[r][c] === 1,
+               'active-blue': ledMatrix[r][c] === 2,
+               'active-purple': ledMatrix[r][c] === 3
+             }"
                    (click)="toggleLed(r, c)">
               </div>
             </div>
@@ -108,7 +128,7 @@
               <button class="btn-send-matrix" (click)="sendCurrentMatrix()">
                 Senden
               </button>
-              <button class="btn-clear-matrix" (click)="clearMatrix()">
+              <button class="btn-clear-matrix" (click)="clearMatrix()" title="Matrix leeren">
                 🗑️
               </button>
             </div>
@@ -116,8 +136,17 @@
         </div>
 
         <div class="text-scroll-container">
-          <input type="text" #scrollInput placeholder="Laufschrift Nachricht..." class="scroll-input" (keyup.enter)="sendScrollingText(scrollInput.value)">
-          <button class="btn-send-text" (click)="sendScrollingText(scrollInput.value)">Senden</button>
+          <input type="text"
+                 #scrollInput
+                 placeholder="Laufschrift Nachricht..."
+                 class="scroll-input"
+                 (keyup.enter)="sendScrollingText(scrollInput.value)">
+
+          <button class="btn-send-text"
+                  [ngClass]="droneService.selectedColor"
+                  (click)="sendScrollingText(scrollInput.value)">
+            Senden
+          </button>
         </div>
       </div>
 

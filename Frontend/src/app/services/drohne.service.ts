@@ -78,6 +78,8 @@ export class DroneService {
     return this.http.post(`${this.baseUrl}/command`, { command: command });
   }
 
+  public selectedColor: 'r' | 'b' | 'p' = 'b';
+
   private initTelemetryWebSocket() {
     this.socket = new WebSocket(this.wsUrl);
 

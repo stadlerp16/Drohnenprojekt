@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="fixes">
+    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="fixes von Variablen der Ip adresse und überschneidungen und senen funktion der matrix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/src/app/services/drohne.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/app/services/drohne.service.ts" afterDir="false" />
@@ -157,7 +157,7 @@
       <workItem from="1773760363552" duration="2203000" />
       <workItem from="1774511092956" duration="2964000" />
       <workItem from="1775031601387" duration="3216000" />
-      <workItem from="1775627111757" duration="4387000" />
+      <workItem from="1775627111757" duration="6561000" />
     </task>
     <task id="LOCAL-00001" summary="Create Backend">
       <option name="closed" value="true" />
@@ -287,7 +287,15 @@
       <option name="project" value="LOCAL" />
       <updated>1774519151572</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="fixes von Variablen der Ip adresse und überschneidungen und senen funktion der matrix">
+      <option name="closed" value="true" />
+      <created>1775632467739</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1775632467739</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -308,6 +316,7 @@
     <MESSAGE value="Title" />
     <MESSAGE value="text led" />
     <MESSAGE value="fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixes" />
+    <MESSAGE value="fixes von Variablen der Ip adresse und überschneidungen und senen funktion der matrix" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixes von Variablen der Ip adresse und überschneidungen und senen funktion der matrix" />
   </component>
 </project>

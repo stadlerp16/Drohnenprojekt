@@ -356,6 +356,42 @@
   font-weight: 600;
 }
 
+/* Farbwähler im Header */
+.color-picker {
+  display: flex;
+  gap: 8px;
+}
+
+.color-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.2s;
+}
+
+.color-dot:hover { transform: scale(1.2); }
+.color-dot.active { border-color: #333; transform: scale(1.1); }
+
+.red { background-color: #ff4d4d; }
+.blue { background-color: #007bff; }
+.purple { background-color: #a020f0; }
+
+
+.led-pixel.active-red {
+  background-color: #ff4d4d;
+  box-shadow: 0 0 8px rgba(255, 77, 77, 0.6);
+}
+.led-pixel.active-blue {
+  background-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.6);
+}
+.led-pixel.active-purple {
+  background-color: #a020f0;
+  box-shadow: 0 0 8px rgba(160, 32, 240, 0.6);
+}
+
 .matrix-actions {
   display: flex;
   gap: 8px;
@@ -373,7 +409,7 @@
 }
 
 .btn-send-matrix:hover {
-  background-color: #218838;
+  background-color:   #0056a0;
 }
 
 .btn-send-matrix:active {

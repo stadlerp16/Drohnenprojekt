@@ -43,11 +43,19 @@ export class Home implements OnInit {
     }
   }
 
-  // --- LED MATRIX LOGIK ---
+
   toggleLed(row: number, col: number) {
-    this.ledMatrix[row][col] = this.ledMatrix[row][col] === 0 ? 1 : 0;
+    const colorMap = { 'r': 1, 'b': 2, 'p': 3 };
+    const selectedColorCode = colorMap[this.droneService.selectedColor];
+
+    if (this.ledMatrix[row][col] === selectedColorCode) {
+      this.ledMatrix[row][col] = 0; // Ausschalten
+    } else {
+      this.ledMatrix[row][col] = selectedColorCode; // Farbe setzen/ändern
+    }
+
     this.droneService.sendLedUpdate(this.ledMatrix).subscribe({
-      next: (res) => console.log('Matrix gesendet', res),
+      next: (res) => console.log(`Matrix Update: Pixel [${row},${col}] Farbe ${this.droneService.selectedColor}`, res),
       error: (err) => console.error('Matrix Fehler', err)
     });
   }
@@ -61,6 +69,10 @@ export class Home implements OnInit {
       },
       error: (err) => console.error('Fehler beim manuellen Senden der Matrix:', err)
     });
+  }
+
+  selectColor(color: 'r' | 'b' | 'p') {
+    this.droneService.selectedColor = color;
   }
 
   clearMatrix() {
