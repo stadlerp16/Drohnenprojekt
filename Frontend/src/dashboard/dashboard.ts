@@ -1,11 +1,12 @@
 import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { DroneService } from '../app/services/drohne.service';
 import { Router } from '@angular/router';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
@@ -18,6 +19,8 @@ export class Dashboard implements OnDestroy , OnInit {
   isFlying: boolean = true;
   isFlightActive: boolean = false;
   private socket: WebSocket | null = null;
+  showSaveModal: boolean = false;
+  flightName: string = '';
 
   // JOYSTICK STATE
   private left = { x: 0, y: 0 };
@@ -270,9 +273,32 @@ export class Dashboard implements OnDestroy , OnInit {
 
   stopDrone() {
     this.droneService.stopDrone().subscribe({
-      next: () => this.cleanUp(),
+      next: () => {
+        this.cleanUp();
+        this.showSaveModal = true; // Modal öffnen nach dem Landen
+      },
       error: (err) => console.error('Stop fehlgeschlagen:', err)
     });
+  }
+
+  saveFlightName() {
+    if (!this.flightName.trim()) return;
+
+    this.droneService.saveFlight({
+      ip: this.droneService.connectedIp, // connectedIp muss im Service gespeichert sein
+      courseName: this.flightName.trim()
+    }).subscribe({
+      next: () => {
+        console.log('Flug gespeichert:', this.flightName);
+        this.closeModal();
+      },
+      error: (err) => console.error('Speichern fehlgeschlagen:', err)
+    });
+  }
+
+  closeModal() {
+    this.showSaveModal = false;
+    this.flightName = '';
   }
 
   emergencyStop() {

@@ -12,10 +12,12 @@ export class DroneService {
 
   isAutoFlight = false;
   selectedAutoFlight: string | null = null;
+  connectedIp: string = '';
 
   constructor(private http: HttpClient) {}
 
   sendIpAddress(ip: string): Observable<any> {
+    this.connectedIp = ip; // IP merken
     return this.http.post(`${this.baseUrl}/connect`, { ip });
   }
 
@@ -35,7 +37,7 @@ export class DroneService {
   }
 
   saveFlight(payload: { ip: string, courseName: string }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/save-course`, payload);
+    return this.http.post(`${this.baseUrl}/save-flight-name`, payload);
   }
 
   startDrone(): Observable<any> {

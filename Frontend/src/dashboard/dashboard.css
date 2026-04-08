@@ -158,3 +158,88 @@
 .btn-joy.stop {
   background-color: #dc3545;
 }
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-box {
+  background: #ffffff; /* Ersatz für background-primary */
+  border: 1px solid #e5e7eb; /* Ersatz für border-secondary */
+  border-radius: 16px;
+  padding: 32px;
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.modal-box h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 500;
+  color: #111827; /* Ersatz für text-primary */
+}
+
+.modal-box p {
+  margin: 0;
+  color: #6b7280; /* Ersatz für text-secondary */
+  font-size: 14px;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #d1d5db; /* Ersatz für border-primary */
+  border-radius: 8px;
+  font-size: 15px;
+  background: #f9fafb; /* Ersatz für background-secondary */
+  color: #111827;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.modal-input:focus {
+  border-color: #3b82f6; /* Blau als Fokus-Farbe sieht meist besser aus */
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.btn-secondary {
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: transparent;
+  color: #374151;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-primary {
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: none;
+  background: #111827; /* Dunkler Button */
+  color: #ffffff; /* Weißer Text */
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
