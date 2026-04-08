@@ -356,6 +356,30 @@
   font-weight: 600;
 }
 
+.matrix-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.btn-send-matrix {
+  background-color: #0067c0;
+  color: white;
+  border: none;
+  padding: 5px 5px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.btn-send-matrix:hover {
+  background-color: #218838;
+}
+
+.btn-send-matrix:active {
+  transform: scale(0.95);
+}
+
 .btn-clear-matrix {
   background: #f5f5f5;
   border: 1px solid #ddd;

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {interval, Observable, startWith, switchMap} from 'rxjs';
 
+
 @Injectable({ providedIn: 'root' })
 export class DroneService {
   private baseUrl = 'http://localhost:8000/drone';
