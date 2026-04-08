@@ -302,6 +302,7 @@ export class Dashboard implements OnDestroy , OnInit {
   }
 
   closeModal() {
+    this.isStarted = false;
     this.showSaveModal = false;
     this.flightName = '';
   }
