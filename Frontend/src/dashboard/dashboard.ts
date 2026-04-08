@@ -22,6 +22,7 @@ export class Dashboard implements OnDestroy , OnInit {
   private socket: WebSocket | null = null;
   showSaveModal: boolean = false;
   flightName: string = '';
+  showafterland: boolean = false;
 
   // JOYSTICK STATE
   private left = { x: 0, y: 0 };
@@ -176,10 +177,9 @@ export class Dashboard implements OnDestroy , OnInit {
 
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
-    if(event.key === "Space" || " "){
+    if (event.key === ' ' || event.code === 'Space'){
       if(!this.isFlying) this.isFlying = true;
-      else this.isFlying = false;
-      if(this.isStarted) this.showSaveModal = true
+      if(this.isStarted) this.showafterland = true
       if(!this.isStarted) this.isStarted = true;
     }
     if (this.isFlying && this.droneService.selectedMode === 'controlkeyboard') {
@@ -187,6 +187,10 @@ export class Dashboard implements OnDestroy , OnInit {
       event.preventDefault();
       if (event.repeat) return;
       this.sendData({ key: event.key, pressed: true });
+    }
+    if(this.showafterland){
+      this.showSaveModal= true;
+      this.isFlying = false;
     }
   }
 
@@ -288,10 +292,8 @@ export class Dashboard implements OnDestroy , OnInit {
 
   saveFlightName() {
     if (!this.flightName.trim()) return;
-    this.isStarted = false;
     this.droneService.saveFlight({
-      ip: this.droneService.connectedIp, // connectedIp muss im Service gespeichert sein
-      courseName: this.flightName.trim()
+      name: this.flightName.trim()
     }).subscribe({
       next: () => {
         console.log('Flug gespeichert:', this.flightName);
@@ -302,6 +304,8 @@ export class Dashboard implements OnDestroy , OnInit {
   }
 
   closeModal() {
+    this.isStarted = false;
+    this.showafterland = false;
     this.showSaveModal = false;
     this.flightName = '';
   }

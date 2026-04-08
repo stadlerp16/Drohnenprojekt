@@ -36,7 +36,7 @@ export class DroneService {
     return this.http.post(`${this.baseUrl}/play-flight`, { name: flightName });
   }
 
-  saveFlight(payload: { ip: string, courseName: string }): Observable<any> {
+  saveFlight(payload: { name: string }): Observable<any> {
     return this.http.post(`${this.baseUrl}/save-flight-name`, payload);
   }
 
