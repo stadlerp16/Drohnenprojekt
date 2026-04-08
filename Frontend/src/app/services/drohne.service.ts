@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {interval, Observable, startWith, switchMap} from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class DroneService {
   private baseUrl = 'http://localhost:8000/drone';
+  private wsUrl = 'ws://localhost:8000/drohne/telemetry';
 
   // Zentraler Status
   isConnected = false;
@@ -12,9 +13,23 @@ export class DroneService {
 
   isAutoFlight = false;
   selectedAutoFlight: string | null = null;
+  activeIp: string | null = null;
+
+  public telemetry: any = {
+    bat: 0,
+    speed: 0,
+    h: 0,
+    pitch: 0,
+    roll: 0,
+    yaw: 0
+  };
   connectedIp: string = '';
 
-  constructor(private http: HttpClient) {}
+  private socket: WebSocket | null = null;
+
+  constructor(private http: HttpClient) {
+    this.initTelemetryWebSocket();
+  }
 
   sendIpAddress(ip: string): Observable<any> {
     this.connectedIp = ip; // IP merken
@@ -50,5 +65,42 @@ export class DroneService {
 
   emergencyStop(): Observable<any> {
     return this.http.post(`${this.baseUrl}/emergency`, {});
+  }
+
+  sendLedUpdate(row: number, col: number, state: boolean): Observable<any> {
+    return this.http.post(`${this.baseUrl}/led`, { row, col, active: state });
+  }
+
+  sendControlCommand(command: string) {
+    return this.http.post(`${this.baseUrl}/command`, { command: command });
+  }
+
+  private initTelemetryWebSocket() {
+    this.socket = new WebSocket(this.wsUrl);
+
+    this.socket.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        // Die Telemetrie-Daten werden hier direkt aktualisiert
+        this.telemetry = {
+          bat: data.bat || 0,
+          speed: data.speed || 0,
+          h: data.h || 0,
+          pitch: data.pitch || 0,
+          roll: data.roll || 0,
+          yaw: data.yaw || 0
+        };
+      } catch (err) {
+        console.error('Fehler beim Parsen der WebSocket-Daten:', err);
+      }
+    };
+
+    this.socket.onopen = () => console.log('WebSocket Telemetrie: Verbunden');
+    this.socket.onerror = (err: any) => console.error('WebSocket Fehler:', err);
+
+    this.socket.onclose = () => {
+      console.warn('WebSocket geschlossen. Reconnect in 2s...');
+      setTimeout(() => this.initTelemetryWebSocket(), 2000);
+    };
   }
 }
