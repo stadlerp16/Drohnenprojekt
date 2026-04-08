@@ -1,16 +1,14 @@
 import asyncio
-
-from fastapi import APIRouter, Body, HTTPException
+from datetime import datetime, timedelta
+from fastapi import APIRouter, Body, HTTPException, WebSocket, WebSocketDisconnect
 import ipaddress
-
-from starlette.websockets import WebSocketDisconnect
-
-from starlette.websockets import WebSocket
+from pydantic import BaseModel
 
 import Services.DrohneVerwaltung.drohneService as drohne_service
 import Services.DrohneVerwaltung.telemtrieService as telemtrie_service
+from connect import label_flight, get_all_flight_names
 router = APIRouter()
-
+class FlightRequest(BaseModel): name: str
 
 @router.post("/connect")
 def connect_drone(ip: str = Body(..., embed=True)):
@@ -81,7 +79,7 @@ async def gettelemetrie(ws: WebSocket):
         while True:
             data = telemtrie_service.get_telemetry()
             await ws.send_json(data)
-            await asyncio.sleep(0.5)  # alle 500 ms aktualisieren
+            await asyncio.sleep(0.1)  # alle 500 ms aktualisieren
 
     except WebSocketDisconnect:
         print("[WebSocket] Telemetrie getrennt")
@@ -92,3 +90,17 @@ async def gettelemetrie(ws: WebSocket):
             await ws.close()
         except Exception:
             pass
+
+@router.post("/save-flight-name")
+async def save_flight_name(req: FlightRequest):
+    """Speichert den letzten Flug aus dem telemtrieService Puffer."""
+    s, e = telemtrie_service.last_completed_flight["start"], telemtrie_service.last_completed_flight["end"]
+    if s and e:
+        label_flight(s - timedelta(seconds=5), e + timedelta(seconds=1), req.name)
+        telemtrie_service.last_completed_flight = {"start": None, "end": None}
+        return {"ok": True}
+    return {"ok": False, "message": "Kein Flug im Puffer"}
+
+@router.get("/flights")
+async def list_flights():
+    return {"ok": True, "flights": get_all_flight_names()}

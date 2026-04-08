@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26b6f950-785b-47a4-9c2f-9295330bdc85" name="Changes" comment="Merge branch 'main' of https://github.com/stadlerp16/Drohnenprojekt&#10;&#10;# Conflicts:&#10;#&#9;Backend/.idea/workspace.xml">
+    <list default="true" id="26b6f950-785b-47a4-9c2f-9295330bdc85" name="Changes" comment=".">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Routes/drohnenRoutes.py" beforeDir="false" afterPath="$PROJECT_DIR$/Routes/drohnenRoutes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Routes/steuerungRoutes.py" beforeDir="false" afterPath="$PROJECT_DIR$/Routes/steuerungRoutes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/DrohneVerwaltung/telemtrieService.py" beforeDir="false" afterPath="$PROJECT_DIR$/Services/DrohneVerwaltung/telemtrieService.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,7 +39,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/stadlerp16/Drohnenprojekt.git&quot;,
-    &quot;accountId&quot;: &quot;1978b089-0d8e-42b3-96e0-deda842a48c7&quot;
+    &quot;accountId&quot;: &quot;833642a4-41db-4f43-a67c-8f86849f90e4&quot;
   }
 }</component>
   <component name="ProjectColorInfo">{
@@ -47,25 +50,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python.connect.executor": "Run",
-    "Python.main.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/RechenzentrumGastein/Projekte/SYP/DrohnenProjekt/Drohnenprojekt/Backend",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.connect.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Luca&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/RechenzentrumGastein/Projekte/SYP/DrohnenProjekt/Drohnenprojekt/Backend&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration default="true" type="DjangoTestsConfigurationType">
       <module name="Backend" />
@@ -212,6 +215,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
+        <option value="bundled-js-predefined-d6986cc7102b-b598e85cdad2-JavaScript-PY-252.25557.178" />
         <option value="bundled-python-sdk-ce6832f46686-7b97d883f26b-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.25557.178" />
       </set>
     </attachedChunks>
@@ -257,6 +261,9 @@
       <workItem from="1772092003487" duration="5389000" />
       <workItem from="1772178400267" duration="44000" />
       <workItem from="1772208544195" duration="1736000" />
+      <workItem from="1774508862201" duration="2005000" />
+      <workItem from="1774511166666" duration="6347000" />
+      <workItem from="1775627003040" duration="7492000" />
     </task>
     <task id="LOCAL-00001" summary="Grundlegende Ordnerstrukur und routing von main.py in die anderen Routes">
       <option name="closed" value="true" />
