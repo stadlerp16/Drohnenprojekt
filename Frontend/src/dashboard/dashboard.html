@@ -1,5 +1,40 @@
 <div class="dashboard-page">
 
+  <div class="telemetry-overlay">
+    <div class="tel-card">
+      <span class="tel-label">Batterie</span>
+      <span class="tel-value">{{ droneService.telemetry?.bat || 0 }}%</span>
+      <div class="tel-bat-bg">
+        <div class="tel-bat-fill" [style.width.%]="droneService.telemetry?.bat"></div>
+      </div>
+    </div>
+
+    <div class="tel-card">
+      <span class="tel-label">Höhe</span>
+      <span class="tel-value">{{ droneService.telemetry?.h || 0 }} cm</span>
+    </div>
+
+    <div class="tel-card">
+      <span class="tel-label">Geschwindigkeit</span>
+      <span class="tel-value">{{ droneService.telemetry?.speed || 0 }} cm/s</span>
+    </div>
+
+    <div class="tel-card">
+      <span class="tel-label">Lage (P | R | Y)</span>
+      <span class="tel-value small">
+        {{ droneService.telemetry?.pitch || 0 }}° |
+        {{ droneService.telemetry?.roll || 0 }}° |
+        {{ droneService.telemetry?.yaw || 0 }}°
+      </span>
+    </div>
+
+
+    <div class="tel-card">
+      <span class="tel-label">IP Adresse</span>
+      <span class="tel-value small">{{ droneService.activeIp || 'Nicht verbunden' }}</span>
+    </div>
+  </div>
+
   <div class="dashboard-header">
     @if (droneService.isAutoFlight) {
       <div class="header-content autopilot">
