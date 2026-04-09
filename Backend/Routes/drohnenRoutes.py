@@ -106,11 +106,15 @@ async def list_flights(): return {"ok": True, "flights": get_all_flight_names()}
 from typing import List
 from fastapi import Body
 
-@router.post("/led")
-async def send_led_image(pattern: List[List[int]] = Body(..., embed=True)):
-    print("LED PATTERN:", pattern)
+from fastapi import Body
 
-    ok = telemtrie_service.set_matrix_pattern(pattern)
+@router.post("/led")
+async def send_led_image(data: dict = Body(...)):
+    matrix_str = data.get("matrix")
+
+    print("LED STRING:", matrix_str)
+
+    ok = telemtrie_service.set_matrix_string(matrix_str)
 
     if not ok:
         return {
@@ -123,12 +127,15 @@ async def send_led_image(pattern: List[List[int]] = Body(..., embed=True)):
         "mode": "image"
     }
 
-
 @router.post("/command")
-async def send_led_text(command: str = Body(..., embed=True)):
-    print("COMMAND:", command)
+async def send_led_text(data: dict = Body(...)):
+    command = data.get("command")
+    color = data.get("color", "r")
 
-    ok = telemtrie_service.set_matrix_text(command, scroll=True)
+    print("COMMAND:", command)
+    print("COLOR:", color)
+
+    ok = telemtrie_service.set_matrix_text(command, color=color, scroll=True)
 
     if not ok:
         return {
@@ -139,5 +146,6 @@ async def send_led_text(command: str = Body(..., embed=True)):
     return {
         "status": "ok",
         "mode": "text-scroll",
-        "command": command
+        "command": command,
+        "color": color
     }

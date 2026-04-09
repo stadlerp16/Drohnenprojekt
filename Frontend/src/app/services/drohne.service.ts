@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {interval, Observable, startWith, switchMap} from 'rxjs';
 
+
 @Injectable({ providedIn: 'root' })
 export class DroneService {
   private baseUrl = 'http://localhost:8000/drone';
-  private wsUrl = 'ws://localhost:8000/drohne/telemetry';
+  private wsUrl = 'ws://localhost:8000/drone/telemetrie';
 
   // Zentraler Status
   isConnected = false;
@@ -67,13 +68,29 @@ export class DroneService {
     return this.http.post(`${this.baseUrl}/emergency`, {});
   }
 
-  sendLedUpdate(row: number, col: number, state: boolean): Observable<any> {
-    return this.http.post(`${this.baseUrl}/led`, { row, col, active: state });
+  // drone.service.ts
+
+// Ändere die Methode so ab:
+  sendLedUpdate(pattern: number[][]): Observable<any> {
+    const map: { [key: number]: string } = {
+      0: '0',
+      1: 'r',
+      2: 'b',
+      3: 'p'
+    };
+
+    const matrix = pattern.flat().map(pixel => map[pixel] || '0').join('');
+    return this.http.post(`${this.baseUrl}/led`, { matrix });
   }
 
   sendControlCommand(command: string) {
-    return this.http.post(`${this.baseUrl}/command`, { command: command });
+    return this.http.post(`${this.baseUrl}/command`, {
+      command: command,
+      color: this.selectedColor
+    });
   }
+
+  public selectedColor: 'r' | 'b' | 'p' = 'b';
 
   private initTelemetryWebSocket() {
     this.socket = new WebSocket(this.wsUrl);
@@ -81,15 +98,18 @@ export class DroneService {
     this.socket.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        // Die Telemetrie-Daten werden hier direkt aktualisiert
+
+        // Mapping der Backend-Keys (battery, height) auf deine Frontend-Variablen (bat, h)
         this.telemetry = {
-          bat: data.bat || 0,
-          speed: data.speed || 0,
-          h: data.h || 0,
-          pitch: data.pitch || 0,
-          roll: data.roll || 0,
-          yaw: data.yaw || 0
+          bat: data.battery || 0,   // Backend sendet "battery"
+          h: data.height || 0,      // Backend sendet "height"
+          speed: data.speed || 0,   // Bleibt gleich
+          pitch: data.pitch || 0,   // Bleibt gleich
+          roll: data.roll || 0,     // Bleibt gleich
+          yaw: data.yaw || 0        // Bleibt gleich
         };
+
+        console.log('Telemetrie Update:', this.telemetry);
       } catch (err) {
         console.error('Fehler beim Parsen der WebSocket-Daten:', err);
       }
