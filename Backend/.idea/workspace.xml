@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26b6f950-785b-47a4-9c2f-9295330bdc85" name="Changes" comment="Merge branch 'main' of https://github.com/stadlerp16/Drohnenprojekt&#10;&#10;# Conflicts:&#10;#&#9;Backend/.idea/workspace.xml">
+    <list default="true" id="26b6f950-785b-47a4-9c2f-9295330bdc85" name="Changes" comment="Endlich">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Routes/drohnenRoutes.py" beforeDir="false" afterPath="$PROJECT_DIR$/Routes/drohnenRoutes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/DrohneVerwaltung/telemtrieService.py" beforeDir="false" afterPath="$PROJECT_DIR$/Services/DrohneVerwaltung/telemtrieService.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,7 +22,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="Simon" />
+        <entry key="$PROJECT_DIR$/.." value="Lipp" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -266,7 +263,12 @@
       <workItem from="1772092003487" duration="5389000" />
       <workItem from="1772178400267" duration="44000" />
       <workItem from="1772208544195" duration="1736000" />
-      <workItem from="1774511321911" duration="4717000" />
+      <workItem from="1774426968604" duration="1177000" />
+      <workItem from="1774428272838" duration="201000" />
+      <workItem from="1774429015032" duration="649000" />
+      <workItem from="1774429686281" duration="515000" />
+      <workItem from="1775628204090" duration="899000" />
+      <workItem from="1775719457840" duration="1251000" />
     </task>
     <task id="LOCAL-00001" summary="Grundlegende Ordnerstrukur und routing von main.py in die anderen Routes">
       <option name="closed" value="true" />
