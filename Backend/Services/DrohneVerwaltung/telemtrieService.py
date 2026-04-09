@@ -57,24 +57,18 @@ def get_telemetry() -> dict:
     }
 
 
-def set_matrix_pattern(pattern: List[List[int]]) -> bool:
+def set_matrix_string(matrix_str: str) -> bool:
     if drohne_service.ep_drone is None:
         print("[LED-Matrix] Drohne nicht verbunden")
         return False
 
-    if len(pattern) != 8 or any(len(row) != 8 for row in pattern):
-        print("[LED-Matrix] Ungültiges Format: Matrix muss 8x8 sein")
+    if not matrix_str or len(matrix_str) != 64:
+        print("[LED-Matrix] Ungültiger String: muss genau 64 Zeichen haben")
         return False
 
     try:
-        matrix_str = "".join(
-            "r" if pixel == 1 else "0"
-            for row in pattern
-            for pixel in row
-        )
-
         drohne_service.ep_drone.led.set_mled_graph(matrix_str)
-        print("[LED-Matrix] Ganzes Bild gesetzt")
+        print("[LED-Matrix] String direkt gesetzt")
         return True
     except Exception as e:
         print(f"[LED-Matrix] Fehler: {e}")
@@ -85,6 +79,9 @@ def set_matrix_text(text: str, color: str = "r", scroll: bool = True) -> bool:
     if drohne_service.ep_drone is None:
         print("[LED-Matrix] Drohne nicht verbunden")
         return False
+
+    if color not in ["r", "b", "p"]:
+        color = "r"
 
     try:
         drohne_service.ep_drone.led.set_mled_bright(255)

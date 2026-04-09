@@ -164,12 +164,11 @@ def buildconnection(drone_ip: str) -> bool:
         ep_drone = new_drone
         current_drone_ip = drone_ip
         count = 0
-        new_drone.led.set_led(r=0, g=0, b=255)
-        new_drone.led.set_led_blink(freq=5, r1=0, g1=0, b1=255, r2=0, g2=0, b2=0)
+        new_drone.led.set_led(r=0, g=0, b=200)
         time.sleep(3)
 
         print("4")
-        ep_drone.led.set_led(r=0, g=255, b=0)
+        new_drone.led.set_led_blink(freq=1, r1=255, g1=0, b1=0, r2=0, g2=0, b2=255)
         watchdog_running = False
         starte_watchdog()
         return True
