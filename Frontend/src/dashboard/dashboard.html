@@ -28,6 +28,15 @@
       </span>
     </div>
 
+    <div class="tel-card">
+      <span class="tel-label">Entfernung</span>
+      <span class="tel-value small">{{ droneService.telemetry?.distance  || 0}}</span>
+    </div>
+
+    <div class="tel-card">
+      <span class="tel-label">Höhe</span>
+      <span class="tel-value small">{{ droneService.telemetry?.high || 0}}</span>
+    </div>
 
     <div class="tel-card">
       <span class="tel-label">IP Adresse</span>

@@ -22,7 +22,9 @@ export class DroneService {
     h: 0,
     pitch: 0,
     roll: 0,
-    yaw: 0
+    yaw: 0,
+    distance: 0,
+    high: 0,
   };
 
   private socket: WebSocket | null = null;
@@ -87,14 +89,15 @@ export class DroneService {
       try {
         const data = JSON.parse(event.data);
 
-        // Mapping der Backend-Keys (battery, height) auf deine Frontend-Variablen (bat, h)
         this.telemetry = {
-          bat: data.battery || 0,   // Backend sendet "battery"
-          h: data.height || 0,      // Backend sendet "height"
-          speed: data.speed || 0,   // Bleibt gleich
-          pitch: data.pitch || 0,   // Bleibt gleich
-          roll: data.roll || 0,     // Bleibt gleich
-          yaw: data.yaw || 0        // Bleibt gleich
+          bat: data.battery || 0,
+          h: data.height || 0,
+          speed: data.speed || 0,
+          pitch: data.pitch || 0,
+          roll: data.roll || 0,
+          yaw: data.yaw || 0,
+          distance: data.distance || 0,
+          high: data.high || 0,
         };
 
         console.log('Telemetrie Update:', this.telemetry);
