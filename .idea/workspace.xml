@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="fixes von Variablen der Ip adresse und überschneidungen und senen funktion der matrix &amp; farben für LED r b &amp; p">
+    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="höhe und entfernung von luca im ui visualisiert">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/src/app/services/drohne.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/app/services/drohne.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.html" afterDir="false" />
@@ -158,7 +158,7 @@
       <workItem from="1775720565300" duration="743000" />
       <workItem from="1775806916589" duration="123000" />
       <workItem from="1776232791180" duration="2702000" />
-      <workItem from="1776323755544" duration="268000" />
+      <workItem from="1776323755544" duration="465000" />
     </task>
     <task id="LOCAL-00001" summary="Create Backend">
       <option name="closed" value="true" />
@@ -304,7 +304,15 @@
       <option name="project" value="LOCAL" />
       <updated>1775635340232</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="höhe und entfernung von luca im ui visualisiert">
+      <option name="closed" value="true" />
+      <created>1776324049317</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1776324049317</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -327,6 +335,7 @@
     <MESSAGE value="fixes" />
     <MESSAGE value="fixes von Variablen der Ip adresse und überschneidungen und senen funktion der matrix" />
     <MESSAGE value="fixes von Variablen der Ip adresse und überschneidungen und senen funktion der matrix &amp; farben für LED r b &amp; p" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixes von Variablen der Ip adresse und überschneidungen und senen funktion der matrix &amp; farben für LED r b &amp; p" />
+    <MESSAGE value="höhe und entfernung von luca im ui visualisiert" />
+    <option name="LAST_COMMIT_MESSAGE" value="höhe und entfernung von luca im ui visualisiert" />
   </component>
 </project>

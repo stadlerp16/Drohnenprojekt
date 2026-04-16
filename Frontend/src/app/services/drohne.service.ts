@@ -24,7 +24,7 @@ export class DroneService {
     roll: 0,
     yaw: 0,
     distance: 0,
-    high: 0,
+    timer: 0,
   };
 
   private socket: WebSocket | null = null;
@@ -97,7 +97,7 @@ export class DroneService {
           roll: data.roll || 0,
           yaw: data.yaw || 0,
           distance: data.distance || 0,
-          high: data.high || 0,
+          timer: data.timer || 0,
         };
 
         console.log('Telemetrie Update:', this.telemetry);
