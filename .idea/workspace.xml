@@ -6,6 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="timer statt höhe">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/Services/DrohneVerwaltung/telemtrieService.py" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/Services/DrohneVerwaltung/telemtrieService.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/connect.py" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/connect.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/app/services/drohne.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/app/services/drohne.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/home/home.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/home/home.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

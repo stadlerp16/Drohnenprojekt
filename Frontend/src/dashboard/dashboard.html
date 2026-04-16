@@ -16,7 +16,7 @@
 
     <div class="tel-card">
       <span class="tel-label">Geschwindigkeit</span>
-      <span class="tel-value">{{ droneService.telemetry?.speed || 0 }} cm/s</span>
+      <span class="tel-value">{{ droneService.telemetry?.speed || 0 }} m</span>
     </div>
 
     <div class="tel-card">
@@ -30,12 +30,12 @@
 
     <div class="tel-card">
       <span class="tel-label">Entfernung</span>
-      <span class="tel-value small">{{ droneService.telemetry?.distance  || 0}} cm</span>
+      <span class="tel-value small">{{ droneService.telemetry?.total_distance_cm  || 0}} cm</span>
     </div>
 
     <div class="tel-card">
       <span class="tel-label">Timer</span>
-      <span class="tel-value small">{{ droneService.telemetry?.timer || 0}} s</span>
+      <span class="tel-value small">{{ droneService.telemetry?.flight_duration || 0}} s</span>
     </div>
 
     <div class="tel-card">

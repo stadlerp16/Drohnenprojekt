@@ -60,7 +60,7 @@ def _integrate_velocity(vgx: float, vgy: float, vgz: float) -> float:
         return 0.0
 
     # 3D-Distanz: sqrt(vx² + vy² + vz²) × Δt
-    speed = math.sqrt(vgx ** 2 + vgy ** 2 + vgz ** 2)
+    speed = round(math.sqrt((vgx or 0)**2 + (vgy or 0)**2 + (vgz or 0)**2) / 10, 2)
     delta_dist = speed * dt
 
     # Schwellwert: Rauschen unter 2 cm/s ignorieren
@@ -144,7 +144,7 @@ def get_telemetry() -> dict:
         try:
             data.update({
                 "battery": drone.get_status(name="bat"),
-                "speed": round(math.sqrt(vgx ** 2 + vgy ** 2 + vgz ** 2), 2),
+                "speed": round(math.sqrt((vgx or 0)**2 + (vgy or 0)**2 + (vgz or 0)**2) / 10, 2),
                 "pitch": drone.get_status(name="pitch"),
                 "roll": drone.get_status(name="roll"),
                 "yaw": drone.get_status(name="yaw"),
