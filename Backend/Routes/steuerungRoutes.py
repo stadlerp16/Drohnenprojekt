@@ -140,10 +140,6 @@ async def ws_touch(ws: WebSocket):
         await session.stop()
 
 
-
-@router.get("/flights")
-async def list_flights(): return {"ok": True, "flights": get_all_flight_names()}
-
 @router.post("/play-flight")
 async def start_replay(req: FlightRequest):
     if rs.active_replay_task and not rs.active_replay_task.done():

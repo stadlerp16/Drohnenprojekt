@@ -115,8 +115,6 @@ async def save_flight_name(req: FlightRequest):
 async def list_flights():
     return {"ok": True, "flights": get_all_flight_names()}
 
-@router.get("/flights")
-async def list_flights(): return {"ok": True, "flights": get_all_flight_names()}
 
 from typing import List
 from fastapi import Body

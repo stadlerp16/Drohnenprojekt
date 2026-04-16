@@ -153,19 +153,6 @@ def get_telemetry() -> dict:
             pass
 
     return data
-    return {
-        "connected": True,
-        "ip": current_drone_ip,
-        "battery": battery,
-        "height": height,
-        "speed": speed,
-        "pitch": pitch,
-        "roll": roll,
-        "yaw": yaw,
-        "vgx": vgx,
-        "vgy": vgy,
-        "vgz": vgz
-    }
 
 
 def set_matrix_string(matrix_str: str) -> bool:
