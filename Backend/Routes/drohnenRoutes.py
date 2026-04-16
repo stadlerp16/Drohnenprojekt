@@ -1,14 +1,23 @@
 import asyncio
 from datetime import datetime, timedelta
 from fastapi import APIRouter, Body, HTTPException, WebSocket, WebSocketDisconnect
+from urllib import request
+
+from fastapi import APIRouter, Body, HTTPException
 import ipaddress
 from pydantic import BaseModel
+from starlette.websockets import WebSocket
 
 import Services.DrohneVerwaltung.drohneService as drohne_service
 import Services.DrohneVerwaltung.telemtrieService as telemtrie_service
+from connect import get_all_flight_names
+from pydantic import BaseModel
+from typing import List
+
 from connect import label_flight, get_all_flight_names
 router = APIRouter()
 class FlightRequest(BaseModel): name: str
+
 
 @router.post("/connect")
 def connect_drone(ip: str = Body(..., embed=True)):
@@ -70,6 +79,7 @@ def disconnect_drone():
         "status": "ok",
         "message": "Drohne wurde getrennt"
     }
+
 @router.websocket("/telemetrie")
 async def gettelemetrie(ws: WebSocket):
     await ws.accept()
@@ -104,3 +114,53 @@ async def save_flight_name(req: FlightRequest):
 @router.get("/flights")
 async def list_flights():
     return {"ok": True, "flights": get_all_flight_names()}
+
+@router.get("/flights")
+async def list_flights(): return {"ok": True, "flights": get_all_flight_names()}
+
+from typing import List
+from fastapi import Body
+
+from fastapi import Body
+
+@router.post("/led")
+async def send_led_image(data: dict = Body(...)):
+    matrix_str = data.get("matrix")
+
+    print("LED STRING:", matrix_str)
+
+    ok = telemtrie_service.set_matrix_string(matrix_str)
+
+    if not ok:
+        return {
+            "status": "error",
+            "message": "Bild konnte nicht angezeigt werden"
+        }
+
+    return {
+        "status": "ok",
+        "mode": "image"
+    }
+
+@router.post("/command")
+async def send_led_text(data: dict = Body(...)):
+    command = data.get("command")
+    color = data.get("color", "r")
+
+    print("COMMAND:", command)
+    print("COLOR:", color)
+
+    ok = telemtrie_service.set_matrix_text(command, color=color, scroll=True)
+
+    if not ok:
+        return {
+            "status": "error",
+            "message": "Text konnte nicht angezeigt werden"
+        }
+
+    return {
+        "status": "ok",
+        "mode": "text-scroll",
+        "command": command,
+        "color": color
+    }

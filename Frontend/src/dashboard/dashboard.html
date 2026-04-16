@@ -1,5 +1,40 @@
 <div class="dashboard-page">
 
+  <div class="telemetry-overlay">
+    <div class="tel-card">
+      <span class="tel-label">Batterie</span>
+      <span class="tel-value">{{ droneService.telemetry?.bat || 0 }}%</span>
+      <div class="tel-bat-bg">
+        <div class="tel-bat-fill" [style.width.%]="droneService.telemetry?.bat"></div>
+      </div>
+    </div>
+
+    <div class="tel-card">
+      <span class="tel-label">Höhe</span>
+      <span class="tel-value">{{ droneService.telemetry?.h || 0 }} cm</span>
+    </div>
+
+    <div class="tel-card">
+      <span class="tel-label">Geschwindigkeit</span>
+      <span class="tel-value">{{ droneService.telemetry?.speed || 0 }} cm/s</span>
+    </div>
+
+    <div class="tel-card">
+      <span class="tel-label">Lage (P | R | Y)</span>
+      <span class="tel-value small">
+        {{ droneService.telemetry?.pitch || 0 }}° |
+        {{ droneService.telemetry?.roll || 0 }}° |
+        {{ droneService.telemetry?.yaw || 0 }}°
+      </span>
+    </div>
+
+
+    <div class="tel-card">
+      <span class="tel-label">IP Adresse</span>
+      <span class="tel-value small">{{ droneService.activeIp || 'Nicht verbunden' }}</span>
+    </div>
+  </div>
+
   <div class="dashboard-header">
     @if (droneService.isAutoFlight) {
       <div class="header-content autopilot">
@@ -28,9 +63,9 @@
         </div>
 
         <div class="joystick-controls">
-          <button class="btn-joy start" [disabled]="isFlying" (click)="startDrone()">START</button>
+
           <button class="btn-joy space-btn" (pointerdown)="handleSpaceAction(true)">TAKEOFF / LAND</button>
-          <button class="btn-joy stop" [disabled]="!isFlying" (click)="stopDrone()">STOP</button>
+
         </div>
 
         <div class="joystick-container">
@@ -59,5 +94,30 @@
       EMERGENCY STOP
     </button>
   </div>
+
+  @if (showSaveModal) {
+    <div class="modal-overlay" (click)="closeModal()">
+      <div class="modal-box" (click)="$event.stopPropagation()">
+        <h2>Flug speichern</h2>
+        <p>Gib deinem Flug einen Namen:</p>
+
+        <input
+          class="modal-input"
+          type="text"
+          placeholder="z.B. Runde 1, Testflug..."
+          [(ngModel)]="flightName"
+          (keyup.enter)="saveFlightName()"
+          autofocus
+        />
+
+        <div class="modal-actions">
+          <button class="btn-secondary" (click)="closeModal()">Abbrechen</button>
+          <button class="btn-primary" [disabled]="!flightName.trim()" (click)="saveFlightName()">
+            Speichern
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 
 </div>

@@ -11,7 +11,7 @@ from Services.Steuerung.controlServices import ControlSession
 from Services.Steuerung.keyboardSteuerung import set_key
 from Services.Steuerung.input_ps5 import set_gamepad
 from Services.Steuerung.input_touch import set_touch
-from connect import log_command
+from connect import log_command, get_all_flight_names
 
 router = APIRouter()
 
@@ -140,6 +140,10 @@ async def ws_touch(ws: WebSocket):
         await session.stop()
 
 
+
+@router.get("/flights")
+async def list_flights(): return {"ok": True, "flights": get_all_flight_names()}
+
 @router.post("/play-flight")
 async def start_replay(req: FlightRequest):
     if rs.active_replay_task and not rs.active_replay_task.done():
@@ -154,3 +158,4 @@ async def emergency():
         rs.active_replay_task.cancel()
     rs.stop_drone_immediately()
     return {"ok": True}
+
