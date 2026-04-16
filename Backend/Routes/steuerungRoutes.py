@@ -28,7 +28,6 @@ _SPACE_KEYS = {" ", "Space", "Spacebar"}
 
 
 async def handle_takeoff_logic(source: str, session: ControlSession):
-    """Nutzt die zentralen Variablen aus dem telemtrieService."""
     if await session.takeoff_land():
         log_command("FLIGHT_EVENT", "takeoff_land", source=source)
 
