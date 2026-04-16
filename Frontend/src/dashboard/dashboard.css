@@ -7,8 +7,68 @@
   background-color: #f3f3f3;
   padding: 0;
   margin: 0;
+  position: relative; /* Wichtig für die absolute Positionierung der Telemetrie */
+  overflow-x: hidden;
 }
 
+/* TELEMETRIE OVERLAY (Neu hinzugefügt) */
+.telemetry-overlay {
+  position: absolute;
+  left: 20px;
+  top: 120px; /* Platziert es unter dem Header */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 100;
+  pointer-events: none; /* Klicks gehen durch den leeren Bereich durch */
+}
+
+.tel-card {
+  background: white;
+  padding: 12px 18px;
+  border-radius: 8px;
+  border-left: 5px solid #007bff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  min-width: 180px;
+  pointer-events: auto; /* Boxen selbst sind klickbar/interaktiv */
+}
+
+.tel-label {
+  display: block;
+  font-size: 0.65rem;
+  color: #888;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+.tel-value {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #333;
+}
+
+.tel-value.small {
+  font-size: 0.9rem;
+}
+
+.tel-bat-bg {
+  width: 100%;
+  height: 5px;
+  background: #eee;
+  margin-top: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.tel-bat-fill {
+  height: 100%;
+  background: #28a745;
+  transition: width 0.5s ease;
+}
+
+/* DEIN BESTEHENDER CODE (Unverändert) */
 .dashboard-header {
   width: 100%;
   background: white;
@@ -157,4 +217,89 @@
 
 .btn-joy.stop {
   background-color: #dc3545;
+}
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-box {
+  background: #ffffff; /* Ersatz für background-primary */
+  border: 1px solid #e5e7eb; /* Ersatz für border-secondary */
+  border-radius: 16px;
+  padding: 32px;
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.modal-box h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 500;
+  color: #111827; /* Ersatz für text-primary */
+}
+
+.modal-box p {
+  margin: 0;
+  color: #6b7280; /* Ersatz für text-secondary */
+  font-size: 14px;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #d1d5db; /* Ersatz für border-primary */
+  border-radius: 8px;
+  font-size: 15px;
+  background: #f9fafb; /* Ersatz für background-secondary */
+  color: #111827;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.modal-input:focus {
+  border-color: #3b82f6; /* Blau als Fokus-Farbe sieht meist besser aus */
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.btn-secondary {
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: transparent;
+  color: #374151;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-primary {
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: none;
+  background: #111827; /* Dunkler Button */
+  color: #ffffff; /* Weißer Text */
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }

@@ -1,11 +1,12 @@
 import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { DroneService } from '../app/services/drohne.service';
 import { Router } from '@angular/router';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
@@ -15,9 +16,13 @@ export class Dashboard implements OnDestroy , OnInit {
   @ViewChild('leftJoy') leftJoy?: ElementRef;
   @ViewChild('rightJoy') rightJoy?: ElementRef;
 
-  isFlying: boolean = true;
+  isFlying: boolean = false;
+  isStarted: boolean = false;
   isFlightActive: boolean = false;
   private socket: WebSocket | null = null;
+  showSaveModal: boolean = false;
+  flightName: string = '';
+  showafterland: boolean = false;
 
   // JOYSTICK STATE
   private left = { x: 0, y: 0 };
@@ -172,11 +177,20 @@ export class Dashboard implements OnDestroy , OnInit {
 
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
+    if (event.key === ' ' || event.code === 'Space'){
+      if(!this.isFlying) this.isFlying = true;
+      if(this.isStarted) this.showafterland = true
+      if(!this.isStarted) this.isStarted = true;
+    }
     if (this.isFlying && this.droneService.selectedMode === 'controlkeyboard') {
       if (!this.allowedKeys.has(event.key)) return;
       event.preventDefault();
       if (event.repeat) return;
       this.sendData({ key: event.key, pressed: true });
+    }
+    if(this.showafterland){
+      this.showSaveModal= true;
+      this.isFlying = false;
     }
   }
 
@@ -252,13 +266,11 @@ export class Dashboard implements OnDestroy , OnInit {
     if (xNow && !this.lastXPressed) takeoffLand = true;
     this.lastXPressed = xNow;
 
-
-
     this.sendData({ lx, ly, rx, l2, r2, takeoffLand });
   }
 
 
-  startDrone() {
+  /*startDrone() {
     this.droneService.startDrone().subscribe({
       next: () => {
         this.isFlying = true;
@@ -270,9 +282,32 @@ export class Dashboard implements OnDestroy , OnInit {
 
   stopDrone() {
     this.droneService.stopDrone().subscribe({
-      next: () => this.cleanUp(),
+      next: () => {
+        this.cleanUp();
+        this.showSaveModal = true; // Modal öffnen nach dem Landen
+      },
       error: (err) => console.error('Stop fehlgeschlagen:', err)
     });
+  }*/
+
+  saveFlightName() {
+    if (!this.flightName.trim()) return;
+    this.droneService.saveFlight({
+      name: this.flightName.trim()
+    }).subscribe({
+      next: () => {
+        console.log('Flug gespeichert:', this.flightName);
+        this.closeModal();
+      },
+      error: (err) => console.error('Speichern fehlgeschlagen:', err)
+    });
+  }
+
+  closeModal() {
+    this.isStarted = false;
+    this.showafterland = false;
+    this.showSaveModal = false;
+    this.flightName = '';
   }
 
   emergencyStop() {

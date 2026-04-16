@@ -139,8 +139,7 @@ async def save_flight_name(req: FlightRequest):
         return {"ok": True, "message": f"Flug '{req.name}' gespeichert."}
     return {"ok": False, "message": "Kein abgeschlossener Flug gefunden."}
 
-@router.get("/flights")
-async def list_flights(): return {"ok": True, "flights": get_all_flight_names()}
+
 
 @router.post("/play-flight")
 async def start_replay(req: FlightRequest):
@@ -153,3 +152,4 @@ async def emergency():
     if rs.active_replay_task: rs.active_replay_task.cancel()
     rs.stop_drone_immediately()
     return {"ok": True}
+

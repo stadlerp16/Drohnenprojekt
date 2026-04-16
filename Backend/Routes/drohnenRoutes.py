@@ -1,4 +1,5 @@
 import asyncio
+from urllib import request
 
 from fastapi import APIRouter, Body, HTTPException
 import ipaddress
@@ -9,7 +10,12 @@ from starlette.websockets import WebSocket
 
 import Services.DrohneVerwaltung.drohneService as drohne_service
 import Services.DrohneVerwaltung.telemtrieService as telemtrie_service
+from connect import get_all_flight_names
+from pydantic import BaseModel
+from typing import List
+
 router = APIRouter()
+
 
 
 @router.post("/connect")
@@ -72,6 +78,7 @@ def disconnect_drone():
         "status": "ok",
         "message": "Drohne wurde getrennt"
     }
+
 @router.websocket("/telemetrie")
 async def gettelemetrie(ws: WebSocket):
     await ws.accept()
@@ -81,7 +88,7 @@ async def gettelemetrie(ws: WebSocket):
         while True:
             data = telemtrie_service.get_telemetry()
             await ws.send_json(data)
-            await asyncio.sleep(0.5)  # alle 500 ms aktualisieren
+            await asyncio.sleep(0.5)
 
     except WebSocketDisconnect:
         print("[WebSocket] Telemetrie getrennt")
@@ -92,3 +99,53 @@ async def gettelemetrie(ws: WebSocket):
             await ws.close()
         except Exception:
             pass
+
+@router.get("/flights")
+async def list_flights(): return {"ok": True, "flights": get_all_flight_names()}
+
+from typing import List
+from fastapi import Body
+
+from fastapi import Body
+
+@router.post("/led")
+async def send_led_image(data: dict = Body(...)):
+    matrix_str = data.get("matrix")
+
+    print("LED STRING:", matrix_str)
+
+    ok = telemtrie_service.set_matrix_string(matrix_str)
+
+    if not ok:
+        return {
+            "status": "error",
+            "message": "Bild konnte nicht angezeigt werden"
+        }
+
+    return {
+        "status": "ok",
+        "mode": "image"
+    }
+
+@router.post("/command")
+async def send_led_text(data: dict = Body(...)):
+    command = data.get("command")
+    color = data.get("color", "r")
+
+    print("COMMAND:", command)
+    print("COLOR:", color)
+
+    ok = telemtrie_service.set_matrix_text(command, color=color, scroll=True)
+
+    if not ok:
+        return {
+            "status": "error",
+            "message": "Text konnte nicht angezeigt werden"
+        }
+
+    return {
+        "status": "ok",
+        "mode": "text-scroll",
+        "command": command,
+        "color": color
+    }
