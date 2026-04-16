@@ -1,0 +1,43 @@
+@startuml
+!theme plain
+skinparam componentStyle uml2
+
+' Externe Systeme
+cloud "Web-Client / Frontend" as Client
+node "DJI Robomaster Drohne" as Hardware
+database "MariaDB" as DB
+
+' Backend Struktur
+package "FastAPI Backend" {
+  component "main.py\n(App Lifecycle & Init)" as Main
+  component "drohnenRoutes.py\n(API & WebSockets)" as Routes
+  
+  package "Services" {
+    component "drohneService.py\n(Drohnen-Steuerung)" as DroneSVC
+    component "telemtrieService.py\n(Tracking & Sensoren)" as TelemetrySVC
+  }
+  
+  component "connect.py\n(Datenbank-Schnittstelle)" as DatabaseLayer
+}
+
+' Verbindungen von Außen
+Client .down.> Routes : REST / WebSocket
+
+' Lifecycle und Router-Einbindung
+Main -down-> Routes : bindet Router ein
+Main -down-> DatabaseLayer : init_db()
+Main -down-> DroneSVC : test_reconnect() / close()
+
+' Anfragen von den Routes an die Logik
+Routes -down-> DroneSVC : buildconnection() / close()
+Routes -down-> TelemetrySVC : get_telemetry()
+Routes -down-> DatabaseLayer : label_flight() / get_all_flight_names()
+
+' Interne Service-Abhängigkeiten
+TelemetrySVC -left-> DroneSVC : liest Sensordaten (ep_drone)
+
+' Hardware und Datenbank Anbindung
+DroneSVC -down-> Hardware : Robomaster SDK (WLAN)
+DatabaseLayer -down-> DB : SQLModel
+
+@enduml

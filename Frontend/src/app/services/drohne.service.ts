@@ -26,6 +26,7 @@ export class DroneService {
     distance: 0,
     timer: 0,
   };
+  connectedIp: string = '';
 
   private socket: WebSocket | null = null;
 
@@ -34,8 +35,8 @@ export class DroneService {
   }
 
   sendIpAddress(ip: string): Observable<any> {
+    this.connectedIp = ip; // IP merken
     return this.http.post(`${this.baseUrl}/connect`, { ip });
-
   }
 
   disconnect(): Observable<any> {
@@ -53,17 +54,17 @@ export class DroneService {
     return this.http.post(`${this.baseUrl}/play-flight`, { name: flightName });
   }
 
-  saveFlight(payload: { ip: string, courseName: string }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/save-course`, payload);
+  saveFlight(payload: { name: string }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/save-flight-name`, payload);
   }
 
-  startDrone(): Observable<any> {
+  /*startDrone(): Observable<any> {
     return this.http.post(`${this.baseUrl}/start`, {});
   }
 
   stopDrone(): Observable<any> {
     return this.http.post(`${this.baseUrl}/stop`, {});
-  }
+  }*/
 
   emergencyStop(): Observable<any> {
     return this.http.post(`${this.baseUrl}/emergency`, {});
@@ -73,11 +74,22 @@ export class DroneService {
 
 // Ändere die Methode so ab:
   sendLedUpdate(pattern: number[][]): Observable<any> {
-    return this.http.post(`${this.baseUrl}/led`, { pattern: pattern });
+    const map: { [key: number]: string } = {
+      0: '0',
+      1: 'r',
+      2: 'b',
+      3: 'p'
+    };
+
+    const matrix = pattern.flat().map(pixel => map[pixel] || '0').join('');
+    return this.http.post(`${this.baseUrl}/led`, { matrix });
   }
 
   sendControlCommand(command: string) {
-    return this.http.post(`${this.baseUrl}/command`, { command: command });
+    return this.http.post(`${this.baseUrl}/command`, {
+      command: command,
+      color: this.selectedColor
+    });
   }
 
   public selectedColor: 'r' | 'b' | 'p' = 'b';

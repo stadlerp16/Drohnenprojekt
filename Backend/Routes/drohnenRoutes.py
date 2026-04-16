@@ -1,11 +1,11 @@
 import asyncio
+from datetime import datetime, timedelta
+from fastapi import APIRouter, Body, HTTPException, WebSocket, WebSocketDisconnect
 from urllib import request
 
 from fastapi import APIRouter, Body, HTTPException
 import ipaddress
-
-from starlette.websockets import WebSocketDisconnect
-
+from pydantic import BaseModel
 from starlette.websockets import WebSocket
 
 import Services.DrohneVerwaltung.drohneService as drohne_service
@@ -14,8 +14,9 @@ from connect import get_all_flight_names
 from pydantic import BaseModel
 from typing import List
 
+from connect import label_flight, get_all_flight_names
 router = APIRouter()
-
+class FlightRequest(BaseModel): name: str
 
 
 @router.post("/connect")
@@ -88,7 +89,7 @@ async def gettelemetrie(ws: WebSocket):
         while True:
             data = telemtrie_service.get_telemetry()
             await ws.send_json(data)
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(0.1)  # alle 500 ms aktualisieren
 
     except WebSocketDisconnect:
         print("[WebSocket] Telemetrie getrennt")
@@ -100,17 +101,30 @@ async def gettelemetrie(ws: WebSocket):
         except Exception:
             pass
 
-@router.get("/flights")
-async def list_flights(): return {"ok": True, "flights": get_all_flight_names()}
+@router.post("/save-flight-name")
+async def save_flight_name(req: FlightRequest):
+    """Speichert den letzten Flug aus dem telemtrieService Puffer."""
+    s, e = telemtrie_service.last_completed_flight["start"], telemtrie_service.last_completed_flight["end"]
+    if s and e:
+        label_flight(s - timedelta(seconds=5), e + timedelta(seconds=1), req.name)
+        telemtrie_service.last_completed_flight = {"start": None, "end": None}
+        return {"ok": True}
+    return {"ok": False, "message": "Kein Flug im Puffer"}
 
-from typing import List
+@router.get("/flights")
+async def list_flights():
+    return {"ok": True, "flights": get_all_flight_names()}
+
+
 from fastapi import Body
 
 @router.post("/led")
-async def send_led_image(pattern: List[List[int]] = Body(..., embed=True)):
-    print("LED PATTERN:", pattern)
+async def send_led_image(data: dict = Body(...)):
+    matrix_str = data.get("matrix")
 
-    ok = telemtrie_service.set_matrix_pattern(pattern)
+    print("LED STRING:", matrix_str)
+
+    ok = telemtrie_service.set_matrix_string(matrix_str)
 
     if not ok:
         return {
@@ -123,12 +137,15 @@ async def send_led_image(pattern: List[List[int]] = Body(..., embed=True)):
         "mode": "image"
     }
 
-
 @router.post("/command")
-async def send_led_text(command: str = Body(..., embed=True)):
-    print("COMMAND:", command)
+async def send_led_text(data: dict = Body(...)):
+    command = data.get("command")
+    color = data.get("color", "r")
 
-    ok = telemtrie_service.set_matrix_text(command, scroll=True)
+    print("COMMAND:", command)
+    print("COLOR:", color)
+
+    ok = telemtrie_service.set_matrix_text(command, color=color, scroll=True)
 
     if not ok:
         return {
@@ -139,5 +156,6 @@ async def send_led_text(command: str = Body(..., embed=True)):
     return {
         "status": "ok",
         "mode": "text-scroll",
-        "command": command
+        "command": command,
+        "color": color
     }
