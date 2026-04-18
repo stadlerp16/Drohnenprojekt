@@ -63,9 +63,9 @@
         </div>
 
         <div class="joystick-controls">
-          <button class="btn-joy start" [disabled]="isFlying" (click)="startDrone()">START</button>
+
           <button class="btn-joy space-btn" (pointerdown)="handleSpaceAction(true)">TAKEOFF / LAND</button>
-          <button class="btn-joy stop" [disabled]="!isFlying" (click)="stopDrone()">STOP</button>
+
         </div>
 
         <div class="joystick-container">
@@ -94,5 +94,30 @@
       EMERGENCY STOP
     </button>
   </div>
+
+  @if (showSaveModal) {
+    <div class="modal-overlay" (click)="closeModal()">
+      <div class="modal-box" (click)="$event.stopPropagation()">
+        <h2>Flug speichern</h2>
+        <p>Gib deinem Flug einen Namen:</p>
+
+        <input
+          class="modal-input"
+          type="text"
+          placeholder="z.B. Runde 1, Testflug..."
+          [(ngModel)]="flightName"
+          (keyup.enter)="saveFlightName()"
+          autofocus
+        />
+
+        <div class="modal-actions">
+          <button class="btn-secondary" (click)="closeModal()">Abbrechen</button>
+          <button class="btn-primary" [disabled]="!flightName.trim()" (click)="saveFlightName()">
+            Speichern
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 
 </div>

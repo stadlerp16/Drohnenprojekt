@@ -24,6 +24,7 @@ export class DroneService {
     roll: 0,
     yaw: 0
   };
+  connectedIp: string = '';
 
   private socket: WebSocket | null = null;
 
@@ -32,8 +33,8 @@ export class DroneService {
   }
 
   sendIpAddress(ip: string): Observable<any> {
+    this.connectedIp = ip; // IP merken
     return this.http.post(`${this.baseUrl}/connect`, { ip });
-
   }
 
   disconnect(): Observable<any> {
@@ -51,17 +52,17 @@ export class DroneService {
     return this.http.post(`${this.baseUrl}/play-flight`, { name: flightName });
   }
 
-  saveFlight(payload: { ip: string, courseName: string }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/save-course`, payload);
+  saveFlight(payload: { name: string }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/save-flight-name`, payload);
   }
 
-  startDrone(): Observable<any> {
+  /*startDrone(): Observable<any> {
     return this.http.post(`${this.baseUrl}/start`, {});
   }
 
   stopDrone(): Observable<any> {
     return this.http.post(`${this.baseUrl}/stop`, {});
-  }
+  }*/
 
   emergencyStop(): Observable<any> {
     return this.http.post(`${this.baseUrl}/emergency`, {});
