@@ -17,7 +17,6 @@ from typing import List
 router = APIRouter()
 
 
-
 @router.post("/connect")
 def connect_drone(ip: str = Body(..., embed=True)):
     # IPv4 validieren
