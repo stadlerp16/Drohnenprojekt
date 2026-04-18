@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26b6f950-785b-47a4-9c2f-9295330bdc85" name="Changes" comment="LED Steuerung fertig" />
+    <list default="true" id="26b6f950-785b-47a4-9c2f-9295330bdc85" name="Changes" comment="Merge branch 'Mario' of https://github.com/stadlerp16/Drohnenprojekt into Mario&#10;&#10;# Conflicts:&#10;#&#9;Backend/.gitignore&#10;#&#9;Backend/.idea/workspace.xml">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -20,7 +22,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="Lipp" />
+        <entry key="$PROJECT_DIR$/.." value="Mario" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -45,30 +47,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python.connect.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Simon&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/RechenzentrumGastein/Projekte/SYP/DrohnenProjekt/Drohnenprojekt/Backend&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.connect.executor": "Run",
+    "Python.main.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/Mario/Projekt/Drohnenprojekt/Backend",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\RechenzentrumGastein\Projekte\SYP\DrohnenProjekt\Drohnenprojekt\Backend\Services\DrohneVerwaltung" />
-    </key>
-  </component>
+}]]></component>
   <component name="RunManager">
     <configuration default="true" type="DjangoTestsConfigurationType">
       <module name="Backend" />
@@ -215,7 +212,6 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-b598e85cdad2-JavaScript-PY-252.25557.178" />
         <option value="bundled-python-sdk-ce6832f46686-7b97d883f26b-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.25557.178" />
       </set>
     </attachedChunks>
@@ -254,19 +250,6 @@
       <workItem from="1770192064485" duration="1868000" />
       <workItem from="1770193957841" duration="7000" />
       <workItem from="1770194014010" duration="287000" />
-      <workItem from="1771493862767" duration="2403000" />
-      <workItem from="1771580316225" duration="19000" />
-      <workItem from="1771944327333" duration="1695000" />
-      <workItem from="1772002092096" duration="3355000" />
-      <workItem from="1772092003487" duration="5389000" />
-      <workItem from="1772178400267" duration="44000" />
-      <workItem from="1772208544195" duration="1736000" />
-      <workItem from="1774426968604" duration="1177000" />
-      <workItem from="1774428272838" duration="201000" />
-      <workItem from="1774429015032" duration="649000" />
-      <workItem from="1774429686281" duration="515000" />
-      <workItem from="1775628204090" duration="899000" />
-      <workItem from="1775719457840" duration="1251000" />
     </task>
     <task id="LOCAL-00001" summary="Grundlegende Ordnerstrukur und routing von main.py in die anderen Routes">
       <option name="closed" value="true" />
@@ -292,31 +275,15 @@
       <option name="project" value="LOCAL" />
       <updated>1769681839977</updated>
     </task>
-    <task id="LOCAL-00004" summary="Merge branch 'main' of https://github.com/stadlerp16/Drohnenprojekt&#10;&#10;# Conflicts:&#10;#&#9;Backend/.idea/workspace.xml">
+    <task id="LOCAL-00004" summary="Merge branch 'Mario' of https://github.com/stadlerp16/Drohnenprojekt into Mario&#10;&#10;# Conflicts:&#10;#&#9;Backend/.gitignore&#10;#&#9;Backend/.idea/workspace.xml">
       <option name="closed" value="true" />
-      <created>1773766672687</created>
+      <created>1776525878954</created>
       <option name="number" value="00004" />
       <option name="presentableId" value="LOCAL-00004" />
       <option name="project" value="LOCAL" />
-      <updated>1773766672687</updated>
+      <updated>1776525878954</updated>
     </task>
-    <task id="LOCAL-00005" summary="Merge">
-      <option name="closed" value="true" />
-      <created>1773913515894</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1773913515894</updated>
-    </task>
-    <task id="LOCAL-00006" summary="LED Steuerung fertig">
-      <option name="closed" value="true" />
-      <created>1775723580950</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1775723580950</updated>
-    </task>
-    <option name="localTasksCounter" value="7" />
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -326,10 +293,7 @@
     <MESSAGE value="Grundlegende Ordnerstrukur und routing von main.py in die anderen Routes" />
     <MESSAGE value="x" />
     <MESSAGE value="test" />
-    <MESSAGE value="Merge" />
-    <MESSAGE value="Merge branch 'main' of https://github.com/stadlerp16/Drohnenprojekt&#10;&#10;# Conflicts:&#10;#&#9;Backend/.idea/workspace.xml" />
-    <MESSAGE value="LED Steuerung fertig" />
-    <option name="LAST_COMMIT_MESSAGE" value="LED Steuerung fertig" />
+    <option name="LAST_COMMIT_MESSAGE" value="test" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Backend$main.coverage" NAME="main Coverage Results" MODIFIED="1769077331138" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
