@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
-import {DroneService} from '../app/services/drohne.service';
-import {Router} from '@angular/router';
-//import { NgIf, NgClass } from '@angular/common';
+import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { DroneService } from '../app/services/drohne.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,51 +9,290 @@ import {Router} from '@angular/router';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
-export class Dashboard {
-  isFlying: boolean = false;
-  controlMode: 'keyboard' | 'controller' | null = null;   //Zu beginn nichts
+export class Dashboard implements OnDestroy , OnInit {
+  @ViewChild('leftStick') leftStick?: ElementRef;
+  @ViewChild('rightStick') rightStick?: ElementRef;
+  @ViewChild('leftJoy') leftJoy?: ElementRef;
+  @ViewChild('rightJoy') rightJoy?: ElementRef;
 
-  constructor(private droneService: DroneService, private router: Router) {}
+  isFlying: boolean = true;
+  isFlightActive: boolean = false;
+  private socket: WebSocket | null = null;
 
-  selectMode(mode: 'keyboard' | 'controller') {
-    if (!this.isFlying) {
-      this.controlMode = mode;
-      console.log('Steuerungsmodus gewählt:', mode);
+  // JOYSTICK STATE
+  private left = { x: 0, y: 0 };
+  private right = { x: 0, y: 0 };
+  private draggingSide: 'left' | 'right' | null = null;
+  private readonly RADIUS = 50; // Bewegungsradius in Pixeln
+
+  //CONTROLLER KONFIGURATION
+  private readonly DEADZONE = 0.08;
+  private readonly SEND_HZ = 20;
+  private readonly SEND_DT_MS = 1000 / this.SEND_HZ;
+  private controllerLoopId: any = null;
+  private lastXPressed = false;
+  gamepadConnected: boolean = false;
+  gamepadName: string = '';
+
+  private readonly allowedKeys = new Set([
+    "w", "a", "s", "d", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " ", "Space"
+  ]);
+
+  constructor(protected droneService: DroneService, private router: Router) {}
+
+  ngOnInit() {
+    // Wir warten einen winzigen Moment, bis die Seite stabil geladen ist
+    setTimeout(() => {
+      if (this.droneService.isAutoFlight && this.droneService.selectedAutoFlight) {
+        this.startAutoFlightFromSetup();
+      } else {
+        this.connectWebSocket();
+      }
+    }, 300);
+  }
+
+  startAutoFlightFromSetup() {
+    console.log('Autopilot-Sequenz wird jetzt gefeuert...');
+    this.isFlightActive = true;
+    this.isFlying = true; // Damit die UI den Flug-Status anzeigt
+
+    this.droneService.playSavedFlight(this.droneService.selectedAutoFlight!).subscribe({
+      next: (res) => {
+        console.log('Backend hat Flug erfolgreich gestartet:', res);
+      },
+      error: (err) => {
+        console.error('Konnte Route nicht starten:', err);
+        this.isFlying = false; // Zurücksetzen bei Fehler
+        this.isFlightActive = false;
+      }
+    });
+  }
+
+  //WEBSOCKET LOGIK
+  private connectWebSocket() {
+    const mode = this.droneService.selectedMode;
+    // Dynamischer Pfad: /keyboard oder /controller oder Joysticks
+    const WS_URL = `ws://localhost:8000/drone/${mode}`;
+
+    this.socket = new WebSocket(WS_URL);
+    this.socket.onopen = () => {
+      console.log(`WS verbunden: ${mode}`);
+      if (mode === 'controlps') {
+        this.startControllerLoop();
+      }
+    };
+    this.socket.onclose = () => this.stopControllerLoop();
+  }
+
+  private sendData(data: any) {
+    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+      this.socket.send(JSON.stringify(data));
     }
   }
 
-  startDrone() {
-    if (!this.controlMode) {
-      alert('Bitte wählen Sie zuerst einen Steuerungsmodus!');
-      return;
+  startJoystick(event: MouseEvent | TouchEvent, side: 'left' | 'right') {
+    event.preventDefault();
+    this.draggingSide = side;
+  }
+
+  @HostListener('window:mousemove', ['$event'])
+  @HostListener('window:touchmove', ['$event'])
+  handleJoystickMove(event: any) {
+    if (!this.draggingSide) return;
+
+    const clientX = event.touches ? event.touches[0].clientX : event.clientX;
+    const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+
+    const root = this.draggingSide === 'left' ? this.leftJoy : this.rightJoy;
+    const stick = this.draggingSide === 'left' ? this.leftStick : this.rightStick;
+    const state = this.draggingSide === 'left' ? this.left : this.right;
+
+    if (!root || !stick) return;
+
+    const rect = root.nativeElement.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+
+    let dx = clientX - cx;
+    let dy = clientY - cy;
+
+    const dist = Math.hypot(dx, dy);
+    if (dist > this.RADIUS) {
+      dx *= this.RADIUS / dist;
+      dy *= this.RADIUS / dist;
     }
 
+    // Visuelle Bewegung
+    stick.nativeElement.style.left = 50 + (dx / this.RADIUS) * 50 + "%";
+    stick.nativeElement.style.top = 50 + (dy / this.RADIUS) * 50 + "%";
+
+    // Werte für Backend (-1 bis 1)
+    state.x = dx / this.RADIUS;
+    state.y = dy / this.RADIUS;
+
+    if (this.droneService.selectedMode === 'controltouch') {
+      this.sendData({
+        lx: this.left.x,
+        ly: this.left.y,
+        rx: this.right.x,
+        ry: this.right.y
+      });
+    }
+  }
+
+  @HostListener('window:mouseup')
+  @HostListener('window:touchend')
+  stopJoystick() {
+    if (!this.draggingSide) return;
+
+    const stick = this.draggingSide === 'left' ? this.leftStick : this.rightStick;
+    const state = this.draggingSide === 'left' ? this.left : this.right;
+
+    if (stick) {
+      stick.nativeElement.style.left = "50%";
+      stick.nativeElement.style.top = "50%";
+    }
+
+    state.x = 0;
+    state.y = 0;
+    this.draggingSide = null;
+
+    if (this.droneService.selectedMode === 'controltouch') {
+      this.sendData({ lx: 0, ly: 0, rx: 0, ry: 0 });
+    }
+  }
+  handleSpaceAction(isPressed: boolean) {
+    if (this.droneService.selectedMode !== 'controltouch') return;
+    if (!isPressed) return;
+    this.sendData({ takeoffLand: true });
+  }
+
+
+  //TASTATUR LOGIK
+
+  @HostListener('window:keydown', ['$event'])
+  handleKeyDown(event: KeyboardEvent) {
+    if (this.isFlying && this.droneService.selectedMode === 'controlkeyboard') {
+      if (!this.allowedKeys.has(event.key)) return;
+      event.preventDefault();
+      if (event.repeat) return;
+      this.sendData({ key: event.key, pressed: true });
+    }
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  handleKeyUp(event: KeyboardEvent) {
+    if (this.isFlying && this.droneService.selectedMode === 'controlkeyboard') {
+      if (!this.allowedKeys.has(event.key)) return;
+      event.preventDefault();
+      this.sendData({ key: event.key, pressed: false });
+    }
+  }
+
+  //CONTROLLER LOGIK
+
+  private startControllerLoop() {
+    this.stopControllerLoop();
+
+    const loop = () => {
+      this.controllerLoopId = setTimeout(loop, this.SEND_DT_MS);
+
+      if (!this.isFlying) return;
+      if (this.droneService.selectedMode !== 'controlps') return;
+
+      const gp = this.getFirstGamepad();
+      if (gp) this.processGamepadData(gp);
+    };
+
+    loop();
+  }
+
+  @HostListener('window:gamepadconnected', ['$event'])
+  onGamepadConnected(event: GamepadEvent) {
+    this.gamepadConnected = true;
+    this.gamepadName = event.gamepad.id;
+    console.log('Gamepad connected:', event.gamepad.id, 'index', event.gamepad.index);
+  }
+
+  @HostListener('window:gamepaddisconnected', ['$event'])
+  onGamepadDisconnected(event: GamepadEvent): void {
+    this.gamepadConnected = false;
+    this.gamepadName = '';
+  }
+
+  private stopControllerLoop() {
+    if (this.controllerLoopId) {
+      clearTimeout(this.controllerLoopId);
+      this.controllerLoopId = null;
+    }
+  }
+
+  private getFirstGamepad(): Gamepad | null {
+    const gamepads = navigator.getGamepads?.() ?? [];
+    for (const gp of gamepads) {
+      if (gp && gp.connected) return gp;
+    }
+    return null;
+  }
+
+  private processGamepadData(gp: Gamepad) {
+
+    const dz = (v: number) => Math.abs(v) < this.DEADZONE ? 0 : v;
+    const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
+
+    const lx = dz(gp.axes[0] ?? 0);
+    const ly = dz(gp.axes[1] ?? 0);
+    const rx = dz(gp.axes[2] ?? 0);
+
+    const l2 = clamp01(gp.buttons[6]?.value ?? 0);
+    const r2 = clamp01(gp.buttons[7]?.value ?? 0);
+
+    const xNow = !!gp.buttons[0]?.pressed;
+    let takeoffLand = false;
+    if (xNow && !this.lastXPressed) takeoffLand = true;
+    this.lastXPressed = xNow;
+
+
+
+    this.sendData({ lx, ly, rx, l2, r2, takeoffLand });
+  }
+
+
+  startDrone() {
     this.droneService.startDrone().subscribe({
-      next: (res) => {
-        this.isFlying = true; // Sperrt die Auswahl
-        console.log('Drohne gestartet');
+      next: () => {
+        this.isFlying = true;
+        this.connectWebSocket();
       },
-      error: (err) => console.error(err)
+      error: (err) => console.error('Start fehlgeschlagen:', err)
     });
   }
 
   stopDrone() {
     this.droneService.stopDrone().subscribe({
-      next: (res) => {
-        this.isFlying = false; // Gibt die Auswahl wieder frei
-        console.log('Drohne gelandet/gestoppt');
-      },
-      error: (err) => console.error(err)
+      next: () => this.cleanUp(),
+      error: (err) => console.error('Stop fehlgeschlagen:', err)
     });
   }
 
   emergencyStop() {
-    this.droneService.emergencyStop().subscribe({
-      next: (res) => console.log('Not-Aus erfolgreich gesendet'),
-      error: (err) => console.error('Not-Aus Fehler:', err)
-    });
+    this.droneService.emergencyStop().subscribe();
+    this.cleanUp();
+    this.droneService.isConnected = false;
+    this.droneService.selectedMode = null;
     this.router.navigate(['/']);
-    this.isFlying = false;
   }
 
+  private cleanUp() {
+    this.isFlying = false;
+    this.stopControllerLoop();
+    if (this.socket) {
+      this.socket.close();
+      this.socket = null;
+    }
+  }
+
+  ngOnDestroy() {
+    this.cleanUp();
+  }
 }

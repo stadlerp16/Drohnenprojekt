@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="tastatur und Controller auswahl aber noch keine genaueren Details">
+    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="timer statt höhe">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,6 +45,9 @@
     &quot;accountId&quot;: &quot;d4b57c3b-1664-4b8f-9bdf-0cdca03b0d89&quot;
   }
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0
 }</component>
@@ -59,6 +61,7 @@
     &quot;JavaScript Debug.app.html.executor&quot;: &quot;Run&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;Node.js.app.ts.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.dashboard.ts.executor&quot;: &quot;Run&quot;,
     &quot;Node.js.main.ts.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
@@ -66,7 +69,7 @@
     &quot;Vitest.app.spec.ts.executor&quot;: &quot;Run&quot;,
     &quot;git-widget-placeholder&quot;: &quot;Mario&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Mario/Projekt/Drohnenprojekt&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Mario/Projekt/Drohnenprojekt/Frontend/src/home&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -76,6 +79,14 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Mario\Projekt\Drohnenprojekt\Frontend\src\home" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Mario\Projekt\Drohnenprojekt\Frontend\public" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="Drohnenprojekt" />
@@ -122,7 +133,30 @@
       <workItem from="1770187835484" duration="1119000" />
       <workItem from="1770508775451" duration="6000" />
       <workItem from="1770562563198" duration="2452000" />
-      <workItem from="1770565701941" duration="235000" />
+      <workItem from="1770565701941" duration="368000" />
+      <workItem from="1770665838016" duration="770000" />
+      <workItem from="1770728593395" duration="11192000" />
+      <workItem from="1770891169787" duration="3342000" />
+      <workItem from="1771059446365" duration="3680000" />
+      <workItem from="1771235639324" duration="5715000" />
+      <workItem from="1771322160014" duration="1634000" />
+      <workItem from="1771577577029" duration="2320000" />
+      <workItem from="1772001685142" duration="1989000" />
+      <workItem from="1772092471611" duration="6200000" />
+      <workItem from="1772180394871" duration="21000" />
+      <workItem from="1772606571635" duration="1185000" />
+      <workItem from="1772607773950" duration="1259000" />
+      <workItem from="1772749161402" duration="86000" />
+      <workItem from="1772786555708" duration="23000" />
+      <workItem from="1773214252939" duration="999000" />
+      <workItem from="1773760363552" duration="2203000" />
+      <workItem from="1774511092956" duration="2964000" />
+      <workItem from="1775031601387" duration="3216000" />
+      <workItem from="1775627111757" duration="7604000" />
+      <workItem from="1775720565300" duration="743000" />
+      <workItem from="1775806916589" duration="123000" />
+      <workItem from="1776232791180" duration="2702000" />
+      <workItem from="1776323755544" duration="1099000" />
     </task>
     <task id="LOCAL-00001" summary="Create Backend">
       <option name="closed" value="true" />
@@ -164,7 +198,127 @@
       <option name="project" value="LOCAL" />
       <updated>1770565883527</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="tastatur und Controller auswahl aber noch keine genaueren Details">
+      <option name="closed" value="true" />
+      <created>1770565951789</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1770565951789</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Verbesserung, des layouts und Änderung der Inhalten der Pfade">
+      <option name="closed" value="true" />
+      <created>1771060415442</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1771060415442</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Hinzufügen von joySticks">
+      <option name="closed" value="true" />
+      <created>1771240503633</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1771240503633</updated>
+    </task>
+    <task id="LOCAL-00009" summary="db weg">
+      <option name="closed" value="true" />
+      <created>1771323768115</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1771323768115</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Frontend wieder herstellung, farben, dummy routen, auf autopilot">
+      <option name="closed" value="true" />
+      <created>1773741492144</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1773741492144</updated>
+    </task>
+    <task id="LOCAL-00011" summary="verbesserung des Frontends und Struktur">
+      <option name="closed" value="true" />
+      <created>1773742034062</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1773742034062</updated>
+    </task>
+    <task id="LOCAL-00012" summary="aufruf verbesserung">
+      <option name="closed" value="true" />
+      <created>1773761954884</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1773761954884</updated>
+    </task>
+    <task id="LOCAL-00013" summary="telemtrie daten auf websocket">
+      <option name="closed" value="true" />
+      <created>1774512596758</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1774512596758</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Title">
+      <option name="closed" value="true" />
+      <created>1774513377636</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1774513377636</updated>
+    </task>
+    <task id="LOCAL-00015" summary="text led">
+      <option name="closed" value="true" />
+      <created>1774517258259</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1774517258259</updated>
+    </task>
+    <task id="LOCAL-00016" summary="fixes">
+      <option name="closed" value="true" />
+      <created>1774519151572</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1774519151572</updated>
+    </task>
+    <task id="LOCAL-00017" summary="fixes von Variablen der Ip adresse und überschneidungen und senen funktion der matrix">
+      <option name="closed" value="true" />
+      <created>1775632467739</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1775632467739</updated>
+    </task>
+    <task id="LOCAL-00018" summary="fixes von Variablen der Ip adresse und überschneidungen und senen funktion der matrix &amp; farben für LED r b &amp; p">
+      <option name="closed" value="true" />
+      <created>1775635340232</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1775635340232</updated>
+    </task>
+    <task id="LOCAL-00019" summary="höhe und entfernung von luca im ui visualisiert">
+      <option name="closed" value="true" />
+      <created>1776324049317</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1776324049317</updated>
+    </task>
+    <task id="LOCAL-00020" summary="timer statt höhe">
+      <option name="closed" value="true" />
+      <created>1776324238578</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1776324238578</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -175,6 +329,20 @@
     <MESSAGE value="Start, Stop &amp; Emergency Button" />
     <MESSAGE value="Start, Stop &amp; Emergency Button und einen neuen Pfad für die Control Ansicht eingereichtet" />
     <MESSAGE value="tastatur und Controller auswahl aber noch keine genaueren Details" />
-    <option name="LAST_COMMIT_MESSAGE" value="tastatur und Controller auswahl aber noch keine genaueren Details" />
+    <MESSAGE value="Verbesserung, des layouts und Änderung der Inhalten der Pfade" />
+    <MESSAGE value="Hinzufügen von joySticks" />
+    <MESSAGE value="db weg" />
+    <MESSAGE value="Frontend wieder herstellung, farben, dummy routen, auf autopilot" />
+    <MESSAGE value="verbesserung des Frontends und Struktur" />
+    <MESSAGE value="aufruf verbesserung" />
+    <MESSAGE value="telemtrie daten auf websocket" />
+    <MESSAGE value="Title" />
+    <MESSAGE value="text led" />
+    <MESSAGE value="fixes" />
+    <MESSAGE value="fixes von Variablen der Ip adresse und überschneidungen und senen funktion der matrix" />
+    <MESSAGE value="fixes von Variablen der Ip adresse und überschneidungen und senen funktion der matrix &amp; farben für LED r b &amp; p" />
+    <MESSAGE value="höhe und entfernung von luca im ui visualisiert" />
+    <MESSAGE value="timer statt höhe" />
+    <option name="LAST_COMMIT_MESSAGE" value="timer statt höhe" />
   </component>
 </project>

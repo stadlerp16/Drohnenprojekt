@@ -1,31 +1,117 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {interval, Observable, startWith, switchMap} from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+
+@Injectable({ providedIn: 'root' })
 export class DroneService {
   private baseUrl = 'http://localhost:8000/drone';
+  private wsUrl = 'ws://localhost:8000/drone/telemetrie';
 
-  constructor(private http: HttpClient) {}
+  // Zentraler Status
+  isConnected = false;
+  selectedMode: 'controlkeyboard' | 'controlps' | 'controltouch' | null = null;
+
+  isAutoFlight = false;
+  selectedAutoFlight: string | null = null;
+  activeIp: string | null = null;
+
+  public telemetry: any = {
+    bat: 0,
+    speed: 0,
+    h: 0,
+    pitch: 0,
+    roll: 0,
+    yaw: 0,
+    distance: 0,
+    timer: 0,
+  };
+
+  private socket: WebSocket | null = null;
+
+  constructor(private http: HttpClient) {
+    this.initTelemetryWebSocket();
+  }
 
   sendIpAddress(ip: string): Observable<any> {
-    const payload = {ip: ip};
-    // Nutzt baseUrl -> Ergebnis: http://localhost:8080/api/drone/connect
-    return this.http.post(`${this.baseUrl}/connect`, payload);
+    return this.http.post(`${this.baseUrl}/connect`, { ip });
+
+  }
+
+  disconnect(): Observable<any> {
+    console.log('Service: Sende Disconnect-Anfrage an Backend...');
+    // Wir senden einen POST-Request ohne Body an den disconnect-Endpunkt
+    return this.http.post(`${this.baseUrl}/disconnect`, {});
+  }
+
+  getSavedFlights(): Observable<{ ok: boolean, flights: string[] }> {
+    return this.http.get<{ ok: boolean, flights: string[] }>(`${this.baseUrl}/flights`);
+  }
+
+
+  playSavedFlight(flightName: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/play-flight`, { name: flightName });
+  }
+
+  saveFlight(payload: { ip: string, courseName: string }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/save-course`, payload);
   }
 
   startDrone(): Observable<any> {
-    // Geändert von apiUrl zu baseUrl -> Ergebnis: http://localhost:8080/api/drone/start
     return this.http.post(`${this.baseUrl}/start`, {});
   }
 
   stopDrone(): Observable<any> {
-    // Geändert von apiUrl zu baseUrl -> Ergebnis: http://localhost:8080/api/drone/stop
     return this.http.post(`${this.baseUrl}/stop`, {});
   }
+
   emergencyStop(): Observable<any> {
     return this.http.post(`${this.baseUrl}/emergency`, {});
+  }
+
+  // drone.service.ts
+
+// Ändere die Methode so ab:
+  sendLedUpdate(pattern: number[][]): Observable<any> {
+    return this.http.post(`${this.baseUrl}/led`, { pattern: pattern });
+  }
+
+  sendControlCommand(command: string) {
+    return this.http.post(`${this.baseUrl}/command`, { command: command });
+  }
+
+  public selectedColor: 'r' | 'b' | 'p' = 'b';
+
+  private initTelemetryWebSocket() {
+    this.socket = new WebSocket(this.wsUrl);
+
+    this.socket.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+
+        this.telemetry = {
+          bat: data.battery || 0,
+          h: data.height || 0,
+          speed: data.speed || 0,
+          pitch: data.pitch || 0,
+          roll: data.roll || 0,
+          yaw: data.yaw || 0,
+          distance: data.distance || 0,
+          timer: data.timer || 0,
+        };
+
+        console.log('Telemetrie Update:', this.telemetry);
+      } catch (err) {
+        console.error('Fehler beim Parsen der WebSocket-Daten:', err);
+      }
+    };
+
+    this.socket.onopen = () => console.log('WebSocket Telemetrie: Verbunden');
+    this.socket.onerror = (err: any) => console.error('WebSocket Fehler:', err);
+
+    this.socket.onclose = () => {
+      console.warn('WebSocket geschlossen. Reconnect in 2s...');
+      setTimeout(() => this.initTelemetryWebSocket(), 2000);
+    };
   }
 }

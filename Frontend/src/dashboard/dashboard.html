@@ -1,40 +1,107 @@
-<link rel="stylesheet" href="dashboard.css">
-<div class="test-steuerung">
-  <h2>Steuerungs-Zentrale</h2>
+<div class="dashboard-page">
 
-  <div class="mode-section">
-    <button
-      type="button"
-      class="mode-btn"
-      [class.active]="controlMode === 'keyboard'"
-      [disabled]="isFlying"
-      (click)="selectMode('keyboard')">
-      Tastatur
-    </button>
-    <button
-      type="button"
-      class="mode-btn"
-      [class.active]="controlMode === 'controller'"
-      [disabled]="isFlying"
-      (click)="selectMode('controller')">
-      Controller
+  <div class="telemetry-overlay">
+    <div class="tel-card">
+      <span class="tel-label">Batterie</span>
+      <span class="tel-value">{{ droneService.telemetry?.bat || 0 }}%</span>
+      <div class="tel-bat-bg">
+        <div class="tel-bat-fill" [style.width.%]="droneService.telemetry?.bat"></div>
+      </div>
+    </div>
+
+    <div class="tel-card">
+      <span class="tel-label">Höhe</span>
+      <span class="tel-value">{{ droneService.telemetry?.h || 0 }} cm</span>
+    </div>
+
+    <div class="tel-card">
+      <span class="tel-label">Geschwindigkeit</span>
+      <span class="tel-value">{{ droneService.telemetry?.speed || 0 }} cm/s</span>
+    </div>
+
+    <div class="tel-card">
+      <span class="tel-label">Lage (P | R | Y)</span>
+      <span class="tel-value small">
+        {{ droneService.telemetry?.pitch || 0 }}° |
+        {{ droneService.telemetry?.roll || 0 }}° |
+        {{ droneService.telemetry?.yaw || 0 }}°
+      </span>
+    </div>
+
+    <div class="tel-card">
+      <span class="tel-label">Entfernung</span>
+      <span class="tel-value small">{{ droneService.telemetry?.distance  || 0}} cm</span>
+    </div>
+
+    <div class="tel-card">
+      <span class="tel-label">Timer</span>
+      <span class="tel-value small">{{ droneService.telemetry?.timer || 0}} s</span>
+    </div>
+
+    <div class="tel-card">
+      <span class="tel-label">IP Adresse</span>
+      <span class="tel-value small">{{ droneService.activeIp || 'Nicht verbunden' }}</span>
+    </div>
+  </div>
+
+  <div class="dashboard-header">
+    @if (droneService.isAutoFlight) {
+      <div class="header-content autopilot">
+        <span class="mode-label">Aktiver Modus: Flugkurs</span>
+        <h1 class="flight-title">{{ droneService.selectedAutoFlight }}</h1>
+        <div class="status-badge pulse">Autopilot aktiv</div>
+      </div>
+    } @else {
+      <div class="header-content manual">
+        <h1>Steuerungs-Zentrale</h1>
+        <p class="mode-text">
+          Aktiver Modus: <strong>{{ droneService.selectedMode }}</strong>
+        </p>
+      </div>
+    }
+  </div>
+
+  @if (!droneService.isAutoFlight && droneService.selectedMode === 'controltouch') {
+    <div class="joystick-main-container">
+      <div class="joystick-wrapper">
+        <div class="joystick-container">
+          <span class="joystick-label">Throttle / Yaw</span>
+          <div class="joystick" #leftJoy (pointerdown)="startJoystick($event, 'left')">
+            <div class="stick" #leftStick></div>
+          </div>
+        </div>
+
+        <div class="joystick-controls">
+          <button class="btn-joy start" [disabled]="isFlying" (click)="startDrone()">START</button>
+          <button class="btn-joy space-btn" (pointerdown)="handleSpaceAction(true)">TAKEOFF / LAND</button>
+          <button class="btn-joy stop" [disabled]="!isFlying" (click)="stopDrone()">STOP</button>
+        </div>
+
+        <div class="joystick-container">
+          <span class="joystick-label">Pitch / Roll</span>
+          <div class="joystick" #rightJoy (pointerdown)="startJoystick($event, 'right')">
+            <div class="stick" #rightStick></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <div class="bottom-section">
+    @if (!droneService.isAutoFlight && droneService.selectedMode === 'controlps'){
+      <div class="controller-status">
+        <h3>Controller Status</h3>
+        @if (gamepadConnected) {
+          <p class="status-ok">✅ Verbunden: {{ gamepadName }}</p>
+        } @else {
+          <p class="status-err">❌ Kein Controller verbunden</p>
+        }
+      </div>
+    }
+
+    <button class="btn-emergency" (click)="emergencyStop()">
+      EMERGENCY STOP
     </button>
   </div>
 
-  <div class="button-row">
-    <button
-      class="btn-gruen"
-      [disabled]="!controlMode || isFlying"
-      (click)="startDrone()">
-      START
-    </button>
-    <button
-      class="btn-rot"
-      [disabled]="!isFlying"
-      (click)="stopDrone()">
-      STOP
-    </button>
-  </div>
-
-  <button class="btn-emergency" (click)="emergencyStop()">EMERGENCY STOP</button>
 </div>
