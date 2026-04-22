@@ -6,12 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="26b6f950-785b-47a4-9c2f-9295330bdc85" name="Changes" comment="merging">
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/DrohneVerwaltung/telemtrieService.py" beforeDir="false" afterPath="$PROJECT_DIR$/Services/DrohneVerwaltung/telemtrieService.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/connect.py" beforeDir="false" afterPath="$PROJECT_DIR$/connect.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/app/services/drohne.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/app/services/drohne.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/dashboard/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/dashboard/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/home/home.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/home/home.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
