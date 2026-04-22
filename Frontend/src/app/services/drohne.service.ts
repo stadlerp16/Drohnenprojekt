@@ -11,6 +11,7 @@ export class DroneService {
   // Zentraler Status
   isConnected = false;
   selectedMode: 'controlkeyboard' | 'controlps' | 'controltouch' | null = null;
+  private isManuallyDisconnected = false;
 
   isAutoFlight = false;
   selectedAutoFlight: string | null = null;
@@ -19,12 +20,12 @@ export class DroneService {
   public telemetry: any = {
     bat: 0,
     speed: 0,
-    h: 0,
+    current_height: 0,
     pitch: 0,
     roll: 0,
     yaw: 0,
-    distance: 0,
-    timer: 0,
+    total_distance_cm: 0,
+    flight_duration: 0,
   };
 
   private socket: WebSocket | null = null;
@@ -33,14 +34,32 @@ export class DroneService {
     this.initTelemetryWebSocket();
   }
 
-  sendIpAddress(ip: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/connect`, { ip });
 
+
+
+  sendIpAddress(ip: string): Observable<any> {
+    this.isManuallyDisconnected = false; // Sperre aufheben
+    this.connectedIp = ip;
+    this.activeIp = ip;
+
+    if (!this.socket || this.socket.readyState === WebSocket.CLOSED) {
+      this.initTelemetryWebSocket();
+    }
+
+    return this.http.post(`${this.baseUrl}/connect`, { ip });
   }
 
   disconnect(): Observable<any> {
-    console.log('Service: Sende Disconnect-Anfrage an Backend...');
-    // Wir senden einen POST-Request ohne Body an den disconnect-Endpunkt
+    this.isManuallyDisconnected = true; // Wir sagen dem Service: "Stopp, ich will das!"
+    this.isConnected = false;
+    this.activeIp = null;
+
+    // WebSocket hart schließen
+    if (this.socket) {
+      this.socket.close();
+      this.socket = null;
+    }
+
     return this.http.post(`${this.baseUrl}/disconnect`, {});
   }
 
@@ -53,34 +72,35 @@ export class DroneService {
     return this.http.post(`${this.baseUrl}/play-flight`, { name: flightName });
   }
 
-  saveFlight(payload: { ip: string, courseName: string }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/save-course`, payload);
-  }
-
-  startDrone(): Observable<any> {
-    return this.http.post(`${this.baseUrl}/start`, {});
-  }
-
-  stopDrone(): Observable<any> {
-    return this.http.post(`${this.baseUrl}/stop`, {});
+  saveFlight(payload: { name: string }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/save-flight-name`, payload);
   }
 
   emergencyStop(): Observable<any> {
     return this.http.post(`${this.baseUrl}/emergency`, {});
   }
 
-  // drone.service.ts
-
-// Ändere die Methode so ab:
   sendLedUpdate(pattern: number[][]): Observable<any> {
-    return this.http.post(`${this.baseUrl}/led`, { pattern: pattern });
+    const map: { [key: number]: string } = {
+      0: '0',
+      1: 'r',
+      2: 'b',
+      3: 'p'
+    };
+
+    const matrix = pattern.flat().map(pixel => map[pixel] || '0').join('');
+    return this.http.post(`${this.baseUrl}/led`, { matrix });
   }
 
   sendControlCommand(command: string) {
-    return this.http.post(`${this.baseUrl}/command`, { command: command });
+    return this.http.post(`${this.baseUrl}/command`, {
+      command: command,
+      color: this.selectedColor
+    });
   }
 
   public selectedColor: 'r' | 'b' | 'p' = 'b';
+
 
   private initTelemetryWebSocket() {
     this.socket = new WebSocket(this.wsUrl);
@@ -91,13 +111,13 @@ export class DroneService {
 
         this.telemetry = {
           bat: data.battery || 0,
-          h: data.height || 0,
+          current_height: data.current_height || 0,
           speed: data.speed || 0,
           pitch: data.pitch || 0,
           roll: data.roll || 0,
           yaw: data.yaw || 0,
-          distance: data.distance || 0,
-          timer: data.timer || 0,
+          total_distance_cm: data.total_distance_cm || 0,
+          flight_duration: data.flight_duration || 0,
         };
 
         console.log('Telemetrie Update:', this.telemetry);
@@ -106,12 +126,20 @@ export class DroneService {
       }
     };
 
-    this.socket.onopen = () => console.log('WebSocket Telemetrie: Verbunden');
+    this.socket.onopen = () => {
+      console.log('WebSocket Telemetrie: Verbunden');
+      this.isManuallyDisconnected = false;
+    };
+
     this.socket.onerror = (err: any) => console.error('WebSocket Fehler:', err);
 
     this.socket.onclose = () => {
-      console.warn('WebSocket geschlossen. Reconnect in 2s...');
-      setTimeout(() => this.initTelemetryWebSocket(), 2000);
+      if (!this.isManuallyDisconnected) {
+        console.warn('WebSocket ungewollt geschlossen. Reconnect in 2s...');
+        setTimeout(() => this.initTelemetryWebSocket(), 2000);
+      } else {
+        console.log('WebSocket absichtlich geschlossen. Kein Reconnect gestartet.');
+      }
     };
   }
 }

@@ -30,9 +30,6 @@ def log_command(cmd_type: str, value: any, source: str):
         # Verhindert, dass die Steuerung bei DB-Fehlern hängen bleibt
         print(f"Fehler beim Speichern in MariaDB: {e}")
 
-
-from connect import init_db, log_command
-
 try:
     print("Teste Initialisierung...")
     init_db()
