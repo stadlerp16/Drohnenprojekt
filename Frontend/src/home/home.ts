@@ -83,7 +83,7 @@ export class Home implements OnInit {
   sendScrollingText(text: string) {
     if (!text || !this.droneService.isConnected) return;
     this.droneService.sendControlCommand(text).subscribe({
-      next: () => console.log(`Text gesendet: ${text}`),
+      next: () => console.log(`Text gesendet: ${text} (Farbe: ${this.droneService.selectedColor})`),
       error: (err) => console.error('Fehler Text-Senden', err)
     });
   }
@@ -131,18 +131,33 @@ export class Home implements OnInit {
   }
 
   onDisconnect() {
+    console.log('Trenne Drohne...');
     this.droneService.disconnect().subscribe({
-      next: () => this.resetServiceStatus(),
-      error: () => this.resetServiceStatus() // Auch bei Fehler lokal trennen
+      next: () => {
+        console.log('Vom Backend getrennt');
+        this.resetServiceStatus();
+      },
+      error: (err) => {
+        console.warn('Backend nicht erreichbar, erzwinge lokalen Reset', err);
+        this.resetServiceStatus();
+      }
     });
   }
 
   private resetServiceStatus() {
     this.droneService.isConnected = false;
     this.droneService.activeIp = null;
-    this.setupType = null;
     this.droneService.selectedMode = null;
     this.droneService.selectedAutoFlight = null;
+
+
+    this.setupType = null;
+    this.connectingIp = null;
+    this.isAddingNew = false;
+
+    this.ledMatrix = Array(8).fill(0).map(() => Array(8).fill(0));
+
+    console.log('UI komplett zurückgesetzt.');
   }
 
   // --- NAVIGATION & MODI ---

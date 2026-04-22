@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26b6f950-785b-47a4-9c2f-9295330bdc85" name="Changes" comment="Merge branch 'main' of https://github.com/stadlerp16/Drohnenprojekt&#10;&#10;# Conflicts:&#10;#&#9;Backend/.idea/workspace.xml">
+    <list default="true" id="26b6f950-785b-47a4-9c2f-9295330bdc85" name="Changes" comment="test">
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/DrohneVerwaltung/telemtrieService.py" beforeDir="false" afterPath="$PROJECT_DIR$/Services/DrohneVerwaltung/telemtrieService.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/connect.py" beforeDir="false" afterPath="$PROJECT_DIR$/connect.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/src/app/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/app/app.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/src/app/app.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/app/app.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/src/app/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/app/app.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,7 +26,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="Mario" />
+        <entry key="$PROJECT_DIR$/.." value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -49,25 +51,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python.connect.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Simon&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Mario/Projekt/Drohnenprojekt/Backend&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.connect.executor": "Run",
+    "Python.drohneService.executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.setup_drone_wifi.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "Luca",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/RechenzentrumGastein/Projekte/SYP/DrohnenProjekt/Drohnenprojekt/Backend",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\RechenzentrumGastein\Projekte\SYP\DrohnenProjekt\Drohnenprojekt\Backend\Services\Steuerung" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration default="true" type="DjangoTestsConfigurationType">
       <module name="Backend" />
@@ -253,8 +262,26 @@
       <workItem from="1770192064485" duration="1868000" />
       <workItem from="1770193957841" duration="7000" />
       <workItem from="1770194014010" duration="287000" />
-      <workItem from="1776691200273" duration="47000" />
-      <workItem from="1776693001362" duration="314000" />
+      <workItem from="1771493862767" duration="2403000" />
+      <workItem from="1771580316225" duration="19000" />
+      <workItem from="1771944327333" duration="1695000" />
+      <workItem from="1772002092096" duration="3355000" />
+      <workItem from="1772092003487" duration="5389000" />
+      <workItem from="1772178400267" duration="44000" />
+      <workItem from="1772208544195" duration="1736000" />
+      <workItem from="1772608177884" duration="7815000" />
+      <workItem from="1772701131632" duration="5251000" />
+      <workItem from="1772713909928" duration="2422000" />
+      <workItem from="1773155031285" duration="4492000" />
+      <workItem from="1773214597364" duration="6083000" />
+      <workItem from="1773306558812" duration="4061000" />
+      <workItem from="1773395346030" duration="8000" />
+      <workItem from="1773680674727" duration="1466000" />
+      <workItem from="1773684720905" duration="70000" />
+      <workItem from="1773743530009" duration="623000" />
+      <workItem from="1773823202475" duration="2127000" />
+      <workItem from="1773909282890" duration="15000" />
+      <workItem from="1773909507230" duration="1623000" />
     </task>
     <task id="LOCAL-00001" summary="Grundlegende Ordnerstrukur und routing von main.py in die anderen Routes">
       <option name="closed" value="true" />
@@ -280,31 +307,23 @@
       <option name="project" value="LOCAL" />
       <updated>1769681839977</updated>
     </task>
-    <task id="LOCAL-00004" summary="Merge branch 'Mario' of https://github.com/stadlerp16/Drohnenprojekt into Mario&#10;&#10;# Conflicts:&#10;#&#9;Backend/.gitignore&#10;#&#9;Backend/.idea/workspace.xml">
+    <task id="LOCAL-00004" summary="Fertige Robuste Connection inkl.&#10;SchusterLösung für Verbindungsabbruch">
       <option name="closed" value="true" />
-      <created>1776525878954</created>
+      <created>1773823627989</created>
       <option name="number" value="00004" />
       <option name="presentableId" value="LOCAL-00004" />
       <option name="project" value="LOCAL" />
-      <updated>1776525878954</updated>
+      <updated>1773823627989</updated>
     </task>
-    <task id="LOCAL-00005" summary="Merge branch 'main' of https://github.com/stadlerp16/Drohnenprojekt&#10;&#10;# Conflicts:&#10;#&#9;Backend/.idea/workspace.xml">
+    <task id="LOCAL-00005" summary="merging">
       <option name="closed" value="true" />
-      <created>1776526473527</created>
+      <created>1776324476119</created>
       <option name="number" value="00005" />
       <option name="presentableId" value="LOCAL-00005" />
       <option name="project" value="LOCAL" />
-      <updated>1776526473527</updated>
+      <updated>1776324476119</updated>
     </task>
-    <task id="LOCAL-00006" summary="Merge branch 'main' of https://github.com/stadlerp16/Drohnenprojekt&#10;&#10;# Conflicts:&#10;#&#9;Backend/.idea/workspace.xml">
-      <option name="closed" value="true" />
-      <created>1776526482371</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1776526482371</updated>
-    </task>
-    <option name="localTasksCounter" value="7" />
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -314,11 +333,14 @@
     <MESSAGE value="Grundlegende Ordnerstrukur und routing von main.py in die anderen Routes" />
     <MESSAGE value="x" />
     <MESSAGE value="test" />
-    <MESSAGE value="Merge branch 'main' of https://github.com/stadlerp16/Drohnenprojekt&#10;&#10;# Conflicts:&#10;#&#9;Backend/.idea/workspace.xml" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'main' of https://github.com/stadlerp16/Drohnenprojekt&#10;&#10;# Conflicts:&#10;#&#9;Backend/.idea/workspace.xml" />
+    <MESSAGE value="Fertige Robuste Connection inkl.&#10;SchusterLösung für Verbindungsabbruch" />
+    <MESSAGE value="merging" />
+    <option name="LAST_COMMIT_MESSAGE" value="merging" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Backend$main.coverage" NAME="main Coverage Results" MODIFIED="1769077331138" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Backend$setup_drone_wifi.coverage" NAME="setup_drone_wifi Coverage Results" MODIFIED="1773155723063" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Backend$drohneService.coverage" NAME="drohneService Coverage Results" MODIFIED="1772701140477" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Services" />
     <SUITE FILE_PATH="coverage/Backend$connect.coverage" NAME="connect Coverage Results" MODIFIED="1769592039458" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Backend$main.coverage" NAME="main Coverage Results" MODIFIED="1772702176690" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
