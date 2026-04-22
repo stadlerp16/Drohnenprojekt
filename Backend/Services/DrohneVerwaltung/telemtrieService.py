@@ -109,24 +109,25 @@ async def start_takeoff_timer(duration: float = 2.0):
     await asyncio.sleep(duration)
     is_logging_allowed = True
 
-
 def get_telemetry() -> dict:
-    global _last_telemetry_time
     drone = drohne_service.ep_drone
     dur = round((datetime.now() - current_flight_start).total_seconds(), 1) if current_flight_start else 0.0
 
-    current_height = 0
+    h_val = 0
+    tof_val = 0
     vgx, vgy, vgz = 0, 0, 0
 
     if drone:
         try:
-            current_height = drone.get_status(name="h") or 0
+            h_val = drone.get_status("h") or 0
+            tof_val = drone.get_status("tof") or 0
+
             vgx = drone.get_status("vgx") or 0
             vgy = drone.get_status("vgy") or 0
             vgz = drone.get_status("vgz") or 0
 
-            # Distanz aus echten Velocity-Daten integrieren
             _integrate_velocity(vgx, vgy, vgz)
+
         except:
             pass
 
@@ -135,7 +136,13 @@ def get_telemetry() -> dict:
         "is_logging": is_logging_allowed,
         "flight_duration": dur,
         "total_distance_cm": round(total_distance_cm, 1),
-        "height_cm": current_height,
+
+
+        "height": tof_val,
+
+        # optional intern/debug (Frontend nutzt sie nicht)
+        "h_raw": h_val,
+
         "position": current_pos,
         "path": route_history,
     }
@@ -143,11 +150,11 @@ def get_telemetry() -> dict:
     if drone:
         try:
             data.update({
-                "battery": drone.get_status(name="bat"),
+                "battery": drone.get_status("bat") or 0,
                 "speed": round(math.sqrt(vgx ** 2 + vgy ** 2 + vgz ** 2), 2),
-                "pitch": drone.get_status(name="pitch"),
-                "roll": drone.get_status(name="roll"),
-                "yaw": drone.get_status(name="yaw"),
+                "pitch": drone.get_status("pitch") or 0,
+                "roll": drone.get_status("roll") or 0,
+                "yaw": drone.get_status("yaw") or 0,
             })
         except:
             pass
