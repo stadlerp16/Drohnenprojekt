@@ -140,14 +140,6 @@ def get_telemetry() -> dict:
         "path": route_history,
     }
 
-    vgx = safe_status("vgx", 0)
-    vgy = safe_status("vgy", 0)
-    vgz = safe_status("vgz", 0)
-
-    try:
-        speed = round(math.sqrt((vgx or 0) ** 2 + (vgy or 0) ** 2 + (vgz or 0) ** 2), 2)
-    except Exception:
-        speed = None
     if drone:
         try:
             data.update({

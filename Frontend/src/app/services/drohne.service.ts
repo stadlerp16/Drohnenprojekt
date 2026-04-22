@@ -27,6 +27,7 @@ export class DroneService {
     total_distance_cm: 0,
     flight_duration: 0,
   };
+  connectedIp: string = '';
 
   private socket: WebSocket | null = null;
 
