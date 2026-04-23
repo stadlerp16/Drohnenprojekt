@@ -2,11 +2,12 @@ import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from 
 import { DroneService } from '../app/services/drohne.service';
 import { Router } from '@angular/router';
 import {FormsModule} from '@angular/forms';
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, NgIf],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
@@ -23,6 +24,8 @@ export class Dashboard implements OnDestroy , OnInit {
   showSaveModal: boolean = false;
   flightName: string = '';
   showafterland: boolean = false;
+  videoStreamSocket: WebSocket | null = null;
+  frameData: string = '';
 
   // JOYSTICK STATE
   private left = { x: 0, y: 0 };
@@ -54,6 +57,20 @@ export class Dashboard implements OnDestroy , OnInit {
         this.connectWebSocket();
       }
     }, 300);
+  }
+
+
+  private initVideoStream() {
+    const WS_STREAM_URL = `ws://localhost:8000/drone/video/getlifestream`;
+    this.videoStreamSocket = new WebSocket(WS_STREAM_URL);
+
+    this.videoStreamSocket.onmessage = (event) => {
+
+      this.frameData = 'data:image/jpeg;base64,' + event.data;
+
+    };
+
+    this.videoStreamSocket.onerror = (err) => console.error('Streaming Fehler:', err);
   }
 
   startAutoFlightFromSetup() {
@@ -324,6 +341,10 @@ export class Dashboard implements OnDestroy , OnInit {
     if (this.socket) {
       this.socket.close();
       this.socket = null;
+    }
+    if (this.videoStreamSocket) {
+      this.videoStreamSocket.close();
+      this.videoStreamSocket = null;
     }
   }
 
