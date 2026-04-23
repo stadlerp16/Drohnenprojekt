@@ -88,7 +88,7 @@ async def gettelemetrie(ws: WebSocket):
         while True:
             data = telemtrie_service.get_telemetry()
             await ws.send_json(data)
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(0.1)  # alle 500 ms aktualisieren
 
     except WebSocketDisconnect:
         print("[WebSocket] Telemetrie getrennt")
@@ -100,11 +100,20 @@ async def gettelemetrie(ws: WebSocket):
         except Exception:
             pass
 
-@router.get("/flights")
-async def list_flights(): return {"ok": True, "flights": get_all_flight_names()}
+@router.post("/save-flight-name")
+async def save_flight_name(req: FlightRequest):
+    """Speichert den letzten Flug aus dem telemtrieService Puffer."""
+    s, e = telemtrie_service.last_completed_flight["start"], telemtrie_service.last_completed_flight["end"]
+    if s and e:
+        label_flight(s - timedelta(seconds=5), e + timedelta(seconds=1), req.name)
+        telemtrie_service.last_completed_flight = {"start": None, "end": None}
+        return {"ok": True}
+    return {"ok": False, "message": "Kein Flug im Puffer"}
 
-from typing import List
-from fastapi import Body
+@router.get("/flights")
+async def list_flights():
+    return {"ok": True, "flights": get_all_flight_names()}
+
 
 from fastapi import Body
 
