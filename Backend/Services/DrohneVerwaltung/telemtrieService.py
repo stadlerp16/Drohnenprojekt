@@ -119,7 +119,7 @@ def get_telemetry() -> dict:
 
     if drone:
         try:
-            h_val = drone.get_status("h") or 0
+            h_val = drone._safe_status("tof", default=drone._safe_status("h", 0))
             tof_val = drone.get_status("tof") or 0
 
             vgx = drone.get_status("vgx") or 0
@@ -139,8 +139,6 @@ def get_telemetry() -> dict:
 
 
         "height": tof_val,
-
-        # optional intern/debug (Frontend nutzt sie nicht)
         "h_raw": h_val,
 
         "position": current_pos,
