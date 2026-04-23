@@ -24,6 +24,11 @@ export class Dashboard implements OnDestroy , OnInit {
   flightName: string = '';
   showafterland: boolean = false;
 
+  // LED MATRIX STATE
+  showLedPanel: boolean = false;
+  public ledMatrix: number[][] = Array(8).fill(0).map(() => Array(8).fill(0));
+  scrollText: string = '';
+
   // JOYSTICK STATE
   private left = { x: 0, y: 0 };
   private right = { x: 0, y: 0 };
@@ -269,26 +274,55 @@ export class Dashboard implements OnDestroy , OnInit {
     this.sendData({ lx, ly, rx, l2, r2, takeoffLand });
   }
 
+  // ============================================================
+  // LED MATRIX LOGIK (wie in Home.ts)
+  // ============================================================
+  toggleLedPanel() {
+    this.showLedPanel = !this.showLedPanel;
+  }
 
-  /*startDrone() {
-    this.droneService.startDrone().subscribe({
-      next: () => {
-        this.isFlying = true;
-        this.connectWebSocket();
-      },
-      error: (err) => console.error('Start fehlgeschlagen:', err)
+  toggleLed(row: number, col: number) {
+    const colorMap: { [key: string]: number } = { 'r': 1, 'b': 2, 'p': 3 };
+    const selectedColorCode = colorMap[this.droneService.selectedColor];
+
+    if (this.ledMatrix[row][col] === selectedColorCode) {
+      this.ledMatrix[row][col] = 0; // Ausschalten
+    } else {
+      this.ledMatrix[row][col] = selectedColorCode; // Farbe setzen/ändern
+    }
+
+    this.droneService.sendLedUpdate(this.ledMatrix).subscribe({
+      next: (res) => console.log(`Matrix Update: Pixel [${row},${col}] Farbe ${this.droneService.selectedColor}`, res),
+      error: (err) => console.error('Matrix Fehler', err)
     });
   }
 
-  stopDrone() {
-    this.droneService.stopDrone().subscribe({
-      next: () => {
-        this.cleanUp();
-        this.showSaveModal = true; // Modal öffnen nach dem Landen
-      },
-      error: (err) => console.error('Stop fehlgeschlagen:', err)
+  sendCurrentMatrix() {
+    if (!this.droneService.isConnected) return;
+
+    this.droneService.sendLedUpdate(this.ledMatrix).subscribe({
+      next: (res) => console.log('Matrix manuell gesendet:', res),
+      error: (err) => console.error('Fehler beim manuellen Senden der Matrix:', err)
     });
-  }*/
+  }
+
+  selectColor(color: 'r' | 'b' | 'p') {
+    this.droneService.selectedColor = color;
+  }
+
+  clearMatrix() {
+    this.ledMatrix.forEach(row => row.fill(0));
+    this.droneService.sendLedUpdate(this.ledMatrix).subscribe();
+  }
+
+  sendScrollingText(text: string) {
+    if (!text || !this.droneService.isConnected) return;
+    this.droneService.sendControlCommand(text).subscribe({
+      next: () => console.log(`Text gesendet: ${text}`),
+      error: (err) => console.error('Fehler Text-Senden', err)
+    });
+  }
+  // ============================================================
 
   saveFlightName() {
     if (!this.flightName.trim()) return;
