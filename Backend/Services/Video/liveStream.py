@@ -11,7 +11,7 @@ class VideoStreamService:
 
     async def stream_to_websocket(self, websocket: WebSocket):
         await websocket.accept()
-
+        print("seas")
         if drohneService.ep_drone is None:
             await websocket.send_json({
                 "type": "error",
@@ -23,7 +23,7 @@ class VideoStreamService:
         try:
             self.running = True
             drohneService.ep_drone.camera.start_video_stream(display=False)
-
+            print("seas1")
             while self.running:
                 frame = drohneService.ep_drone.camera.read_cv2_image(strategy="newest")
 

@@ -20,15 +20,16 @@
   <div class="main-view-container">
     <div class="video-wrapper">
 
-      <img [src]="frameData" class="live-stream" alt="Drone Live Stream"
-           *ngIf="frameData; else noStream">
-
-      <ng-template #noStream>
+      @if (frameData) {
+        <img [src]="frameData" class="live-stream" alt="Drone Live Stream">
+      } @else {
         <div class="stream-placeholder">
           <div class="spinner"></div>
-          <p>Warte auf Video-Signal von {{ droneService.activeIp }}...</p>
+          <p>Warte auf Video-Signal von <br>
+            <span class="ip-highlight">{{ droneService.activeIp || 'Drohne' }}</span>...
+          </p>
         </div>
-      </ng-template>
+      }
 
       <div class="telemetry-hud">
         <div class="hud-card">
@@ -45,8 +46,18 @@
         </div>
 
         <div class="hud-card">
-          <span class="hud-label">Speed</span>
-          <span class="hud-value">{{ droneService.telemetry?.speed || 0 }} m/s</span>
+          <span class="hud-label">Geschwindigkeit</span>
+          <span class="hud-value">{{ droneService.telemetry?.speed || 0 }} cm/s</span>
+        </div>
+
+        <div class="hud-card">
+          <span class="hud-label">Entfernung</span>
+          <span class="hud-value">{{ droneService.telemetry?.total_distance_cm || 0 }} cm</span>
+        </div>
+
+        <div class="hud-card">
+          <span class="hud-label">Flugzeit</span>
+          <span class="hud-value">{{ droneService.telemetry?.flight_duration || 0 }} s</span>
         </div>
 
         <div class="hud-card">
@@ -59,7 +70,7 @@
         </div>
 
         <div class="hud-card info">
-          <span class="hud-label">IP</span>
+          <span class="hud-label">IP Adresse</span>
           <span class="hud-value small">{{ droneService.activeIp || 'Offline' }}</span>
         </div>
       </div>
@@ -95,7 +106,6 @@
   <div class="bottom-section">
     @if (!droneService.isAutoFlight && droneService.selectedMode === 'controlps'){
       <div class="controller-status">
-        <h3>Controller Status</h3>
         @if (gamepadConnected) {
           <p class="status-ok">✅ Verbunden: {{ gamepadName }}</p>
         } @else {

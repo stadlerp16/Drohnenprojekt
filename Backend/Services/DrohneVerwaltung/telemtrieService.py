@@ -4,7 +4,6 @@ import math
 import asyncio
 from datetime import datetime
 import Services.DrohneVerwaltung.drohneService as drohne_service
-from typing import List
 
 # --- Globaler Flug-Status ---
 is_logging_allowed = False
@@ -14,7 +13,6 @@ current_pos = {"x": 0, "y": 0}
 route_history = [{"x": 0, "y": 0}]
 total_distance_cm = 0.0
 
-# Für zeitbasierte Geschwindigkeitsintegration
 _last_telemetry_time: datetime | None = None
 
 
@@ -26,24 +24,54 @@ def reset_tracking():
     _last_telemetry_time = None
 
 
+def _safe_get_status(drone, key: str, default=0):
+    try:
+        value = drone.get_status(key)
+        return value if value is not None else default
+    except Exception:
+        return default
+
+
+def get_height(drone) -> float:
+    tof = _safe_get_status(drone, "tof", 0)
+    return tof
+
+
+def get_velocity_cm_s(drone):
+    """
+    Deine Messung wirkt so, als würden vgx/vgy/vgz in dm/s kommen.
+    Darum: RAW-Wert * 10 = cm/s.
+    """
+    vgx_raw = _safe_get_status(drone, "vgx", 0)
+    vgy_raw = _safe_get_status(drone, "vgy", 0)
+    vgz_raw = _safe_get_status(drone, "vgz", 0)
+
+    vgx = vgx_raw * 10
+    vgy = vgy_raw * 10
+    vgz = vgz_raw * 10
+
+    speed = math.sqrt(vgx ** 2 + vgy ** 2 + vgz ** 2)
+
+    return vgx, vgy, vgz, round(speed, 2)
+
+
 def _update_distance(new_x, new_y):
     global total_distance_cm, current_pos
+
     dx = new_x - current_pos["x"]
     dy = new_y - current_pos["y"]
     dist = math.sqrt(dx ** 2 + dy ** 2)
+
     total_distance_cm += dist
     current_pos = {"x": new_x, "y": new_y}
+
     new_p = {"x": round(new_x, 1), "y": round(new_y, 1)}
+
     if route_history[-1] != new_p:
         route_history.append(new_p)
 
 
 def _integrate_velocity(vgx: float, vgy: float, vgz: float) -> float:
-    """
-    Berechnet die zurückgelegte Strecke seit dem letzten Aufruf
-    anhand der echten Geschwindigkeitsvektoren (cm/s) × Δt (s).
-    Gibt die Delta-Distanz in cm zurück.
-    """
     global _last_telemetry_time, total_distance_cm, current_pos, route_history
 
     now = datetime.now()
@@ -55,25 +83,24 @@ def _integrate_velocity(vgx: float, vgy: float, vgz: float) -> float:
     dt = (now - _last_telemetry_time).total_seconds()
     _last_telemetry_time = now
 
-    # Plausibilitätsprüfung: zu große Zeitlücken ignorieren (z. B. nach Pause)
     if dt <= 0 or dt > 1.0:
         return 0.0
 
-    # 3D-Distanz: sqrt(vx² + vy² + vz²) × Δt
     speed = math.sqrt(vgx ** 2 + vgy ** 2 + vgz ** 2)
-    delta_dist = speed * dt
 
-    # Schwellwert: Rauschen unter 2 cm/s ignorieren
     if speed < 2.0:
         return 0.0
 
+    delta_dist = speed * dt
     total_distance_cm += delta_dist
 
-    # Position in 2D (x/y) ebenfalls integrieren für Pfad-Tracking
     new_x = current_pos["x"] + vgx * dt
     new_y = current_pos["y"] + vgy * dt
+
     current_pos = {"x": round(new_x, 1), "y": round(new_y, 1)}
+
     new_p = {"x": round(new_x, 1), "y": round(new_y, 1)}
+
     if route_history[-1] != new_p:
         route_history.append(new_p)
 
@@ -81,83 +108,99 @@ def _integrate_velocity(vgx: float, vgy: float, vgz: float) -> float:
 
 
 def update_position_keyboard(key: str, duration: float):
-    """Fallback für Keyboard-Steuerung ohne echte Velocity-Daten."""
     px_per_sec = 40
-    new_x, new_y = current_pos["x"], current_pos["y"]
-    if key in ["w"]:
+
+    new_x = current_pos["x"]
+    new_y = current_pos["y"]
+
+    if key == "w":
         new_y -= px_per_sec * duration
-    elif key in ["s"]:
+    elif key == "s":
         new_y += px_per_sec * duration
-    elif key in ["a"]:
+    elif key == "a":
         new_x -= px_per_sec * duration
-    elif key in ["d"]:
+    elif key == "d":
         new_x += px_per_sec * duration
+
     _update_distance(new_x, new_y)
 
 
 def update_position_analog(lx: float, ly: float):
-    """Fallback für Analog-Steuerung ohne echte Velocity-Daten."""
     px_per_frame = 2
+
     new_x = current_pos["x"] + (lx * px_per_frame)
     new_y = current_pos["y"] - (ly * px_per_frame)
+
     _update_distance(new_x, new_y)
 
 
 async def start_takeoff_timer(duration: float = 2.0):
     global is_logging_allowed
+
     is_logging_allowed = False
     await asyncio.sleep(duration)
     is_logging_allowed = True
 
+
 def get_telemetry() -> dict:
     drone = drohne_service.ep_drone
+
     dur = round((datetime.now() - current_flight_start).total_seconds(), 1) if current_flight_start else 0.0
 
-    h_val = 0
-    tof_val = 0
-    vgx, vgy, vgz = 0, 0, 0
+    battery = 0
+    height = 0
+    speed = 0
+    pitch = 0
+    roll = 0
+    yaw = 0
+
+    vgx = vgy = vgz = 0
 
     if drone:
-        try:
-            h_val = drone._safe_status("tof", default=drone._safe_status("h", 0))
-            tof_val = drone.get_status("tof") or 0
+        battery = _safe_get_status(drone, "bat", 0)
 
-            vgx = drone.get_status("vgx") or 0
-            vgy = drone.get_status("vgy") or 0
-            vgz = drone.get_status("vgz") or 0
+        tof = _safe_get_status(drone, "tof", 0)
 
-            _integrate_velocity(vgx, vgy, vgz)
+        # Höhe: TOF bevorzugen, sonst h
+        if tof > 0:
+            height = tof
 
-        except:
-            pass
+        # Geschwindigkeit
+        vgx_raw = _safe_get_status(drone, "vgx", 0)
+        vgy_raw = _safe_get_status(drone, "vgy", 0)
+        vgz_raw = _safe_get_status(drone, "vgz", 0)
 
-    data = {
+        # falls deine Werte dm/s sind:
+        vgx = vgx_raw * 10
+        vgy = vgy_raw * 10
+        vgz = vgz_raw * 10
+
+        speed = round(math.sqrt(vgx ** 2 + vgy ** 2 + vgz ** 2), 2)
+
+        _integrate_velocity(vgx, vgy, vgz)
+
+        pitch = _safe_get_status(drone, "pitch", 0)
+        roll = _safe_get_status(drone, "roll", 0)
+        yaw = _safe_get_status(drone, "yaw", 0)
+
+    return {
         "connected": drone is not None,
         "is_logging": is_logging_allowed,
-        "flight_duration": dur,
+
+        # genau passend zu deinem Frontend
+        "battery": battery,
+        "current_height": height,
+        "speed": speed,
+        "pitch": pitch,
+        "roll": roll,
+        "yaw": yaw,
         "total_distance_cm": round(total_distance_cm, 1),
+        "flight_duration": dur,
 
-
-        "height": tof_val,
-        "h_raw": h_val,
-
+        # Zusatzwerte zum Prüfen
         "position": current_pos,
         "path": route_history,
     }
-
-    if drone:
-        try:
-            data.update({
-                "battery": drone.get_status("bat") or 0,
-                "speed": round(math.sqrt(vgx ** 2 + vgy ** 2 + vgz ** 2), 2),
-                "pitch": drone.get_status("pitch") or 0,
-                "roll": drone.get_status("roll") or 0,
-                "yaw": drone.get_status("yaw") or 0,
-            })
-        except:
-            pass
-
-    return data
 
 
 def set_matrix_string(matrix_str: str) -> bool:
@@ -191,13 +234,12 @@ def set_matrix_text(text: str, color: str = "r", scroll: bool = True) -> bool:
 
         if scroll:
             drohne_service.ep_drone.led.set_mled_char_scroll(
-                direction='l',
+                direction="l",
                 color=color,
                 freq=1.5,
                 display_str=text
             )
             print(f"[LED-Matrix] Scroll-Text gesetzt: {text}")
-
         else:
             text = text[:1]
             drohne_service.ep_drone.led.set_mled_char(color, text)
@@ -208,3 +250,4 @@ def set_matrix_text(text: str, color: str = "r", scroll: bool = True) -> bool:
     except Exception as e:
         print(f"[LED-Matrix] Fehler: {e}")
         return False
+

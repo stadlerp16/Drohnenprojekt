@@ -100,6 +100,11 @@ export class DroneService {
     });
   }
 
+  getVideoStreamSocket(): WebSocket {
+    return new WebSocket('ws://localhost:8000/video/getlivestream');
+  }
+
+
   public selectedColor: 'r' | 'b' | 'p' = 'b';
 
 

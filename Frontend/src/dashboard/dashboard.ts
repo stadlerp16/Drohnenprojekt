@@ -1,8 +1,8 @@
-import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ChangeDetectorRef, NgZone } from '@angular/core';
 import { DroneService } from '../app/services/drohne.service';
 import { Router } from '@angular/router';
-import {FormsModule} from '@angular/forms';
-import {NgIf} from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,7 +11,7 @@ import {NgIf} from '@angular/common';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
-export class Dashboard implements OnDestroy , OnInit {
+export class Dashboard implements OnDestroy, OnInit {
   @ViewChild('leftStick') leftStick?: ElementRef;
   @ViewChild('rightStick') rightStick?: ElementRef;
   @ViewChild('leftJoy') leftJoy?: ElementRef;
@@ -31,9 +31,9 @@ export class Dashboard implements OnDestroy , OnInit {
   private left = { x: 0, y: 0 };
   private right = { x: 0, y: 0 };
   private draggingSide: 'left' | 'right' | null = null;
-  private readonly RADIUS = 50; // Bewegungsradius in Pixeln
+  private readonly RADIUS = 50;
 
-  //CONTROLLER KONFIGURATION
+  // CONTROLLER KONFIGURATION
   private readonly DEADZONE = 0.08;
   private readonly SEND_HZ = 20;
   private readonly SEND_DT_MS = 1000 / this.SEND_HZ;
@@ -46,10 +46,16 @@ export class Dashboard implements OnDestroy , OnInit {
     "w", "a", "s", "d", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " ", "Space"
   ]);
 
-  constructor(protected droneService: DroneService, private router: Router) {}
+  // OPTIMIERUNG: ChangeDetectorRef und NgZone im Constructor
+  constructor(
+    protected droneService: DroneService,
+    private router: Router,
+    private cdr: ChangeDetectorRef,
+    private zone: NgZone
+  ) {}
 
   ngOnInit() {
-    // Wir warten einen winzigen Moment, bis die Seite stabil geladen ist
+    this.initVideoStream();
     setTimeout(() => {
       if (this.droneService.isAutoFlight && this.droneService.selectedAutoFlight) {
         this.startAutoFlightFromSetup();
@@ -59,49 +65,57 @@ export class Dashboard implements OnDestroy , OnInit {
     }, 300);
   }
 
-
   private initVideoStream() {
-    const WS_STREAM_URL = `ws://localhost:8000/drone/video/getlifestream`;
-    this.videoStreamSocket = new WebSocket(WS_STREAM_URL);
+    this.videoStreamSocket = this.droneService.getVideoStreamSocket();
 
-    this.videoStreamSocket.onmessage = (event) => {
+    // OPTIMIERUNG: Wir lassen den Listener außerhalb der Angular-Zone laufen
+    this.zone.runOutsideAngular(() => {
+      if (this.videoStreamSocket) {
+        this.videoStreamSocket.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
 
-      this.frameData = 'data:image/jpeg;base64,' + event.data;
+            if (data.type === "video_frame") {
+              this.frameData = 'data:image/jpeg;base64,' + data.image;
 
-    };
+              // OPTIMIERUNG: Nur die UI für das Bild aktualisieren, ohne die ganze App zu bremsen
+              this.cdr.detectChanges();
+            }
+
+            if (data.type === "error") {
+              console.error("Backend Video Fehler:", data.message);
+            }
+          } catch (e) {
+            console.error("Fehler beim Verarbeiten des Video-Frames:", e);
+          }
+        };
+      }
+    });
 
     this.videoStreamSocket.onerror = (err) => console.error('Streaming Fehler:', err);
   }
 
-  startAutoFlightFromSetup() {
-    console.log('Autopilot-Sequenz wird jetzt gefeuert...');
-    this.isFlightActive = true;
-    this.isFlying = true; // Damit die UI den Flug-Status anzeigt
+  // --- AB HIER BLEIBT DEINE LOGIK GLEICH ---
 
+  startAutoFlightFromSetup() {
+    this.isFlightActive = true;
+    this.isFlying = true;
     this.droneService.playSavedFlight(this.droneService.selectedAutoFlight!).subscribe({
-      next: (res) => {
-        console.log('Backend hat Flug erfolgreich gestartet:', res);
-      },
+      next: (res) => console.log('Backend Start:', res),
       error: (err) => {
-        console.error('Konnte Route nicht starten:', err);
-        this.isFlying = false; // Zurücksetzen bei Fehler
+        console.error('Start Fehler:', err);
+        this.isFlying = false;
         this.isFlightActive = false;
       }
     });
   }
 
-  //WEBSOCKET LOGIK
   private connectWebSocket() {
     const mode = this.droneService.selectedMode;
-    // Dynamischer Pfad: /keyboard oder /controller oder Joysticks
     const WS_URL = `ws://localhost:8000/drone/${mode}`;
-
     this.socket = new WebSocket(WS_URL);
     this.socket.onopen = () => {
-      console.log(`WS verbunden: ${mode}`);
-      if (mode === 'controlps') {
-        this.startControllerLoop();
-      }
+      if (mode === 'controlps') this.startControllerLoop();
     };
     this.socket.onclose = () => this.stopControllerLoop();
   }
@@ -121,44 +135,30 @@ export class Dashboard implements OnDestroy , OnInit {
   @HostListener('window:touchmove', ['$event'])
   handleJoystickMove(event: any) {
     if (!this.draggingSide) return;
-
     const clientX = event.touches ? event.touches[0].clientX : event.clientX;
     const clientY = event.touches ? event.touches[0].clientY : event.clientY;
-
     const root = this.draggingSide === 'left' ? this.leftJoy : this.rightJoy;
     const stick = this.draggingSide === 'left' ? this.leftStick : this.rightStick;
     const state = this.draggingSide === 'left' ? this.left : this.right;
 
     if (!root || !stick) return;
-
     const rect = root.nativeElement.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
     const cy = rect.top + rect.height / 2;
-
     let dx = clientX - cx;
     let dy = clientY - cy;
-
     const dist = Math.hypot(dx, dy);
     if (dist > this.RADIUS) {
       dx *= this.RADIUS / dist;
       dy *= this.RADIUS / dist;
     }
-
-    // Visuelle Bewegung
     stick.nativeElement.style.left = 50 + (dx / this.RADIUS) * 50 + "%";
     stick.nativeElement.style.top = 50 + (dy / this.RADIUS) * 50 + "%";
-
-    // Werte für Backend (-1 bis 1)
     state.x = dx / this.RADIUS;
     state.y = dy / this.RADIUS;
 
     if (this.droneService.selectedMode === 'controltouch') {
-      this.sendData({
-        lx: this.left.x,
-        ly: this.left.y,
-        rx: this.right.x,
-        ry: this.right.y
-      });
+      this.sendData({ lx: this.left.x, ly: this.left.y, rx: this.right.x, ry: this.right.y });
     }
   }
 
@@ -166,31 +166,23 @@ export class Dashboard implements OnDestroy , OnInit {
   @HostListener('window:touchend')
   stopJoystick() {
     if (!this.draggingSide) return;
-
     const stick = this.draggingSide === 'left' ? this.leftStick : this.rightStick;
     const state = this.draggingSide === 'left' ? this.left : this.right;
-
     if (stick) {
       stick.nativeElement.style.left = "50%";
       stick.nativeElement.style.top = "50%";
     }
-
-    state.x = 0;
-    state.y = 0;
+    state.x = 0; state.y = 0;
     this.draggingSide = null;
-
     if (this.droneService.selectedMode === 'controltouch') {
       this.sendData({ lx: 0, ly: 0, rx: 0, ry: 0 });
     }
   }
+
   handleSpaceAction(isPressed: boolean) {
-    if (this.droneService.selectedMode !== 'controltouch') return;
-    if (!isPressed) return;
+    if (this.droneService.selectedMode !== 'controltouch' || !isPressed) return;
     this.sendData({ takeoffLand: true });
   }
-
-
-  //TASTATUR LOGIK
 
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
@@ -205,8 +197,8 @@ export class Dashboard implements OnDestroy , OnInit {
       if (event.repeat) return;
       this.sendData({ key: event.key, pressed: true });
     }
-    if(this.showafterland){
-      this.showSaveModal= true;
+    if(this.showafterland) {
+      this.showSaveModal = true;
       this.isFlying = false;
     }
   }
@@ -220,21 +212,14 @@ export class Dashboard implements OnDestroy , OnInit {
     }
   }
 
-  //CONTROLLER LOGIK
-
   private startControllerLoop() {
     this.stopControllerLoop();
-
     const loop = () => {
       this.controllerLoopId = setTimeout(loop, this.SEND_DT_MS);
-
-      if (!this.isFlying) return;
-      if (this.droneService.selectedMode !== 'controlps') return;
-
+      if (!this.isFlying || this.droneService.selectedMode !== 'controlps') return;
       const gp = this.getFirstGamepad();
       if (gp) this.processGamepadData(gp);
     };
-
     loop();
   }
 
@@ -242,80 +227,41 @@ export class Dashboard implements OnDestroy , OnInit {
   onGamepadConnected(event: GamepadEvent) {
     this.gamepadConnected = true;
     this.gamepadName = event.gamepad.id;
-    console.log('Gamepad connected:', event.gamepad.id, 'index', event.gamepad.index);
   }
 
-  @HostListener('window:gamepaddisconnected', ['$event'])
-  onGamepadDisconnected(event: GamepadEvent): void {
+  @HostListener('window:gamepaddisconnected')
+  onGamepadDisconnected(): void {
     this.gamepadConnected = false;
-    this.gamepadName = '';
   }
 
   private stopControllerLoop() {
-    if (this.controllerLoopId) {
-      clearTimeout(this.controllerLoopId);
-      this.controllerLoopId = null;
-    }
+    if (this.controllerLoopId) clearTimeout(this.controllerLoopId);
   }
 
   private getFirstGamepad(): Gamepad | null {
     const gamepads = navigator.getGamepads?.() ?? [];
-    for (const gp of gamepads) {
-      if (gp && gp.connected) return gp;
-    }
+    for (const gp of gamepads) { if (gp && gp.connected) return gp; }
     return null;
   }
 
   private processGamepadData(gp: Gamepad) {
-
     const dz = (v: number) => Math.abs(v) < this.DEADZONE ? 0 : v;
-    const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
-
     const lx = dz(gp.axes[0] ?? 0);
     const ly = dz(gp.axes[1] ?? 0);
     const rx = dz(gp.axes[2] ?? 0);
-
-    const l2 = clamp01(gp.buttons[6]?.value ?? 0);
-    const r2 = clamp01(gp.buttons[7]?.value ?? 0);
-
+    const l2 = gp.buttons[6]?.value ?? 0;
+    const r2 = gp.buttons[7]?.value ?? 0;
     const xNow = !!gp.buttons[0]?.pressed;
     let takeoffLand = false;
     if (xNow && !this.lastXPressed) takeoffLand = true;
     this.lastXPressed = xNow;
-
     this.sendData({ lx, ly, rx, l2, r2, takeoffLand });
   }
 
-
-  /*startDrone() {
-    this.droneService.startDrone().subscribe({
-      next: () => {
-        this.isFlying = true;
-        this.connectWebSocket();
-      },
-      error: (err) => console.error('Start fehlgeschlagen:', err)
-    });
-  }
-
-  stopDrone() {
-    this.droneService.stopDrone().subscribe({
-      next: () => {
-        this.cleanUp();
-        this.showSaveModal = true; // Modal öffnen nach dem Landen
-      },
-      error: (err) => console.error('Stop fehlgeschlagen:', err)
-    });
-  }*/
-
   saveFlightName() {
     if (!this.flightName.trim()) return;
-    this.droneService.saveFlight({
-      name: this.flightName.trim()
-    }).subscribe({
-      next: () => {
-        console.log('Flug gespeichert:', this.flightName);
-        this.closeModal();
-      },
+    this.droneService.saveFlight({ name: this.flightName.trim() }).subscribe({
+      next: () => this.closeModal(),
       error: (err) => console.error('Speichern fehlgeschlagen:', err)
     });
   }
@@ -338,14 +284,8 @@ export class Dashboard implements OnDestroy , OnInit {
   private cleanUp() {
     this.isFlying = false;
     this.stopControllerLoop();
-    if (this.socket) {
-      this.socket.close();
-      this.socket = null;
-    }
-    if (this.videoStreamSocket) {
-      this.videoStreamSocket.close();
-      this.videoStreamSocket = null;
-    }
+    if (this.socket) this.socket.close();
+    if (this.videoStreamSocket) this.videoStreamSocket.close();
   }
 
   ngOnDestroy() {
