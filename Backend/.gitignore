@@ -16,3 +16,5 @@ venv/
 Thumbs.db
 
 mariadb_data
+./mariadb_data
+/mariadb_data

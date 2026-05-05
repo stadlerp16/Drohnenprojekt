@@ -1,305 +1,151 @@
-/* Layout Basis */
+/* --- BASIS LAYOUT --- */
 .dashboard-page {
   display: flex;
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
   background-color: #f3f3f3;
-  padding: 0;
   margin: 0;
-  position: relative; /* Wichtig für die absolute Positionierung der Telemetrie */
+  padding-bottom: 30px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow-x: hidden;
 }
 
-/* TELEMETRIE OVERLAY (Neu hinzugefügt) */
-.telemetry-overlay {
-  position: absolute;
-  left: 20px;
-  top: 120px; /* Platziert es unter dem Header */
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  z-index: 100;
-  pointer-events: none; /* Klicks gehen durch den leeren Bereich durch */
-}
-
-.tel-card {
-  background: white;
-  padding: 12px 18px;
-  border-radius: 8px;
-  border-left: 5px solid #007bff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  min-width: 180px;
-  pointer-events: auto; /* Boxen selbst sind klickbar/interaktiv */
-}
-
-.tel-label {
-  display: block;
-  font-size: 0.65rem;
-  color: #888;
-  text-transform: uppercase;
-  font-weight: bold;
-  letter-spacing: 0.5px;
-}
-
-.tel-value {
-  display: block;
-  font-size: 1.2rem;
-  font-weight: 800;
-  color: #333;
-}
-
-.tel-value.small {
-  font-size: 0.9rem;
-}
-
-.tel-bat-bg {
-  width: 100%;
-  height: 5px;
-  background: #eee;
-  margin-top: 6px;
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.tel-bat-fill {
-  height: 100%;
-  background: #28a745;
-  transition: width 0.5s ease;
-}
-
-/* DEIN BESTEHENDER CODE (Unverändert) */
+/* --- HEADER --- */
 .dashboard-header {
   width: 100%;
   background: white;
-  padding: 30px 0;
-  border-bottom: 1px solid #e0e0e0;
+  padding: clamp(15px, 2.5vh, 25px) 0;
   text-align: center;
+  border-bottom: 1px solid #e0e0e0;
   box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
 .header-content h1 {
-  margin: 5px 0;
-  font-size: 2rem;
-  color: #202020;
-}
-
-.flight-title {
-  color: #007bff !important;
+  margin: 0;
+  font-size: clamp(1.1rem, 5vw, 1.6rem);
   font-weight: 800;
 }
 
-.mode-label, .mode-text {
-  font-size: 0.9rem;
-  color: #666;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+.mode-text { font-size: 0.75rem; color: #666; margin-top: 5px; text-transform: uppercase; letter-spacing: 1.5px; }
+.flight-title { color: #007bff !important; }
+
+/* --- VIDEO & HUD --- */
+.main-view-container {
+  width: 96%;
+  max-width: 1400px;
+  margin: 15px auto;
+  background: #000;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  border: 3px solid #fff;
 }
 
-.status-badge {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 5px 15px;
-  background: #e7f3ff;
-  color: #007bff;
-  border-radius: 20px;
-  font-weight: bold;
-  font-size: 0.8rem;
-}
-
-.pulse {
-  animation: pulse-red 2s infinite;
-}
-
-@keyframes pulse-red {
-  0% { opacity: 1; }
-  50% { opacity: 0.5; }
-  100% { opacity: 1; }
-}
-
-.joystick-main-container {
-  flex: 1;
-  display: flex;
-  align-items: center;
-}
-
-.bottom-section {
-  padding: 40px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-
-.btn-emergency {
-  background-color: #dc3545 !important;
-  padding: 15px 40px !important;
-  font-size: 16px !important;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.controller-status {
-  background: white;
-  padding: 15px 30px;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  text-align: center;
-}
-
-.status-ok {
-  color: #28a745;
-  font-weight: bold;
-}
-
-.status-err {
-  color: #dc3545;
-  font-weight: bold;
-}
-
-.joystick-wrapper {
-  display: flex;
-  gap: 100px;
-}
-
-.joystick {
+.video-wrapper {
   position: relative;
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  border: 3px solid #dee2e6;
-  background: #f8f9fa;
-  touch-action: none;
-}
-
-.stick {
-  position: absolute;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: #0a84ff;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  cursor: grab;
-}
-
-.space-btn {
-  background-color: #f39c12 !important;
-  height: 60px;
-  color: white;
-  border-radius: 8px;
-  font-weight: bold;
-}
-
-.joystick-controls {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.btn-joy {
-  padding: 10px 20px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  color: white;
-}
-
-.btn-joy.start {
-  background-color: #28a745;
-}
-
-.btn-joy.stop {
-  background-color: #dc3545;
-}
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.55);
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 70vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
-  backdrop-filter: blur(4px);
+  background: #111;
 }
 
-.modal-box {
-  background: #ffffff; /* Ersatz für background-primary */
-  border: 1px solid #e5e7eb; /* Ersatz für border-secondary */
-  border-radius: 16px;
-  padding: 32px;
-  width: 360px;
+.live-stream { width: 100%; height: 100%; object-fit: contain; }
+
+/* PLATZHALTER SCHRIFT (JETZT WEISS) */
+.stream-placeholder {
+  text-align: center;
+  color: #ffffff; /* Weiß für Sichtbarkeit auf Schwarz */
+  padding: 20px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.ip-highlight {
+  color: #007bff;
+  font-weight: bold;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255,255,255,0.2);
+  border-left-color: #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 10px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* --- HUD OVERLAY --- */
+.telemetry-hud {
+  position: absolute;
+  top: 10px;
+  left: 10px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  flex-wrap: wrap;
+  max-height: 95%;
+  gap: 6px;
+  pointer-events: none;
+  z-index: 10;
 }
 
-.modal-box h2 {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 500;
-  color: #111827; /* Ersatz für text-primary */
-}
-
-.modal-box p {
-  margin: 0;
-  color: #6b7280; /* Ersatz für text-secondary */
-  font-size: 14px;
-}
-
-.modal-input {
-  width: 100%;
-  padding: 10px 14px;
-  border: 1px solid #d1d5db; /* Ersatz für border-primary */
+.hud-card {
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(10px);
+  padding: 6px 12px;
   border-radius: 8px;
-  font-size: 15px;
-  background: #f9fafb; /* Ersatz für background-secondary */
-  color: #111827;
-  box-sizing: border-box;
-  outline: none;
-  transition: border-color 0.2s;
+  border-left: 4px solid #007bff;
+  min-width: 130px;
+  color: white;
 }
 
-.modal-input:focus {
-  border-color: #3b82f6; /* Blau als Fokus-Farbe sieht meist besser aus */
+.hud-card.info { border-left-color: #6c757d; }
+
+.hud-label { display: block; font-size: 0.55rem; text-transform: uppercase; color: #ccc; font-weight: 700; }
+.hud-value { display: block; font-size: clamp(0.8rem, 2vw, 1.1rem); font-weight: 800; }
+.hud-value.small { font-size: 0.8rem; }
+
+.hud-bat-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.2); margin-top: 4px; border-radius: 2px; }
+.hud-bat-fill { height: 100%; background: #28a745; transition: width 0.4s ease; }
+
+/* --- STEUERUNG --- */
+.joystick-main-container { width: 100%; padding: 20px 0; display: flex; justify-content: center; }
+.joystick-wrapper { display: flex; justify-content: space-evenly; align-items: center; width: 95%; max-width: 800px; gap: 10px; }
+.joystick { width: clamp(100px, 25vw, 150px); height: clamp(100px, 25vw, 150px); border-radius: 50%; background: #e9ecef; border: 2px solid #ddd; position: relative; touch-action: none; }
+.stick { width: clamp(40px, 10vw, 55px); height: clamp(40px, 10vw, 55px); background: #007bff; border-radius: 50%; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+.joystick-label { font-size: 0.65rem; color: #888; font-weight: bold; text-transform: uppercase; }
+
+.space-btn { background: #f39c12 !important; color: white; padding: 15px 25px; border-radius: 10px; font-weight: 900; font-size: 0.8rem; border: none; cursor: pointer; box-shadow: 0 4px 0 #d68910; }
+.space-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #d68910; }
+
+/* --- ACTIONS --- */
+.bottom-section { width: 100%; padding: 20px 0; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+.controller-status { background: white; padding: 8px 20px; border-radius: 50px; font-size: 0.8rem; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+.status-ok { color: #28a745; font-weight: bold; margin: 0; }
+.status-err { color: #dc3545; font-weight: bold; margin: 0; }
+
+.btn-emergency {
+  background: #dc3545 !important; color: white; padding: 18px 60px; border-radius: 50px;
+  font-size: 1.1rem; font-weight: 900; border: none; cursor: pointer;
+  box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3); text-transform: uppercase;
 }
 
-.modal-actions {
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-  margin-top: 4px;
+/* --- MODAL --- */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modal-box { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 360px; text-align: center; }
+
+/* --- RESPONSIVE OPTIMIERUNG --- */
+@media (max-width: 700px) {
+  .main-view-container { width: 100%; border-radius: 0; border: none; margin: 0; }
+  .telemetry-hud { flex-direction: row; top: 5px; left: 5px; }
+  .hud-card { min-width: 90px; padding: 4px 8px; }
+  .joystick-wrapper { flex-wrap: wrap; }
 }
 
-.btn-secondary {
-  padding: 9px 18px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
-  background: transparent;
-  color: #374151;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.btn-primary {
-  padding: 9px 18px;
-  border-radius: 8px;
-  border: none;
-  background: #111827; /* Dunkler Button */
-  color: #ffffff; /* Weißer Text */
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.btn-primary:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
+.pulse { animation: pulse-red 2s infinite; }
+@keyframes pulse-red { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
