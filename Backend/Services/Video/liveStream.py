@@ -3,6 +3,7 @@ import base64
 import asyncio
 from fastapi import WebSocket, WebSocketDisconnect
 import Services.DrohneVerwaltung.drohneService as drohneService
+from Services.Video.videoService import video_service
 
 
 class VideoStreamService:
@@ -32,6 +33,8 @@ class VideoStreamService:
                     continue
 
                 frame = cv2.resize(frame, (640, 480))
+
+                video_service.write_frame(frame)
 
                 success, buffer = cv2.imencode(".jpg", frame)
                 if not success:

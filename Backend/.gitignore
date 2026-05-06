@@ -18,3 +18,7 @@ Thumbs.db
 mariadb_data
 ./mariadb_data
 /mariadb_data
+
+data/videos/*
+
+!data/videos/.gitkeep
