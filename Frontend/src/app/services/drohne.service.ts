@@ -18,6 +18,7 @@ export class DroneService {
   selectedAutoFlight: string | null = null;
   activeIp: string | null = null;
 
+  //simon is dumm
   // Recording State
   isRecording = false;
 
