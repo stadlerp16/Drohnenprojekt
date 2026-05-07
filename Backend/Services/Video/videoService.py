@@ -1,3 +1,5 @@
+import threading
+
 import cv2
 import os
 import uuid
@@ -30,7 +32,15 @@ class VideoService:
 
     def write_frame(self, frame):
         if self.is_recording and self.writer:
+            thread = threading.Thread(target=self._sync_write, args=(frame,))
+            thread.start()
+
+    def _sync_write(self, frame):
+        """Die eigentliche (langsame) Schreib-Operation"""
+        try:
             self.writer.write(frame)
+        except Exception as e:
+            print(f"Fehler beim Schreiben des Frames: {e}")
 
     def stop_recording(self):
         if not self.is_recording: return

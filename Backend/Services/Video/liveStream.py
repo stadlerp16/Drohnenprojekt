@@ -34,7 +34,7 @@ class VideoStreamService:
 
                 frame = cv2.resize(frame, (640, 480))
 
-                video_service.write_frame(frame)
+                await asyncio.to_thread(video_service.write_frame, frame)
 
                 success, buffer = cv2.imencode(".jpg", frame)
                 if not success:
