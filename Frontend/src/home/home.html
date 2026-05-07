@@ -1,4 +1,11 @@
 <main class="main">
+
+  <!-- VIDEO GALERIE BUTTON (oben rechts im Eck) -->
+  <button class="btn-video-library" (click)="openVideoGallery()" title="Aufnahmen ansehen">
+    <span class="vl-icon">🎬</span>
+    <span class="vl-label">Aufnahmen</span>
+  </button>
+
   <header class="home-header">
     <h1 class="main-title">Drohnen<span>Projekt</span></h1>
   </header>
@@ -152,4 +159,82 @@
 
     </div>
   </div>
+
+
+  <!-- ===== VIDEO GALERIE MODAL ===== -->
+  <div class="video-modal-overlay" *ngIf="showVideoGallery" (click)="closeVideoGallery()">
+    <div class="video-modal" (click)="$event.stopPropagation()">
+
+      <!-- Header (mit Zurück & Schließen) -->
+      <div class="video-modal-header">
+        <div class="video-modal-header-left">
+          <!-- Zurück-Button: nur sichtbar wenn ein Video gerade abgespielt wird -->
+          <button class="btn-modal-back" *ngIf="selectedVideo" (click)="backToGallery()" title="Zurück zur Übersicht">
+            ← Zurück
+          </button>
+          <h2 class="video-modal-title">
+            <ng-container *ngIf="!selectedVideo">Aufnahmen</ng-container>
+            <ng-container *ngIf="selectedVideo">{{ getDisplayName(selectedVideo) }}</ng-container>
+          </h2>
+        </div>
+        <!-- Kreuz zum komplett Schließen -->
+        <button class="btn-modal-close" (click)="closeVideoGallery()" title="Schließen">✕</button>
+      </div>
+
+      <div class="video-modal-body">
+
+        <!-- ANSICHT 1: Galerie-Übersicht -->
+        <ng-container *ngIf="!selectedVideo">
+
+          <div class="video-gallery-toolbar">
+            <span class="video-count" *ngIf="!videosLoading && !videosError">
+              {{ videoList.length }} Aufnahme{{ videoList.length === 1 ? '' : 'n' }}
+            </span>
+            <button class="btn-refresh" (click)="loadVideos()" [disabled]="videosLoading">
+              ⟳ Aktualisieren
+            </button>
+          </div>
+
+          <div class="video-loading" *ngIf="videosLoading">
+            <div class="spinner-small"></div>
+            <p>Lade Aufnahmen...</p>
+          </div>
+
+          <div class="video-error" *ngIf="videosError && !videosLoading">
+            <p>⚠️ {{ videosError }}</p>
+          </div>
+
+          <div class="video-empty" *ngIf="!videosLoading && !videosError && videoList.length === 0">
+            <p>Noch keine Aufnahmen vorhanden.</p>
+            <p class="hint">Starte eine Aufnahme während eines Fluges, um Videos zu sehen.</p>
+          </div>
+
+          <div class="video-grid" *ngIf="!videosLoading && !videosError && videoList.length > 0">
+            <div class="video-card" *ngFor="let v of videoList" (click)="playVideo(v)">
+              <div class="video-thumb">
+                <span class="play-overlay">▶</span>
+              </div>
+              <div class="video-card-name" [title]="v">{{ getDisplayName(v) }}</div>
+            </div>
+          </div>
+
+        </ng-container>
+
+        <!-- ANSICHT 2: Video-Player -->
+        <ng-container *ngIf="selectedVideo && selectedVideoUrl">
+          <div class="video-player-wrapper">
+            <video
+              [src]="selectedVideoUrl"
+              controls
+              autoplay
+              class="video-player">
+              Dein Browser unterstützt das Video-Tag nicht.
+            </video>
+          </div>
+        </ng-container>
+
+      </div>
+    </div>
+  </div>
+
 </main>

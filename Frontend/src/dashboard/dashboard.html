@@ -31,6 +31,15 @@
         </div>
       }
 
+      <!-- RECORDING INDICATOR (oben rechts im Video) -->
+      @if (isRecording) {
+        <div class="rec-indicator">
+          <span class="rec-dot"></span>
+          <span class="rec-text">REC</span>
+          <span class="rec-time">{{ recordingDuration }}</span>
+        </div>
+      }
+
       <div class="telemetry-hud">
         <div class="hud-card">
           <span class="hud-label">Batterie</span>
@@ -77,8 +86,23 @@
     </div>
   </div>
 
-  @if (!droneService.isAutoFlight && droneService.selectedMode === 'controltouch') {
-    <div class="joystick-main-container">
+  <!-- CONTROL BAR: Joysticks + Action-Buttons in einer Zeile -->
+  <div class="control-bar">
+
+    <!-- Linke Seite: Aufnahme-Button -->
+    <div class="control-side left">
+      <button
+        class="btn-record"
+        [class.recording]="isRecording"
+        (click)="toggleRecording()"
+        title="Aufnahme starten/stoppen">
+        <span class="rec-icon"></span>
+        <span class="rec-label">{{ isRecording ? 'STOP' : 'REC' }}</span>
+      </button>
+    </div>
+
+    <!-- Mitte: Joysticks (nur Touch-Modus) -->
+    @if (!droneService.isAutoFlight && droneService.selectedMode === 'controltouch') {
       <div class="joystick-wrapper">
         <div class="joystick-container">
           <span class="joystick-label">Throttle / Yaw</span>
@@ -89,7 +113,7 @@
 
         <div class="joystick-controls">
           <button class="btn-joy space-btn" (pointerdown)="handleSpaceAction(true)">
-            TAKEOFF / LAND
+            TAKEOFF<br>LAND
           </button>
         </div>
 
@@ -100,23 +124,26 @@
           </div>
         </div>
       </div>
-    </div>
-  }
-
-  <div class="bottom-section">
-    @if (!droneService.isAutoFlight && droneService.selectedMode === 'controlps'){
-      <div class="controller-status">
-        @if (gamepadConnected) {
-          <p class="status-ok">✅ Verbunden: {{ gamepadName }}</p>
-        } @else {
-          <p class="status-err">❌ Kein Controller verbunden</p>
+    } @else {
+      <div class="control-spacer">
+        @if (!droneService.isAutoFlight && droneService.selectedMode === 'controlps'){
+          <div class="controller-status">
+            @if (gamepadConnected) {
+              <p class="status-ok">✅ {{ gamepadName }}</p>
+            } @else {
+              <p class="status-err">❌ Kein Controller</p>
+            }
+          </div>
         }
       </div>
     }
 
-    <button class="btn-emergency" (click)="emergencyStop()">
-      EMERGENCY STOP
-    </button>
+    <!-- Rechte Seite: Emergency Stop -->
+    <div class="control-side right">
+      <button class="btn-emergency" (click)="emergencyStop()">
+        EMERGENCY<br>STOP
+      </button>
+    </div>
   </div>
 
   @if (showSaveModal) {

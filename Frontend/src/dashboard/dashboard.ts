@@ -27,6 +27,12 @@ export class Dashboard implements OnDestroy, OnInit {
   videoStreamSocket: WebSocket | null = null;
   frameData: string = '';
 
+  // RECORDING STATE
+  isRecording: boolean = false;
+  recordingStartTime: number = 0;
+  recordingDuration: string = '00:00';
+  private recordingTimerId: any = null;
+
   // JOYSTICK STATE
   private left = { x: 0, y: 0 };
   private right = { x: 0, y: 0 };
@@ -46,7 +52,6 @@ export class Dashboard implements OnDestroy, OnInit {
     "w", "a", "s", "d", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " ", "Space"
   ]);
 
-  // OPTIMIERUNG: ChangeDetectorRef und NgZone im Constructor
   constructor(
     protected droneService: DroneService,
     private router: Router,
@@ -68,7 +73,6 @@ export class Dashboard implements OnDestroy, OnInit {
   private initVideoStream() {
     this.videoStreamSocket = this.droneService.getVideoStreamSocket();
 
-    // OPTIMIERUNG: Wir lassen den Listener außerhalb der Angular-Zone laufen
     this.zone.runOutsideAngular(() => {
       if (this.videoStreamSocket) {
         this.videoStreamSocket.onmessage = (event) => {
@@ -77,8 +81,6 @@ export class Dashboard implements OnDestroy, OnInit {
 
             if (data.type === "video_frame") {
               this.frameData = 'data:image/jpeg;base64,' + data.image;
-
-              // OPTIMIERUNG: Nur die UI für das Bild aktualisieren, ohne die ganze App zu bremsen
               this.cdr.detectChanges();
             }
 
@@ -93,6 +95,60 @@ export class Dashboard implements OnDestroy, OnInit {
     });
 
     this.videoStreamSocket.onerror = (err) => console.error('Streaming Fehler:', err);
+  }
+
+  // --- VIDEO RECORDING ---
+  toggleRecording() {
+    if (this.isRecording) {
+      this.stopRecording();
+    } else {
+      this.startRecording();
+    }
+  }
+
+  private startRecording() {
+    this.droneService.startRecording().subscribe({
+      next: (res) => {
+        console.log('Aufnahme gestartet:', res);
+        this.isRecording = true;
+        this.droneService.isRecording = true;
+        this.recordingStartTime = Date.now();
+        this.startRecordingTimer();
+      },
+      error: (err) => console.error('Aufnahme Start Fehler:', err)
+    });
+  }
+
+  private stopRecording() {
+    this.droneService.stopRecording().subscribe({
+      next: (res) => {
+        console.log('Aufnahme beendet:', res);
+        this.isRecording = false;
+        this.droneService.isRecording = false;
+        this.stopRecordingTimer();
+        this.recordingDuration = '00:00';
+      },
+      error: (err) => console.error('Aufnahme Stop Fehler:', err)
+    });
+  }
+
+  private startRecordingTimer() {
+    this.stopRecordingTimer();
+    this.recordingTimerId = setInterval(() => {
+      const elapsedMs = Date.now() - this.recordingStartTime;
+      const totalSeconds = Math.floor(elapsedMs / 1000);
+      const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+      const seconds = (totalSeconds % 60).toString().padStart(2, '0');
+      this.recordingDuration = `${minutes}:${seconds}`;
+      this.cdr.detectChanges();
+    }, 1000);
+  }
+
+  private stopRecordingTimer() {
+    if (this.recordingTimerId) {
+      clearInterval(this.recordingTimerId);
+      this.recordingTimerId = null;
+    }
   }
 
   // --- AB HIER BLEIBT DEINE LOGIK GLEICH ---
@@ -274,6 +330,11 @@ export class Dashboard implements OnDestroy, OnInit {
   }
 
   emergencyStop() {
+    // Falls noch aufgenommen wird, automatisch stoppen
+    if (this.isRecording) {
+      this.droneService.stopRecording().subscribe();
+      this.stopRecordingTimer();
+    }
     this.droneService.emergencyStop().subscribe();
     this.cleanUp();
     this.droneService.isConnected = false;
@@ -284,6 +345,7 @@ export class Dashboard implements OnDestroy, OnInit {
   private cleanUp() {
     this.isFlying = false;
     this.stopControllerLoop();
+    this.stopRecordingTimer();
     if (this.socket) this.socket.close();
     if (this.videoStreamSocket) this.videoStreamSocket.close();
   }

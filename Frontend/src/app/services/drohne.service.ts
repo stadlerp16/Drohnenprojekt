@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {interval, Observable, startWith, switchMap} from 'rxjs';
+import { interval, Observable, startWith, switchMap } from 'rxjs';
 
 
 @Injectable({ providedIn: 'root' })
 export class DroneService {
   private baseUrl = 'http://localhost:8000/drone';
+  private videoUrl = 'http://localhost:8000/video';
   private wsUrl = 'ws://localhost:8000/drone/telemetrie';
 
   // Zentraler Status
@@ -16,6 +17,9 @@ export class DroneService {
   isAutoFlight = false;
   selectedAutoFlight: string | null = null;
   activeIp: string | null = null;
+
+  // Recording State
+  isRecording = false;
 
   public telemetry: any = {
     bat: 0,
@@ -36,10 +40,8 @@ export class DroneService {
   }
 
 
-
-
   sendIpAddress(ip: string): Observable<any> {
-    this.isManuallyDisconnected = false; // Sperre aufheben
+    this.isManuallyDisconnected = false;
     this.connectedIp = ip;
     this.activeIp = ip;
 
@@ -51,11 +53,10 @@ export class DroneService {
   }
 
   disconnect(): Observable<any> {
-    this.isManuallyDisconnected = true; // Wir sagen dem Service: "Stopp, ich will das!"
+    this.isManuallyDisconnected = true;
     this.isConnected = false;
     this.activeIp = null;
 
-    // WebSocket hart schließen
     if (this.socket) {
       this.socket.close();
       this.socket = null;
@@ -102,6 +103,26 @@ export class DroneService {
 
   getVideoStreamSocket(): WebSocket {
     return new WebSocket('ws://localhost:8000/video/getlivestream');
+  }
+
+  // --- VIDEO RECORDING ---
+  startRecording(): Observable<any> {
+    return this.http.post(`${this.videoUrl}/start`, {});
+  }
+
+  stopRecording(): Observable<any> {
+    return this.http.post(`${this.videoUrl}/stop`, {});
+  }
+
+  // --- VIDEO LIBRARY ---
+  /** Holt die Liste aller gespeicherten Aufnahmen vom Backend */
+  getRecordedVideos(): Observable<{ videos: string[] }> {
+    return this.http.get<{ videos: string[] }>(`${this.videoUrl}/list`);
+  }
+
+  /** Erzeugt die URL zum Abspielen einer einzelnen Videodatei */
+  getVideoFileUrl(filename: string): string {
+    return `${this.videoUrl}/file/${encodeURIComponent(filename)}`;
   }
 
 

@@ -4,10 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="live stream  telemtrie daten">
+    <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="live stream">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/app/services/drohne.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/app/services/drohne.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/home/home.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/home/home.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/home/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/home/home.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/home/home.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/home/home.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,7 +35,7 @@
     </favorite-branches>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="Luca" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -162,9 +167,8 @@
       <workItem from="1776338376806" duration="40000" />
       <workItem from="1776836151219" duration="2612000" />
       <workItem from="1776928826298" duration="3004000" />
-      <workItem from="1777445312562" duration="3933000" />
-      <workItem from="1777531887044" duration="1659000" />
-      <workItem from="1778046237112" duration="3290000" />
+      <workItem from="1777445312562" duration="2130000" />
+      <workItem from="1778136168146" duration="1753000" />
     </task>
     <task id="LOCAL-00001" summary="Create Backend">
       <option name="closed" value="true" />
@@ -342,15 +346,7 @@
       <option name="project" value="LOCAL" />
       <updated>1776836158432</updated>
     </task>
-    <task id="LOCAL-00023" summary="live stream  telemtrie daten">
-      <option name="closed" value="true" />
-      <created>1777448783372</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1777448783372</updated>
-    </task>
-    <option name="localTasksCounter" value="24" />
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -376,7 +372,6 @@
     <MESSAGE value="höhe und entfernung von luca im ui visualisiert" />
     <MESSAGE value="timer statt höhe" />
     <MESSAGE value="trennen button funktionalität verbessern" />
-    <MESSAGE value="live stream  telemtrie daten" />
-    <option name="LAST_COMMIT_MESSAGE" value="live stream  telemtrie daten" />
+    <option name="LAST_COMMIT_MESSAGE" value="trennen button funktionalität verbessern" />
   </component>
 </project>
