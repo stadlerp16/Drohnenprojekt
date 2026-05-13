@@ -7,7 +7,6 @@
     <list default="true" id="26b6f950-785b-47a4-9c2f-9295330bdc85" name="Changes" comment="Merge branch 'Mario' of https://github.com/stadlerp16/Drohnenprojekt into Mario&#10;&#10;# Conflicts:&#10;#&#9;Backend/.idea/workspace.xml">
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/app/services/drohne.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/app/services/drohne.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -285,6 +284,7 @@
       <workItem from="1777445527978" duration="2232000" />
       <workItem from="1777751640058" duration="901000" />
       <workItem from="1778048869614" duration="1402000" />
+      <workItem from="1778505308252" duration="159000" />
     </task>
     <task id="LOCAL-00001" summary="Grundlegende Ordnerstrukur und routing von main.py in die anderen Routes">
       <option name="closed" value="true" />
