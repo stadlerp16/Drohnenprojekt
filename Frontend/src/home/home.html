@@ -163,7 +163,6 @@
   <div class="video-modal-overlay" *ngIf="showVideoGallery" (click)="closeVideoGallery()">
     <div class="video-modal" (click)="$event.stopPropagation()">
 
-      <!-- Header (mit Zurück & Schließen) -->
       <div class="video-modal-header">
         <div class="video-modal-header-left">
           <!-- Zurück-Button: nur sichtbar wenn ein Video gerade abgespielt wird -->
@@ -175,13 +174,11 @@
             <ng-container *ngIf="selectedVideo">{{ getDisplayName(selectedVideo) }}</ng-container>
           </h2>
         </div>
-        <!-- Kreuz zum komplett Schließen -->
         <button class="btn-modal-close" (click)="closeVideoGallery()" title="Schließen">✕</button>
       </div>
 
       <div class="video-modal-body">
 
-        <!-- ANSICHT 1: Galerie-Übersicht -->
         <ng-container *ngIf="!selectedVideo">
 
           <div class="video-gallery-toolbar">
@@ -199,7 +196,7 @@
           </div>
 
           <div class="video-error" *ngIf="videosError && !videosLoading">
-            <p>⚠️ {{ videosError }}</p>
+            <p>{{ videosError }}</p>
           </div>
 
           <div class="video-empty" *ngIf="!videosLoading && !videosError && videoList.length === 0">
@@ -218,7 +215,6 @@
 
         </ng-container>
 
-        <!-- ANSICHT 2: Video-Player -->
         <ng-container *ngIf="selectedVideo && selectedVideoUrl">
           <div class="video-player-wrapper">
             <video
