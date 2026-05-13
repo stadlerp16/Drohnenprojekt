@@ -1,8 +1,20 @@
-import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ChangeDetectorRef, NgZone, AfterViewInit } from '@angular/core';
 import { DroneService } from '../app/services/drohne.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { NgIf } from '@angular/common';
+
+interface BBox {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+}
+
+interface Detection {
+  class: string;
+  confidence: number;
+  bbox: BBox;
+}
 
 @Component({
   selector: 'app-dashboard',
@@ -11,11 +23,14 @@ import { NgIf } from '@angular/common';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
-export class Dashboard implements OnDestroy, OnInit {
+export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
   @ViewChild('leftStick') leftStick?: ElementRef;
   @ViewChild('rightStick') rightStick?: ElementRef;
   @ViewChild('leftJoy') leftJoy?: ElementRef;
   @ViewChild('rightJoy') rightJoy?: ElementRef;
+
+  // Canvas-Overlay für Objekterkennung
+  @ViewChild('overlayCanvas') overlayCanvas?: ElementRef<HTMLCanvasElement>;
 
   isFlying: boolean = false;
   isStarted: boolean = false;
@@ -26,6 +41,13 @@ export class Dashboard implements OnDestroy, OnInit {
   showafterland: boolean = false;
   videoStreamSocket: WebSocket | null = null;
   frameData: string = '';
+
+  // OBJEKTERKENNUNG
+  // Backend resized Frames auf 640x480 (siehe liveStream.py: cv2.resize(frame, (640, 480)))
+  private readonly FRAME_WIDTH = 640;
+  private readonly FRAME_HEIGHT = 480;
+  currentDetections: Detection[] = [];
+  objectDetectionEnabled: boolean = true;
 
   // RECORDING STATE
   isRecording: boolean = false;
@@ -70,6 +92,19 @@ export class Dashboard implements OnDestroy, OnInit {
     }, 300);
   }
 
+  ngAfterViewInit() {
+    // Canvas auf native Frame-Auflösung setzen, damit Bbox-Koordinaten passen
+    this.setupCanvas();
+  }
+
+  private setupCanvas() {
+    if (this.overlayCanvas) {
+      const canvas = this.overlayCanvas.nativeElement;
+      canvas.width = this.FRAME_WIDTH;
+      canvas.height = this.FRAME_HEIGHT;
+    }
+  }
+
   private initVideoStream() {
     this.videoStreamSocket = this.droneService.getVideoStreamSocket();
 
@@ -81,7 +116,25 @@ export class Dashboard implements OnDestroy, OnInit {
 
             if (data.type === "video_frame") {
               this.frameData = 'data:image/jpeg;base64,' + data.image;
-              this.cdr.detectChanges();
+
+              // Object detection status vom Backend übernehmen
+              if (typeof data.object_detection_enabled === 'boolean') {
+                this.objectDetectionEnabled = data.object_detection_enabled;
+              }
+
+              // Detections verarbeiten (auch leeres Array ist gültig)
+              const detections: Detection[] = data.detections || [];
+              this.currentDetections = detections;
+
+              this.zone.run(() => {
+                // Canvas einrichten falls es erst nach erstem Frame gerendert wird
+                if (this.overlayCanvas &&
+                  this.overlayCanvas.nativeElement.width !== this.FRAME_WIDTH) {
+                  this.setupCanvas();
+                }
+                this.drawDetections(detections);
+                this.cdr.detectChanges();
+              });
             }
 
             if (data.type === "error") {
@@ -94,7 +147,67 @@ export class Dashboard implements OnDestroy, OnInit {
       }
     });
 
-    this.videoStreamSocket.onerror = (err) => console.error('Streaming Fehler:', err);
+    if (this.videoStreamSocket) {
+      this.videoStreamSocket.onerror = (err) => console.error('Streaming Fehler:', err);
+      this.videoStreamSocket.onopen = () => console.log('Video-Stream WebSocket verbunden');
+      this.videoStreamSocket.onclose = () => console.log('Video-Stream WebSocket geschlossen');
+    }
+  }
+
+  // --- OBJEKTERKENNUNG / CANVAS DRAWING ---
+  private drawDetections(detections: Detection[]) {
+    if (!this.overlayCanvas) return;
+    const canvas = this.overlayCanvas.nativeElement;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Canvas immer löschen (auch wenn keine Detections)
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (!detections || detections.length === 0) return;
+
+    for (const detection of detections) {
+      this.drawDetection(ctx, detection);
+    }
+  }
+
+  private drawDetection(ctx: CanvasRenderingContext2D, detection: Detection) {
+    const bbox = detection.bbox;
+    if (!bbox) return;
+
+    const width = bbox.x2 - bbox.x1;
+    const height = bbox.y2 - bbox.y1;
+
+    // Grünes Rechteck
+    ctx.strokeStyle = '#00ff00';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(bbox.x1, bbox.y1, width, height);
+
+    // Label
+    const label = `${detection.class} ${Math.round(detection.confidence * 100)}%`;
+    const fontSize = 18;
+    ctx.font = `bold ${fontSize}px Arial`;
+
+    const textMetrics = ctx.measureText(label);
+    const textWidth = textMetrics.width;
+    const textHeight = fontSize + 8;
+
+    const labelX = bbox.x1;
+    let labelY = bbox.y1 - 8;
+
+    // Falls Label oben raus ragt, unterhalb der Bbox platzieren
+    if (labelY - fontSize < 0) {
+      labelY = bbox.y1 + fontSize + 8;
+    }
+
+    // Schwarzer Hintergrund für Text
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.fillRect(labelX - 4, labelY - fontSize, textWidth + 8, textHeight);
+
+    // Weißer Text
+    ctx.fillStyle = '#ffffff';
+    ctx.textBaseline = 'top';
+    ctx.fillText(label, labelX, labelY - fontSize + 4);
   }
 
   // --- VIDEO RECORDING ---
@@ -151,7 +264,7 @@ export class Dashboard implements OnDestroy, OnInit {
     }
   }
 
-  // --- AB HIER BLEIBT DEINE LOGIK GLEICH ---
+  // --- DEINE BESTEHENDE LOGIK ---
 
   startAutoFlightFromSetup() {
     this.isFlightActive = true;

@@ -1,49 +1,5 @@
 <div class="dashboard-page">
 
-  <div class="telemetry-overlay">
-    <div class="tel-card">
-      <span class="tel-label">Batterie</span>
-      <span class="tel-value">{{ droneService.telemetry?.bat || 0 }}%</span>
-      <div class="tel-bat-bg">
-        <div class="tel-bat-fill" [style.width.%]="droneService.telemetry?.bat"></div>
-      </div>
-    </div>
-
-    <div class="tel-card">
-      <span class="tel-label">Höhe</span>
-      <span class="tel-value">{{ droneService.telemetry?.current_height || 0 }} cm</span>
-    </div>
-
-    <div class="tel-card">
-      <span class="tel-label">Geschwindigkeit</span>
-      <span class="tel-value">{{ droneService.telemetry?.speed || 0 }} m</span>
-    </div>
-
-    <div class="tel-card">
-      <span class="tel-label">Lage (P | R | Y)</span>
-      <span class="tel-value small">
-        {{ droneService.telemetry?.pitch || 0 }}° |
-        {{ droneService.telemetry?.roll || 0 }}° |
-        {{ droneService.telemetry?.yaw || 0 }}°
-      </span>
-    </div>
-
-    <div class="tel-card">
-      <span class="tel-label">Entfernung</span>
-      <span class="tel-value small">{{ droneService.telemetry?.total_distance_cm  || 0}} cm</span>
-    </div>
-
-    <div class="tel-card">
-      <span class="tel-label">Timer</span>
-      <span class="tel-value small">{{ droneService.telemetry?.flight_duration || 0}} s</span>
-    </div>
-
-    <div class="tel-card">
-      <span class="tel-label">IP Adresse</span>
-      <span class="tel-value small">{{ droneService.activeIp || 'Nicht verbunden' }}</span>
-    </div>
-  </div>
-
   <div class="dashboard-header">
     @if (droneService.isAutoFlight) {
       <div class="header-content autopilot">
@@ -65,7 +21,11 @@
     <div class="video-wrapper">
 
       @if (frameData) {
-        <img [src]="frameData" class="live-stream" alt="Drone Live Stream">
+        <!-- Video + Canvas-Overlay zusammen im Stream-Container -->
+        <div class="stream-container">
+          <img [src]="frameData" class="live-stream" alt="Drone Live Stream">
+          <canvas #overlayCanvas class="detection-overlay"></canvas>
+        </div>
       } @else {
         <div class="stream-placeholder">
           <div class="spinner"></div>
@@ -81,6 +41,21 @@
           <span class="rec-dot"></span>
           <span class="rec-text">REC</span>
           <span class="rec-time">{{ recordingDuration }}</span>
+        </div>
+      }
+
+      <!-- DETECTION PANEL (unten links im Video) -->
+      @if (currentDetections.length > 0) {
+        <div class="detection-panel">
+          <div class="detection-header">
+            <span class="detection-title">Erkannt</span>
+          </div>
+          @for (det of currentDetections; track $index) {
+            <div class="detection-row">
+              <span class="detection-class">{{ det.class }}</span>
+              <span class="detection-conf">{{ (det.confidence * 100).toFixed(0) }}%</span>
+            </div>
+          }
         </div>
       }
 

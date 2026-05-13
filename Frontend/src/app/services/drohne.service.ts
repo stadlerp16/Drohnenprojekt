@@ -5,7 +5,7 @@ import { interval, Observable, startWith, switchMap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class DroneService {
-  private baseUrl = 'http://:8000/drone';
+  private baseUrl = 'http://localhost:8000/drone';
   private videoUrl = 'http://localhost:8000/video';
   private wsUrl = 'ws://localhost:8000/drone/telemetrie';
 
