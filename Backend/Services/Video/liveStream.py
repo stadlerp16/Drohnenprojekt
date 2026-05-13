@@ -6,6 +6,7 @@ from queue import Empty
 from fastapi import WebSocket, WebSocketDisconnect
 from ultralytics import YOLO
 import Services.DrohneVerwaltung.drohneService as drohneService
+from Services.Video.videoService import video_service
 
 logging.basicConfig(
     level=logging.INFO,
@@ -152,6 +153,8 @@ class VideoStreamService:
                     if empty_counter > 0:
                         logger.info(f"[Conn #{conn_id}] Frame nach {empty_counter} leeren erhalten")
                         empty_counter = 0
+
+                    video_service.write_frame(frame)
 
                     frame = cv2.resize(frame, (640, 480))
 
