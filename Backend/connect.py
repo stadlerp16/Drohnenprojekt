@@ -1,8 +1,7 @@
 import json
-from sqlmodel import create_engine, SQLModel, Session
-from Models.commands import DroneCommandLog  # Importiert dein Model
-from sqlmodel import select, Session, func
+from sqlmodel import create_engine, SQLModel, Session, select, func
 from Models.commands import DroneCommandLog
+from Models.video import Video
 
 # Verbindung zu MariaDB (Werte müssen mit docker-compose.yml übereinstimmen)
 # Format: mysql+mysqlconnector://USER:PASSWORD@HOST:PORT/DATABASE
