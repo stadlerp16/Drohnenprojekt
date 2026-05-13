@@ -3,7 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from Routes.drohnenRoutes import router as drohnen_router
 from Services.DrohneVerwaltung.drohneService import close, test_reconnect
 from Routes.steuerungRoutes import router as steuer_router
-from connect import init_db  # <-- NEU: Importiere die DB-Initialisierung
+from connect import init_db
+from Routes.videoRoutes import router as video_router
 
 import sys
 import asyncio
@@ -39,6 +40,7 @@ app.add_middleware(
 
 app.include_router(drohnen_router, prefix="/drone")
 app.include_router(steuer_router, prefix="/drone")
+app.include_router(video_router, prefix="/video")
 
 if __name__ == "__main__":
     import uvicorn

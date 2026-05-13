@@ -11,6 +11,7 @@ export class DroneService {
   // Zentraler Status
   isConnected = false;
   selectedMode: 'controlkeyboard' | 'controlps' | 'controltouch' | null = null;
+  private isManuallyDisconnected = false;
 
   isAutoFlight = false;
   selectedAutoFlight: string | null = null;
@@ -19,10 +20,12 @@ export class DroneService {
   public telemetry: any = {
     bat: 0,
     speed: 0,
-    h: 0,
+    current_height: 0,
     pitch: 0,
     roll: 0,
-    yaw: 0
+    yaw: 0,
+    total_distance_cm: 0,
+    flight_duration: 0,
   };
   connectedIp: string = '';
 
@@ -32,14 +35,32 @@ export class DroneService {
     this.initTelemetryWebSocket();
   }
 
+
+
+
   sendIpAddress(ip: string): Observable<any> {
-    this.connectedIp = ip; // IP merken
+    this.isManuallyDisconnected = false; // Sperre aufheben
+    this.connectedIp = ip;
+    this.activeIp = ip;
+
+    if (!this.socket || this.socket.readyState === WebSocket.CLOSED) {
+      this.initTelemetryWebSocket();
+    }
+
     return this.http.post(`${this.baseUrl}/connect`, { ip });
   }
 
   disconnect(): Observable<any> {
-    console.log('Service: Sende Disconnect-Anfrage an Backend...');
-    // Wir senden einen POST-Request ohne Body an den disconnect-Endpunkt
+    this.isManuallyDisconnected = true; // Wir sagen dem Service: "Stopp, ich will das!"
+    this.isConnected = false;
+    this.activeIp = null;
+
+    // WebSocket hart schließen
+    if (this.socket) {
+      this.socket.close();
+      this.socket = null;
+    }
+
     return this.http.post(`${this.baseUrl}/disconnect`, {});
   }
 
@@ -56,21 +77,10 @@ export class DroneService {
     return this.http.post(`${this.baseUrl}/save-flight-name`, payload);
   }
 
-  /*startDrone(): Observable<any> {
-    return this.http.post(`${this.baseUrl}/start`, {});
-  }
-
-  stopDrone(): Observable<any> {
-    return this.http.post(`${this.baseUrl}/stop`, {});
-  }*/
-
   emergencyStop(): Observable<any> {
     return this.http.post(`${this.baseUrl}/emergency`, {});
   }
 
-  // drone.service.ts
-
-// Ändere die Methode so ab:
   sendLedUpdate(pattern: number[][]): Observable<any> {
     const map: { [key: number]: string } = {
       0: '0',
@@ -92,6 +102,7 @@ export class DroneService {
 
   public selectedColor: 'r' | 'b' | 'p' = 'b';
 
+
   private initTelemetryWebSocket() {
     this.socket = new WebSocket(this.wsUrl);
 
@@ -99,14 +110,15 @@ export class DroneService {
       try {
         const data = JSON.parse(event.data);
 
-        // Mapping der Backend-Keys (battery, height) auf deine Frontend-Variablen (bat, h)
         this.telemetry = {
-          bat: data.battery || 0,   // Backend sendet "battery"
-          h: data.height || 0,      // Backend sendet "height"
-          speed: data.speed || 0,   // Bleibt gleich
-          pitch: data.pitch || 0,   // Bleibt gleich
-          roll: data.roll || 0,     // Bleibt gleich
-          yaw: data.yaw || 0        // Bleibt gleich
+          bat: data.battery || 0,
+          current_height: data.current_height || 0,
+          speed: data.speed || 0,
+          pitch: data.pitch || 0,
+          roll: data.roll || 0,
+          yaw: data.yaw || 0,
+          total_distance_cm: data.total_distance_cm || 0,
+          flight_duration: data.flight_duration || 0,
         };
 
         console.log('Telemetrie Update:', this.telemetry);
@@ -115,12 +127,20 @@ export class DroneService {
       }
     };
 
-    this.socket.onopen = () => console.log('WebSocket Telemetrie: Verbunden');
+    this.socket.onopen = () => {
+      console.log('WebSocket Telemetrie: Verbunden');
+      this.isManuallyDisconnected = false;
+    };
+
     this.socket.onerror = (err: any) => console.error('WebSocket Fehler:', err);
 
     this.socket.onclose = () => {
-      console.warn('WebSocket geschlossen. Reconnect in 2s...');
-      setTimeout(() => this.initTelemetryWebSocket(), 2000);
+      if (!this.isManuallyDisconnected) {
+        console.warn('WebSocket ungewollt geschlossen. Reconnect in 2s...');
+        setTimeout(() => this.initTelemetryWebSocket(), 2000);
+      } else {
+        console.log('WebSocket absichtlich geschlossen. Kein Reconnect gestartet.');
+      }
     };
   }
 }

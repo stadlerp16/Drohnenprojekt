@@ -18,7 +18,6 @@ from connect import label_flight, get_all_flight_names
 router = APIRouter()
 class FlightRequest(BaseModel): name: str
 
-
 @router.post("/connect")
 def connect_drone(ip: str = Body(..., embed=True)):
     # IPv4 validieren
@@ -115,6 +114,8 @@ async def save_flight_name(req: FlightRequest):
 async def list_flights():
     return {"ok": True, "flights": get_all_flight_names()}
 
+from typing import List
+from fastapi import Body
 
 from fastapi import Body
 
