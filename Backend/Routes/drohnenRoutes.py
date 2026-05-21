@@ -1,18 +1,14 @@
 import asyncio
 from datetime import datetime, timedelta
 from fastapi import APIRouter, Body, HTTPException, WebSocket, WebSocketDisconnect
-from urllib import request
 
 from fastapi import APIRouter, Body, HTTPException
 import ipaddress
-from pydantic import BaseModel
 from starlette.websockets import WebSocket
 
 import Services.DrohneVerwaltung.drohneService as drohne_service
 import Services.DrohneVerwaltung.telemtrieService as telemtrie_service
-from connect import get_all_flight_names
 from pydantic import BaseModel
-from typing import List
 
 from connect import label_flight, get_all_flight_names
 router = APIRouter()

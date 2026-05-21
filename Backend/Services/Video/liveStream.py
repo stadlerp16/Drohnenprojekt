@@ -65,7 +65,6 @@ class VideoStreamService:
             finally:
                 self._stream_started = False
 
-        # State zurücksetzen
         self.frame_count = 0
         self.last_detections = []
         logger.info("dispose() fertig")
@@ -77,13 +76,7 @@ class VideoStreamService:
 
         await websocket.accept()
 
-        if drohneService.ep_drone is None:
-            logger.warning(f"[Conn #{conn_id}] Keine Drohne verbunden")
-            await websocket.send_json({"type": "error", "message": "Keine Drohne verbunden"})
-            await websocket.close()
-            return
 
-        # Falls noch ein alter WebSocket-Loop läuft, erst stoppen lassen
         if self.running:
             logger.warning(f"[Conn #{conn_id}] Alter WebSocket-Loop läuft - stoppe ihn")
             self.running = False
@@ -99,7 +92,6 @@ class VideoStreamService:
                 self.frame_count = 0
                 self.last_detections = []
 
-                # Stream nur starten falls noch nicht aktiv
                 if not self._ensure_stream_started():
                     await websocket.send_json({
                         "type": "error",
@@ -110,7 +102,6 @@ class VideoStreamService:
                 logger.info(f"[Conn #{conn_id}] Betrete Frame-Loop")
 
                 while self.running:
-                    # Frame holen - mit Exception-Handling für Empty queue
                     frame = None
                     try:
                         frame = await asyncio.get_event_loop().run_in_executor(
@@ -155,8 +146,6 @@ class VideoStreamService:
 
                     frame = cv2.resize(frame, (640, 480))
 
-                    # Objekterkennung
-                    detections = []
                     detections_changed = False
 
                     if object_detection_enabled and self.frame_count % 4 == 0:
@@ -218,8 +207,6 @@ class VideoStreamService:
                     f"empty_counter={empty_counter}"
                 )
                 self.running = False
-                # WICHTIG: Stream NICHT stoppen - bleibt für nächste Verbindung aktiv!
-                # Stream wird erst in dispose() (beim Drohnen-close) gestoppt
                 logger.info(f"[Conn #{conn_id}] Cleanup fertig (Stream läuft weiter)")
 
     def _extract_detections(self, results):
