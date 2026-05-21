@@ -32,32 +32,30 @@ async def stop_rec():
 @router.get("/list")
 async def list_videos():
     """
-    Listet alle gespeicherten Aufnahmen auf.
-    Holt sie aus der DB - falls eine Datei nicht mehr existiert,
-    wird sie übersprungen.
+    Liefert alle Aufnahmen aus der DB, sortiert nach Datum (neueste zuerst).
+    Dateien, die nicht mehr im Dateisystem existieren, werden gefiltert.
     """
     videos = []
 
     try:
         with Session(engine) as session:
-            statement = select(Video)
+            statement = select(Video).order_by(Video.created_at.desc())
             results = session.exec(statement).all()
 
             for video in results:
                 file_path = os.path.join(video_service.output_dir, video.filename)
-                if os.path.exists(file_path):
-                    videos.append(video.filename)
+                if not os.path.exists(file_path):
+                    continue
+
+                videos.append({
+                    "id": video.id,
+                    "filename": video.filename,
+                    "created_at": video.created_at.isoformat() if video.created_at else None,
+                    "size_bytes": os.path.getsize(file_path),
+                    "url": f"/file/{video.filename}",
+                })
     except Exception as e:
         print(f"[Video List] DB-Fehler: {e}")
-
-    # Fallback: Falls DB leer ist, lies direkt aus dem Ordner
-    if not videos and os.path.exists(video_service.output_dir):
-        for filename in os.listdir(video_service.output_dir):
-            if filename.endswith(".mp4"):
-                videos.append(filename)
-
-    # Neueste zuerst
-    videos.sort(reverse=True)
 
     return {"videos": videos}
 
@@ -65,11 +63,9 @@ async def list_videos():
 @router.get("/file/{filename}")
 async def get_video_file(filename: str, request: Request):
     """
-    Liefert eine einzelne Videodatei zum Abspielen.
-    Unterstützt HTTP Range Requests, damit Browser das Video
-    korrekt abspielen und vor- und zurückspulen können.
+    Liefert ein Video mit HTTP-Range-Support, damit Browser
+    das Video sauber abspielen und spulen können.
     """
-    # Sicherheit: Nur den Dateinamen erlauben, keinen Pfad
     safe_filename = os.path.basename(filename)
     if safe_filename != filename:
         raise HTTPException(status_code=400, detail="Ungültiger Dateiname")
@@ -82,15 +78,15 @@ async def get_video_file(filename: str, request: Request):
     file_size = os.path.getsize(file_path)
     range_header = request.headers.get("range")
 
-    # Kein Range-Header -> komplette Datei senden
+    # Kein Range-Header -> komplette Datei zurück
     if range_header is None:
         return FileResponse(
             path=file_path,
             media_type="video/mp4",
-            filename=safe_filename
+            headers={"Accept-Ranges": "bytes"},
         )
 
-    # Range-Header parsen: "bytes=0-1023" oder "bytes=1024-"
+    # Range parsen: "bytes=0-1023" oder "bytes=1024-"
     range_match = re.match(r"bytes=(\d+)-(\d*)", range_header)
     if not range_match:
         raise HTTPException(status_code=400, detail="Ungültiger Range-Header")
@@ -99,7 +95,6 @@ async def get_video_file(filename: str, request: Request):
     end_str = range_match.group(2)
     end = int(end_str) if end_str else file_size - 1
 
-    # Sicherheits-Checks
     if start >= file_size or end >= file_size:
         raise HTTPException(
             status_code=416,
@@ -113,7 +108,6 @@ async def get_video_file(filename: str, request: Request):
         with open(file_path, "rb") as f:
             f.seek(start)
             remaining = chunk_size
-            # 1 MB pro Chunk lesen
             while remaining > 0:
                 read_size = min(1024 * 1024, remaining)
                 data = f.read(read_size)
@@ -133,15 +127,12 @@ async def get_video_file(filename: str, request: Request):
         iter_file(),
         status_code=206,
         headers=headers,
-        media_type="video/mp4"
+        media_type="video/mp4",
     )
 
 
 @router.delete("/file/{filename}")
 async def delete_video(filename: str):
-    """
-    Löscht eine Aufnahme - sowohl die Datei als auch den DB-Eintrag.
-    """
     safe_filename = os.path.basename(filename)
     if safe_filename != filename:
         raise HTTPException(status_code=400, detail="Ungültiger Dateiname")
@@ -152,7 +143,10 @@ async def delete_video(filename: str):
         try:
             os.remove(file_path)
         except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Datei konnte nicht gelöscht werden: {e}")
+            raise HTTPException(
+                status_code=500,
+                detail=f"Datei konnte nicht gelöscht werden: {e}"
+            )
 
     try:
         with Session(engine) as session:
