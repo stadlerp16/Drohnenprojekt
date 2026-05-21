@@ -8,9 +8,9 @@
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Routes/videoRoutes.py" beforeDir="false" afterPath="$PROJECT_DIR$/Routes/videoRoutes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/Video/liveStream.py" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Video/liveStream.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/Video/videoService.py" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Video/videoService.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/src/dashboard/dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/dashboard/dashboard.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/src/dashboard/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/dashboard/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/src/dashboard/dashboard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/dashboard/dashboard.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,6 +57,7 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "Python.connect.executor": "Run",
     "Python.drohneService.executor": "Run",
+    "Python.liveStream.executor": "Run",
     "Python.main.executor": "Run",
     "Python.setup_drone_wifi.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -289,6 +290,7 @@
       <workItem from="1777445527978" duration="2232000" />
       <workItem from="1777751640058" duration="901000" />
       <workItem from="1778048869614" duration="1402000" />
+      <workItem from="1779345938288" duration="1795000" />
     </task>
     <task id="LOCAL-00001" summary="Grundlegende Ordnerstrukur und routing von main.py in die anderen Routes">
       <option name="closed" value="true" />
@@ -362,9 +364,10 @@
     <option name="LAST_COMMIT_MESSAGE" value="Live Stream fix" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Backend$setup_drone_wifi.coverage" NAME="setup_drone_wifi Coverage Results" MODIFIED="1773155723063" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Backend$drohneService.coverage" NAME="drohneService Coverage Results" MODIFIED="1772701140477" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Services" />
-    <SUITE FILE_PATH="coverage/Backend$connect.coverage" NAME="connect Coverage Results" MODIFIED="1769592039458" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Backend$main.coverage" NAME="main Coverage Results" MODIFIED="1772702176690" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Backend$setup_drone_wifi.coverage" NAME="setup_drone_wifi Coverage Results" MODIFIED="1773155723063" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Backend$liveStream.coverage" NAME="liveStream Coverage Results" MODIFIED="1779346176373" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Services/Video" />
+    <SUITE FILE_PATH="coverage/Backend$connect.coverage" NAME="connect Coverage Results" MODIFIED="1769592039458" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
