@@ -71,7 +71,7 @@ class VideoStreamService:
         self.last_detections = []
         logger.info("dispose() fertig")
 
-    async def stream_to_websocket(self, websocket: WebSocket, object_detection_enabled: bool = True):
+    async def stream_to_websocket(self, websocket: WebSocket, object_detection_enabled: bool = False):
         self._connection_count += 1
         conn_id = self._connection_count
         logger.info(f"[Conn #{conn_id}] WebSocket-Verbindung wird akzeptiert")
@@ -154,9 +154,11 @@ class VideoStreamService:
                         logger.info(f"[Conn #{conn_id}] Frame nach {empty_counter} leeren erhalten")
                         empty_counter = 0
 
-                    video_service.write_frame(frame)
 
                     frame = cv2.resize(frame, (640, 480))
+
+                    video_service.write_frame(frame)
+
 
                     # Objekterkennung
                     detections = []

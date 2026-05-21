@@ -42,6 +42,7 @@ app.include_router(drohnen_router, prefix="/drone")
 app.include_router(steuer_router, prefix="/drone")
 app.include_router(video_router, prefix="/video")
 
+
 if __name__ == "__main__":
     import uvicorn
     # Hier starten wir uvicorn programmatisch
