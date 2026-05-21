@@ -37,6 +37,9 @@ def get_height(drone) -> float:
     return tof
 
 
+
+
+
 def get_velocity_cm_s(drone):
     """
     Deine Messung wirkt so, als würden vgx/vgy/vgz in dm/s kommen.
@@ -161,6 +164,7 @@ def get_telemetry() -> dict:
 
         tof = _safe_get_status(drone, "tof", 0)
 
+
         # Höhe: TOF bevorzugen, sonst h
         if tof > 0:
             height = tof
@@ -250,4 +254,3 @@ def set_matrix_text(text: str, color: str = "r", scroll: bool = True) -> bool:
     except Exception as e:
         print(f"[LED-Matrix] Fehler: {e}")
         return False
-

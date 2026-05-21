@@ -23,9 +23,17 @@ export class Home implements OnInit {
   savedFlights: string[] = ['Viereck-Parcours', 'Servus-Flug'];
   savedDrones: any[] = [];
 
+  // --- VIDEO GALLERY STATE ---
+  showVideoGallery = false;
+  videoList: string[] = [];
+  videosLoading = false;
+  videosError: string | null = null;
+  selectedVideo: string | null = null;
+  selectedVideoUrl: string | null = null;
+
   constructor(
     private fb: FormBuilder,
-    public droneService: DroneService, // Wichtig: public für Zugriff im HTML
+    public droneService: DroneService,
     public router: Router
   ) {
     this.ipForm = this.fb.group({
@@ -35,12 +43,58 @@ export class Home implements OnInit {
 
   ngOnInit() {
     this.loadFlights();
-    // Falls wir bereits verbunden sind (aus dem Service), stellen wir savedDrones wieder her
     if (this.droneService.isConnected && this.droneService.activeIp) {
       if (!this.savedDrones.find(d => d.ip === this.droneService.activeIp)) {
         this.savedDrones.push({ name: 'Tello Drohne', ip: this.droneService.activeIp });
       }
     }
+  }
+
+  // --- VIDEO GALLERY ---
+  openVideoGallery() {
+    this.showVideoGallery = true;
+    this.selectedVideo = null;
+    this.selectedVideoUrl = null;
+    this.loadVideos();
+  }
+
+  closeVideoGallery() {
+    this.showVideoGallery = false;
+    this.selectedVideo = null;
+    this.selectedVideoUrl = null;
+  }
+
+  loadVideos() {
+    this.videosLoading = true;
+    this.videosError = null;
+    this.droneService.getRecordedVideos().subscribe({
+      next: (res) => {
+        this.videoList = res?.videos || [];
+        this.videosLoading = false;
+      },
+      error: (err) => {
+        console.error('Video-Liste konnte nicht geladen werden:', err);
+        this.videosError = 'Videos konnten nicht geladen werden. Backend erreichbar?';
+        this.videoList = [];
+        this.videosLoading = false;
+      }
+    });
+  }
+
+  playVideo(filename: string) {
+    this.selectedVideo = filename;
+    this.selectedVideoUrl = this.droneService.getVideoFileUrl(filename);
+  }
+
+  /** Zurück zur Galerie-Übersicht (vom Player aus) */
+  backToGallery() {
+    this.selectedVideo = null;
+    this.selectedVideoUrl = null;
+  }
+
+  /** Liefert einen lesbareren Namen für die Anzeige in der Galerie */
+  getDisplayName(filename: string): string {
+    return filename.replace(/\.mp4$/i, '');
   }
 
 
@@ -49,9 +103,9 @@ export class Home implements OnInit {
     const selectedColorCode = colorMap[this.droneService.selectedColor];
 
     if (this.ledMatrix[row][col] === selectedColorCode) {
-      this.ledMatrix[row][col] = 0; // Ausschalten
+      this.ledMatrix[row][col] = 0;
     } else {
-      this.ledMatrix[row][col] = selectedColorCode; // Farbe setzen/ändern
+      this.ledMatrix[row][col] = selectedColorCode;
     }
 
     this.droneService.sendLedUpdate(this.ledMatrix).subscribe({
@@ -97,7 +151,6 @@ export class Home implements OnInit {
   }
 
   handleConnection(ip: string) {
-    // Check gegen Service Status
     if (this.droneService.isConnected && this.droneService.activeIp === ip) {
       this.onDisconnect();
     } else {
@@ -120,7 +173,6 @@ export class Home implements OnInit {
     this.isAddingNew = false;
     this.connectingIp = null;
 
-    // Status global im Service speichern
     this.droneService.isConnected = true;
     this.droneService.activeIp = ip;
 
