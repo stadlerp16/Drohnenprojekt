@@ -2,6 +2,7 @@ import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, Chan
 import { DroneService } from '../app/services/drohne.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { NgIf, NgFor, NgClass, CommonModule } from '@angular/common';
 
 interface BBox {
   x1: number;
@@ -19,7 +20,7 @@ interface Detection {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, NgIf, NgFor, NgClass, CommonModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
@@ -54,6 +55,10 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
   recordingStartTime: number = 0;
   recordingDuration: string = '00:00';
   private recordingTimerId: any = null;
+
+  // --- LED MATRIX STATE (gleich wie in Home) ---
+  showLedModal: boolean = false;
+  public ledMatrix: number[][] = Array(8).fill(0).map(() => Array(8).fill(0));
 
   // JOYSTICK STATE
   private left = { x: 0, y: 0 };
@@ -210,6 +215,56 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
     ctx.fillText(label, labelX, labelY - fontSize + 4);
   }
 
+  // --- LED MATRIX STEUERUNG (übernommen aus Home) ---
+  openLedModal() {
+    this.showLedModal = true;
+  }
+
+  closeLedModal() {
+    this.showLedModal = false;
+  }
+
+  toggleLed(row: number, col: number) {
+    const colorMap: { [key: string]: number } = { 'r': 1, 'b': 2, 'p': 3 };
+    const selectedColorCode = colorMap[this.droneService.selectedColor];
+
+    if (this.ledMatrix[row][col] === selectedColorCode) {
+      this.ledMatrix[row][col] = 0;
+    } else {
+      this.ledMatrix[row][col] = selectedColorCode;
+    }
+
+    this.droneService.sendLedUpdate(this.ledMatrix).subscribe({
+      next: (res) => console.log(`Matrix Update: Pixel [${row},${col}] Farbe ${this.droneService.selectedColor}`, res),
+      error: (err) => console.error('Matrix Fehler', err)
+    });
+  }
+
+  sendCurrentMatrix() {
+    if (!this.droneService.isConnected) return;
+    this.droneService.sendLedUpdate(this.ledMatrix).subscribe({
+      next: (res) => console.log('Matrix manuell gesendet:', res),
+      error: (err) => console.error('Fehler beim manuellen Senden der Matrix:', err)
+    });
+  }
+
+  selectColor(color: 'r' | 'b' | 'p') {
+    this.droneService.selectedColor = color;
+  }
+
+  clearMatrix() {
+    this.ledMatrix.forEach(row => row.fill(0));
+    this.droneService.sendLedUpdate(this.ledMatrix).subscribe();
+  }
+
+  sendScrollingText(text: string) {
+    if (!text || !this.droneService.isConnected) return;
+    this.droneService.sendControlCommand(text).subscribe({
+      next: () => console.log(`Text gesendet: ${text} (Farbe: ${this.droneService.selectedColor})`),
+      error: (err) => console.error('Fehler Text-Senden', err)
+    });
+  }
+
   // --- VIDEO RECORDING ---
   toggleRecording() {
     if (this.isRecording) {
@@ -355,6 +410,9 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
 
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
+    // Wenn LED-Modal offen ist und Text-Input fokussiert ist, keine Steuerung
+    if (this.showLedModal) return;
+
     if (event.key === ' ' || event.code === 'Space'){
       if(!this.isFlying) this.isFlying = true;
       if(this.isStarted) this.showafterland = true
@@ -374,6 +432,8 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
 
   @HostListener('window:keyup', ['$event'])
   handleKeyUp(event: KeyboardEvent) {
+    if (this.showLedModal) return;
+
     if (this.isFlying && this.droneService.selectedMode === 'controlkeyboard') {
       if (!this.allowedKeys.has(event.key)) return;
       event.preventDefault();
