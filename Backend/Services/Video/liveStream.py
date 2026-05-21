@@ -154,9 +154,9 @@ class VideoStreamService:
                         logger.info(f"[Conn #{conn_id}] Frame nach {empty_counter} leeren erhalten")
                         empty_counter = 0
 
-                    video_service.write_frame(frame)
-
                     frame = cv2.resize(frame, (640, 480))
+
+                    video_service.write_frame(frame)
 
                     # Objekterkennung
                     detections = []

@@ -25,7 +25,7 @@ class VideoService:
         if not os.path.exists(self.output_dir):
             os.makedirs(self.output_dir)
 
-    def start_recording(self, width=640, height=480, fps=20.0):
+    def start_recording(self, width=640, height=480, fps=30.0):
         if self.is_recording:
             return
 
