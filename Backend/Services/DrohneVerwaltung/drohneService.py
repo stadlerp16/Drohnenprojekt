@@ -190,13 +190,19 @@ def buildconnection(drone_ip: str) -> bool:
 
 def close():
     global ep_drone, watchdog_running, current_drone_ip
-
     print("5")
 
     with _close_lock:
         if ep_drone is None:
             current_drone_ip = None
             return
+
+        # NEU: Erst den Videostream sauber abräumen, BEVOR drone.close() aufgerufen wird
+        try:
+            from Services.Video.liveStream import video_stream_service
+            video_stream_service.dispose()
+        except Exception as e:
+            print(f"[Close] dispose() Fehler: {e}")
 
         finished = threading.Event()
 
