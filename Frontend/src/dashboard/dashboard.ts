@@ -23,6 +23,7 @@ export class Dashboard implements OnDestroy , OnInit {
   showSaveModal: boolean = false;
   flightName: string = '';
   showafterland: boolean = false;
+  objectDetection: boolean = false;
 
   // LED MATRIX STATE
   showLedPanel: boolean = false;
@@ -174,7 +175,13 @@ export class Dashboard implements OnDestroy , OnInit {
   handleSpaceAction(isPressed: boolean) {
     if (this.droneService.selectedMode !== 'controltouch') return;
     if (!isPressed) return;
-    this.sendData({ takeoffLand: true });
+    this.sendData({
+      lx: 0,
+      ly: 0,
+      rx: 0,
+      ry: 0,
+      takeoffLand: true
+    });
   }
 
 
@@ -216,15 +223,41 @@ export class Dashboard implements OnDestroy , OnInit {
     const loop = () => {
       this.controllerLoopId = setTimeout(loop, this.SEND_DT_MS);
 
-      if (!this.isFlying) return;
       if (this.droneService.selectedMode !== 'controlps') return;
 
       const gp = this.getFirstGamepad();
-      if (gp) this.processGamepadData(gp);
+      if (!gp) return;
+
+      // Save-Modal & Start/Land Logik (analog zur Spacebar) –
+      // läuft auch wenn isFlying === false, damit Start möglich ist
+      const takeoffLand = this.handleControllerActionButton(gp);
+
+      if (!this.isFlying) return;
+      this.processGamepadData(gp, takeoffLand);
     };
 
     loop();
   }
+
+  private handleControllerActionButton(gp: Gamepad): boolean {
+    const xNow = !!gp.buttons[0]?.pressed;
+    const triggered = xNow && !this.lastXPressed;
+
+    if (triggered) {
+      if (!this.isFlying) this.isFlying = true;
+      if (this.isStarted) this.showafterland = true;
+      if (!this.isStarted) this.isStarted = true;
+
+      if (this.showafterland) {
+        this.showSaveModal = true;
+        this.isFlying = false;
+      }
+    }
+
+    this.lastXPressed = xNow;
+    return triggered;
+  }
+
 
   @HostListener('window:gamepadconnected', ['$event'])
   onGamepadConnected(event: GamepadEvent) {
@@ -254,8 +287,7 @@ export class Dashboard implements OnDestroy , OnInit {
     return null;
   }
 
-  private processGamepadData(gp: Gamepad) {
-
+  private processGamepadData(gp: Gamepad, takeoffLand: boolean = false) {
     const dz = (v: number) => Math.abs(v) < this.DEADZONE ? 0 : v;
     const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 
@@ -266,12 +298,17 @@ export class Dashboard implements OnDestroy , OnInit {
     const l2 = clamp01(gp.buttons[6]?.value ?? 0);
     const r2 = clamp01(gp.buttons[7]?.value ?? 0);
 
-    const xNow = !!gp.buttons[0]?.pressed;
-    let takeoffLand = false;
-    if (xNow && !this.lastXPressed) takeoffLand = true;
-    this.lastXPressed = xNow;
-
     this.sendData({ lx, ly, rx, l2, r2, takeoffLand });
+  }
+
+  toggleObjectFalse(){
+    this.objectDetection = false;
+    this.droneService.enableObject(this.objectDetection)
+  }
+
+  toggleObjectTrue(){
+    this.objectDetection = true;
+    this.droneService.enableObject(this.objectDetection)
   }
 
   // ============================================================

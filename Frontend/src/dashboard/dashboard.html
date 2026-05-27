@@ -95,14 +95,20 @@
       </div>
     }
 
+    <div class="object-detection-controls">
+      <span class="object-detection-label">Objekterkennung</span>
+      <div class="object-detection-buttons">
+        <button class="btn-object-on" [class.active]="objectDetection" (click)="toggleObjectTrue()">AN</button>
+        <button class="btn-object-off" [class.active]="!objectDetection" (click)="toggleObjectFalse()">AUS</button>
+      </div>
+    </div>
+
     <button class="btn-emergency" (click)="emergencyStop()">
       EMERGENCY STOP
     </button>
   </div>
 
-  <!-- ============================================================ -->
-  <!-- LED MATRIX PANEL - Fest auf der rechten Seite positioniert    -->
-  <!-- ============================================================ -->
+
   @if (showLedPanel) {
     <div class="led-panel-box">
 

@@ -15,6 +15,7 @@ export class DroneService {
   isAutoFlight = false;
   selectedAutoFlight: string | null = null;
   activeIp: string | null = null;
+  permission = false;
 
   public telemetry: any = {
     bat: 0,
@@ -66,6 +67,16 @@ export class DroneService {
 
   emergencyStop(): Observable<any> {
     return this.http.post(`${this.baseUrl}/emergency`, {});
+  }
+
+  enableObject(permission: boolean): Observable<any> {
+    if(!permission) {
+      permission = true;
+      return this.http.post(`${this.baseUrl}/video/enableObject`, {permission});
+    }else {
+      permission = false;
+      return this.http.post(`${this.baseUrl}/video/enableObject`, {permission});
+    }
   }
 
   // drone.service.ts
