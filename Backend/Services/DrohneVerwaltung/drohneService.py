@@ -168,7 +168,7 @@ def buildconnection(drone_ip: str) -> bool:
         time.sleep(3)
 
         print("4")
-        new_drone.led.set_led_blink(freq=1, r1=255, g1=0, b1=0, r2=0, g2=0, b2=255)
+        new_drone.led.set_led(r=72, g=209, b=204)
         watchdog_running = False
         starte_watchdog()
         return True
@@ -190,6 +190,7 @@ def buildconnection(drone_ip: str) -> bool:
 
 def close():
     global ep_drone, watchdog_running, current_drone_ip
+
     print("5")
 
     with _close_lock:
@@ -197,13 +198,33 @@ def close():
             current_drone_ip = None
             return
 
-        # NEU: Erst den Videostream sauber abräumen, BEVOR drone.close() aufgerufen wird
+        # 1. Tracking-Modus stoppen falls aktiv (BEVOR die Drohne weg ist)
+        try:
+            from Services.Steuerung.police_drone import police_drone_mode
+            if police_drone_mode.is_active():
+                try:
+                    loop = asyncio.get_event_loop()
+                    if loop.is_running():
+                        asyncio.run_coroutine_threadsafe(
+                            police_drone_mode.stop(), loop
+                        ).result(timeout=2.0)
+                    else:
+                        loop.run_until_complete(police_drone_mode.stop())
+                    print("[Close] Police-Mode gestoppt")
+                except Exception as e:
+                    print(f"[Close] police_drone stop Fehler: {e}")
+        except Exception as e:
+            print(f"[Close] police_drone import Fehler: {e}")
+
+        # 2. Videostream aufräumen (stoppt cv2 / stop_video_stream sauber)
         try:
             from Services.Video.liveStream import video_stream_service
             video_stream_service.dispose()
+            print("[Close] Videostream disposed")
         except Exception as e:
             print(f"[Close] dispose() Fehler: {e}")
 
+        # 3. Drohne selbst schließen (in eigenem Thread mit Timeout)
         finished = threading.Event()
 
         def close_worker(drone_ref):
