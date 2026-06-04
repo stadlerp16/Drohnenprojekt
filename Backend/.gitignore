@@ -20,3 +20,5 @@ mariadb_data
 /mariadb_data
 
 yolov8n.pt
+
+data/videos
