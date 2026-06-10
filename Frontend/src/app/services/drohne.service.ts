@@ -31,6 +31,8 @@ export class DroneService {
     yaw: 0,
     total_distance_cm: 0,
     flight_duration: 0,
+    x: null,
+    y: null,
   };
   connectedIp: string = '';
 
@@ -130,6 +132,13 @@ export class DroneService {
   public selectedColor: 'r' | 'b' | 'p' = 'b';
 
 
+  /** Wandelt einen Wert in eine Zahl um, oder gibt null zurück (für Positionsdaten). */
+  private toNum(v: any): number | null {
+    if (v === undefined || v === null) return null;
+    const n = Number(v);
+    return Number.isNaN(n) ? null : n;
+  }
+
   private initTelemetryWebSocket() {
     this.socket = new WebSocket(this.wsUrl);
 
@@ -146,6 +155,9 @@ export class DroneService {
           yaw: data.yaw || 0,
           total_distance_cm: data.total_distance_cm || 0,
           flight_duration: data.flight_duration || 0,
+          // Position für die 2D-Flugroute (verschiedene mögliche Feldnamen)
+          x: this.toNum(data.x ?? data.pos_x ?? data.posX ?? data.position?.x),
+          y: this.toNum(data.y ?? data.pos_y ?? data.posY ?? data.position?.y),
         };
 
         console.log('Telemetrie Update:', this.telemetry);

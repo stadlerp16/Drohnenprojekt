@@ -7,6 +7,11 @@
     <list default="true" id="26b6f950-785b-47a4-9c2f-9295330bdc85" name="Changes" comment="merge main with luca">
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/Video/liveStream.py" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Video/liveStream.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/src/dashboard/dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/dashboard/dashboard.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/src/dashboard/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/dashboard/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/src/dashboard/dashboard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/dashboard/dashboard.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,6 +22,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Python Script" />
+        <option value="Jupyter Notebook" />
       </list>
     </option>
   </component>
@@ -288,7 +294,12 @@
       <workItem from="1778048869614" duration="1402000" />
       <workItem from="1779345938288" duration="3138000" />
       <workItem from="1779455760174" duration="746000" />
-      <workItem from="1779866124923" duration="40000" />
+      <workItem from="1779866124923" duration="2599000" />
+      <workItem from="1779909393105" duration="18000" />
+      <workItem from="1779956193264" duration="1236000" />
+      <workItem from="1780044776101" duration="49000" />
+      <workItem from="1780465238549" duration="2754000" />
+      <workItem from="1780918102190" duration="19000" />
     </task>
     <task id="LOCAL-00001" summary="Grundlegende Ordnerstrukur und routing von main.py in die anderen Routes">
       <option name="closed" value="true" />

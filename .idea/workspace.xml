@@ -7,6 +7,12 @@
     <list default="true" id="c54b6e8d-c964-4a2b-a68b-e5cf3d314c69" name="Changes" comment="led erkennung im Dashboard">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/Services/Video/liveStream.py" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/Services/Video/liveStream.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/app/services/drohne.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/app/services/drohne.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/dashboard/dashboard.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -176,7 +182,13 @@
       <workItem from="1779256164793" duration="1313000" />
       <workItem from="1779344946309" duration="6337000" />
       <workItem from="1779430321702" duration="16000" />
-      <workItem from="1779861380159" duration="1511000" />
+      <workItem from="1779861380159" duration="3464000" />
+      <workItem from="1779950803236" duration="3953000" />
+      <workItem from="1780041826536" duration="18000" />
+      <workItem from="1780420407656" duration="1805000" />
+      <workItem from="1780428611452" duration="2028000" />
+      <workItem from="1780465057767" duration="4185000" />
+      <workItem from="1781070176011" duration="266000" />
     </task>
     <task id="LOCAL-00001" summary="Create Backend">
       <option name="closed" value="true" />
@@ -394,7 +406,15 @@
       <option name="project" value="LOCAL" />
       <updated>1779349117727</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="led erkennung im Dashboard">
+      <option name="closed" value="true" />
+      <created>1779866184695</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1779866184695</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

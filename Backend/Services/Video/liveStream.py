@@ -71,7 +71,7 @@ class VideoStreamService:
         self.last_detections = []
         logger.info("dispose() fertig")
 
-    async def stream_to_websocket(self, websocket: WebSocket, object_detection_enabled: bool = False):
+    async def stream_to_websocket(self, websocket: WebSocket, object_detection_enabled: bool = True):
         self._connection_count += 1
         conn_id = self._connection_count
         logger.info(f"[Conn #{conn_id}] WebSocket-Verbindung wird akzeptiert")
