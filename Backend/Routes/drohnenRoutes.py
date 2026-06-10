@@ -1,22 +1,18 @@
 import asyncio
-from urllib import request
+from datetime import datetime, timedelta
+from fastapi import APIRouter, Body, HTTPException, WebSocket, WebSocketDisconnect
 
 from fastapi import APIRouter, Body, HTTPException
 import ipaddress
-
-from starlette.websockets import WebSocketDisconnect
-
 from starlette.websockets import WebSocket
 
 import Services.DrohneVerwaltung.drohneService as drohne_service
 import Services.DrohneVerwaltung.telemtrieService as telemtrie_service
-from connect import get_all_flight_names
 from pydantic import BaseModel
-from typing import List
 
+from connect import label_flight, get_all_flight_names
 router = APIRouter()
-
-
+class FlightRequest(BaseModel): name: str
 
 @router.post("/connect")
 def connect_drone(ip: str = Body(..., embed=True)):
@@ -114,6 +110,8 @@ async def save_flight_name(req: FlightRequest):
 async def list_flights():
     return {"ok": True, "flights": get_all_flight_names()}
 
+from typing import List
+from fastapi import Body
 
 from fastapi import Body
 

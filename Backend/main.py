@@ -3,7 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from Routes.drohnenRoutes import router as drohnen_router
 from Services.DrohneVerwaltung.drohneService import close, test_reconnect
 from Routes.steuerungRoutes import router as steuer_router
-from connect import init_db  # <-- NEU: Importiere die DB-Initialisierung
+from connect import init_db
+from Routes.videoRoutes import router as video_router
+from Routes.police_droneroutes import router as police_router
 
 import sys
 import asyncio
@@ -31,7 +33,7 @@ app = FastAPI(lifespan=lifecycle)  # In FastAPI heißt das Argument meist 'lifes
 # ... Rest deiner Middleware und Router ...
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # oder spezifischer: ["http://localhost:8080"]
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -39,6 +41,10 @@ app.add_middleware(
 
 app.include_router(drohnen_router, prefix="/drone")
 app.include_router(steuer_router, prefix="/drone")
+app.include_router(video_router, prefix="/video")
+
+app.include_router(police_router, prefix="/police")
+
 
 if __name__ == "__main__":
     import uvicorn

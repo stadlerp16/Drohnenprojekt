@@ -1,45 +1,5 @@
 <div class="dashboard-page">
 
-  <div class="telemetry-overlay">
-    <div class="tel-card">
-      <span class="tel-label">Batterie</span>
-      <span class="tel-value">{{ droneService.telemetry?.bat || 0 }}%</span>
-      <div class="tel-bat-bg">
-        <div class="tel-bat-fill" [style.width.%]="droneService.telemetry?.bat"></div>
-      </div>
-    </div>
-
-    <div class="tel-card">
-      <span class="tel-label">Höhe</span>
-      <span class="tel-value">{{ droneService.telemetry?.h || 0 }} cm</span>
-    </div>
-
-    <div class="tel-card">
-      <span class="tel-label">Geschwindigkeit</span>
-      <span class="tel-value">{{ droneService.telemetry?.speed || 0 }} cm/s</span>
-    </div>
-
-    <div class="tel-card">
-      <span class="tel-label">Lage (P | R | Y)</span>
-      <span class="tel-value small">
-        {{ droneService.telemetry?.pitch || 0 }}° |
-        {{ droneService.telemetry?.roll || 0 }}° |
-        {{ droneService.telemetry?.yaw || 0 }}°
-      </span>
-    </div>
-
-
-    <div class="tel-card">
-      <span class="tel-label">IP Adresse</span>
-      <span class="tel-value small">{{ droneService.activeIp || 'Nicht verbunden' }}</span>
-    </div>
-
-    <!-- NEU: Button unter den Telemetriedaten -->
-    <button class="btn-led-toggle" (click)="toggleLedPanel()">
-      💡 LED-Steuerung
-    </button>
-  </div>
-
   <div class="dashboard-header">
     @if (droneService.isAutoFlight) {
       <div class="header-content autopilot">
@@ -51,14 +11,117 @@
       <div class="header-content manual">
         <h1>Steuerungs-Zentrale</h1>
         <p class="mode-text">
-          Aktiver Modus: <strong>{{ droneService.selectedMode }}</strong>
+          Modus: <strong>{{ droneService.selectedMode }}</strong>
         </p>
       </div>
     }
   </div>
 
-  @if (!droneService.isAutoFlight && droneService.selectedMode === 'controltouch') {
-    <div class="joystick-main-container">
+  <div class="main-view-container">
+    <div class="video-wrapper">
+
+      @if (frameData) {
+        <!-- Video + Canvas-Overlay zusammen im Stream-Container -->
+        <div class="stream-container">
+          <img [src]="frameData" class="live-stream" alt="Drone Live Stream">
+          <canvas #overlayCanvas class="detection-overlay"></canvas>
+        </div>
+      } @else {
+        <div class="stream-placeholder">
+          <div class="spinner"></div>
+          <p>Warte auf Video-Signal von <br>
+            <span class="ip-highlight">{{ droneService.activeIp || 'Drohne' }}</span>...
+          </p>
+        </div>
+      }
+
+      <!-- RECORDING INDICATOR (oben rechts im Video) -->
+      @if (isRecording) {
+        <div class="rec-indicator">
+          <span class="rec-dot"></span>
+          <span class="rec-text">REC</span>
+          <span class="rec-time">{{ recordingDuration }}</span>
+        </div>
+      }
+
+      <!-- DETECTION PANEL (unten links im Video) -->
+      @if (currentDetections.length > 0) {
+        <div class="detection-panel">
+          <div class="detection-header">
+            <span class="detection-title">Erkannt</span>
+          </div>
+          @for (det of currentDetections; track $index) {
+            <div class="detection-row">
+              <span class="detection-class">{{ det.class }}</span>
+              <span class="detection-conf">{{ (det.confidence * 100).toFixed(0) }}%</span>
+            </div>
+          }
+        </div>
+      }
+
+      <div class="telemetry-hud">
+        <div class="hud-card">
+          <span class="hud-label">Batterie</span>
+          <span class="hud-value">{{ droneService.telemetry?.bat || 0 }}%</span>
+          <div class="hud-bat-bar">
+            <div class="hud-bat-fill" [style.width.%]="droneService.telemetry?.bat"></div>
+          </div>
+        </div>
+
+        <div class="hud-card">
+          <span class="hud-label">Höhe</span>
+          <span class="hud-value">{{ droneService.telemetry?.current_height || 0 }} cm</span>
+        </div>
+
+        <div class="hud-card">
+          <span class="hud-label">Geschwindigkeit</span>
+          <span class="hud-value">{{ droneService.telemetry?.speed || 0 }} cm/s</span>
+        </div>
+
+        <div class="hud-card">
+          <span class="hud-label">Entfernung</span>
+          <span class="hud-value">{{ droneService.telemetry?.total_distance_cm || 0 }} cm</span>
+        </div>
+
+        <div class="hud-card">
+          <span class="hud-label">Flugzeit</span>
+          <span class="hud-value">{{ droneService.telemetry?.flight_duration || 0 }} s</span>
+        </div>
+
+        <div class="hud-card">
+          <span class="hud-label">Lage (P|R|Y)</span>
+          <span class="hud-value small">
+            {{ droneService.telemetry?.pitch || 0 }}° |
+            {{ droneService.telemetry?.roll || 0 }}° |
+            {{ droneService.telemetry?.yaw || 0 }}°
+          </span>
+        </div>
+
+        <div class="hud-card info">
+          <span class="hud-label">IP Adresse</span>
+          <span class="hud-value small">{{ droneService.activeIp || 'Offline' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTROL BAR: Joysticks + Action-Buttons in einer Zeile -->
+  <div class="control-bar">
+
+    <!-- Linke Seite: Aufnahme-Button -->
+    <div class="control-side left">
+      <button
+        class="btn-record"
+        [class.recording]="isRecording"
+        (click)="toggleRecording()"
+        title="Aufnahme starten/stoppen">
+        <span class="rec-icon"></span>
+        <span class="rec-label">{{ isRecording ? 'STOP' : 'REC' }}</span>
+      </button>
+    </div>
+
+    <!-- Mitte: Joysticks (nur Touch-Modus) -->
+    @if (!droneService.isAutoFlight && droneService.selectedMode === 'controltouch') {
       <div class="joystick-wrapper">
         <div class="joystick-container">
           <span class="joystick-label">Throttle / Yaw</span>
@@ -68,9 +131,9 @@
         </div>
 
         <div class="joystick-controls">
-
-          <button class="btn-joy space-btn" (pointerdown)="handleSpaceAction(true)">TAKEOFF / LAND</button>
-
+          <button class="btn-joy space-btn" (pointerdown)="handleSpaceAction(true)">
+            TAKEOFF<br>LAND
+          </button>
         </div>
 
         <div class="joystick-container">
@@ -80,125 +143,39 @@
           </div>
         </div>
       </div>
-    </div>
-  }
-
-  <div class="bottom-section">
-    @if (!droneService.isAutoFlight && droneService.selectedMode === 'controlps'){
-      <div class="controller-status">
-        <h3>Controller Status</h3>
-        @if (gamepadConnected) {
-          <p class="status-ok">✅ Verbunden: {{ gamepadName }}</p>
-        } @else {
-          <p class="status-err">❌ Kein Controller verbunden</p>
+    } @else {
+      <div class="control-spacer">
+        @if (!droneService.isAutoFlight && droneService.selectedMode === 'controlps'){
+          <div class="controller-status">
+            @if (gamepadConnected) {
+              <p class="status-ok">✅ {{ gamepadName }}</p>
+            } @else {
+              <p class="status-err">❌ Kein Controller</p>
+            }
+          </div>
         }
       </div>
     }
 
-    <button class="btn-emergency" (click)="emergencyStop()">
-      EMERGENCY STOP
-    </button>
-  </div>
-
-  <!-- ============================================================ -->
-  <!-- LED MATRIX PANEL - Fest auf der rechten Seite positioniert    -->
-  <!-- ============================================================ -->
-  @if (showLedPanel) {
-    <div class="led-panel-box">
-
-      <div class="led-card">
-        <div class="led-header">
-          <h3>Matrix Steuerung</h3>
-
-          <div class="color-picker">
-            <div class="color-dot red"
-                 [class.active]="droneService.selectedColor === 'r'"
-                 (click)="selectColor('r')"
-                 title="Rot"></div>
-            <div class="color-dot blue"
-                 [class.active]="droneService.selectedColor === 'b'"
-                 (click)="selectColor('b')"
-                 title="Blau"></div>
-            <div class="color-dot purple"
-                 [class.active]="droneService.selectedColor === 'p'"
-                 (click)="selectColor('p')"
-                 title="Lila"></div>
-            <span class="led-badge">8x8</span>
-            <button class="btn-close-led" (click)="toggleLedPanel()" title="Schließen">✕</button>
-          </div>
-        </div>
-
-        <p class="led-subtitle">Klicke Pixel (Farbe: {{ droneService.selectedColor.toUpperCase() }})</p>
-
-        <div class="matrix-grid">
-          @for (row of ledMatrix; track $index; let r = $index) {
-            <div class="matrix-row">
-              @for (led of row; track $index; let c = $index) {
-                <div class="led-pixel"
-                     [class.active-red]="ledMatrix[r][c] === 1"
-                     [class.active-blue]="ledMatrix[r][c] === 2"
-                     [class.active-purple]="ledMatrix[r][c] === 3"
-                     (click)="toggleLed(r, c)">
-                </div>
-              }
-            </div>
-          }
-        </div>
-
-        <div class="matrix-footer">
-          <span>IP: <strong>{{ droneService.activeIp }}</strong></span>
-          <div class="matrix-actions">
-            <button class="btn-send-matrix" (click)="sendCurrentMatrix()">
-              Senden
-            </button>
-            <button class="btn-clear-matrix" (click)="clearMatrix()" title="Matrix leeren">
-              🗑️
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="text-scroll-container">
-        <input type="text"
-               #scrollInput
-               placeholder="Laufschrift Nachricht..."
-               class="scroll-input"
-               [(ngModel)]="scrollText"
-               (keyup.enter)="sendScrollingText(scrollInput.value)">
-
-        <button class="btn-send-text"
-                [class]="droneService.selectedColor"
-                (click)="sendScrollingText(scrollInput.value)">
-          Senden
-        </button>
-      </div>
-
+    <!-- Rechte Seite: Emergency Stop -->
+    <div class="control-side right">
+      <button class="btn-emergency" (click)="emergencyStop()">
+        EMERGENCY<br>STOP
+      </button>
     </div>
-  }
+  </div>
 
   @if (showSaveModal) {
     <div class="modal-overlay" (click)="closeModal()">
       <div class="modal-box" (click)="$event.stopPropagation()">
         <h2>Flug speichern</h2>
         <p>Gib deinem Flug einen Namen:</p>
-
-        <input
-          class="modal-input"
-          type="text"
-          placeholder="z.B. Runde 1, Testflug..."
-          [(ngModel)]="flightName"
-          (keyup.enter)="saveFlightName()"
-          autofocus
-        />
-
+        <input class="modal-input" type="text" [(ngModel)]="flightName" (keyup.enter)="saveFlightName()" autofocus />
         <div class="modal-actions">
           <button class="btn-secondary" (click)="closeModal()">Abbrechen</button>
-          <button class="btn-primary" [disabled]="!flightName.trim()" (click)="saveFlightName()">
-            Speichern
-          </button>
+          <button class="btn-primary" [disabled]="!flightName.trim()" (click)="saveFlightName()">Speichern</button>
         </div>
       </div>
     </div>
   }
-
 </div>
