@@ -68,7 +68,7 @@ async def list_videos():
             results = session.exec(statement).all()
 
             for video in results:
-                file_path = os.path.join(video_service.output_dir, video.filename)
+                file_path = os.path.join(video_stream_service.output_dir, video.filename)
                 if not os.path.exists(file_path):
                     continue
 
@@ -95,7 +95,7 @@ async def get_video_file(filename: str, request: Request):
     if safe_filename != filename:
         raise HTTPException(status_code=400, detail="Ungültiger Dateiname")
 
-    file_path = os.path.join(video_service.output_dir, safe_filename)
+    file_path = os.path.join(video_stream_service.output_dir, safe_filename)
 
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="Video nicht gefunden")
@@ -162,7 +162,7 @@ async def delete_video(filename: str):
     if safe_filename != filename:
         raise HTTPException(status_code=400, detail="Ungültiger Dateiname")
 
-    file_path = os.path.join(video_service.output_dir, safe_filename)
+    file_path = os.path.join(video_stream_service.output_dir, safe_filename)
 
     if os.path.exists(file_path):
         try:
