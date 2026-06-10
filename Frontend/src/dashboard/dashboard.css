@@ -102,9 +102,9 @@
 
 /* --- VIDEO & HUD (nimmt verfügbaren Platz ein) --- */
 .main-view-container {
-  width: 96%;
-  max-width: 1400px;
-  margin: 8px auto;
+  width: 65%;
+  max-width: 900px;
+  margin: 8px auto 8px 2%;
   background: #000;
   border-radius: 12px;
   overflow: hidden;
@@ -968,6 +968,71 @@
 @keyframes pulse-red {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
+}
+
+/* OBJEKTERKENNUNG & POLICEMODE TOGGLES */
+.object-detection-controls,
+.object-police-controls {
+  background: white;
+  padding: 15px 24px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.object-detection-label {
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.object-detection-buttons {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+}
+
+.btn-object-on,
+.btn-object-off {
+  padding: 9px 28px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  background: #f5f5f5;
+  color: #999;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-object-on {
+  border-right: 1px solid #e0e0e0;
+}
+
+.btn-object-on.active {
+  background: #28a745;
+  color: white;
+}
+
+.btn-object-off.active {
+  background: #dc3545;
+  color: white;
+}
+
+.btn-object-on:not(.active):hover {
+  background: #e8f5e9;
+  color: #28a745;
+}
+
+.btn-object-off:not(.active):hover {
+  background: #fdecea;
+  color: #dc3545;
 }
 
 

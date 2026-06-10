@@ -133,6 +133,24 @@ export class DroneService {
     return `${this.videoUrl}/file/${encodeURIComponent(filename)}`;
   }
 
+  enableObject(permission: boolean): Observable<any> {
+    if(!permission) {
+      permission = true;
+      return this.http.post(`${this.baseUrl}/video/enableObject`, {permission});
+    }else {
+      permission = false;
+      return this.http.post(`${this.baseUrl}/video/enableObject`, {permission});
+    }
+  }
+
+  enablePolice(permission: boolean): Observable<any> {
+    if(!permission) {
+      return this.http.post(`${this.baseUrl}/police/stop`, {});
+    }else {
+      return this.http.post(`${this.baseUrl}/police/start`, {});
+    }
+  }
+
 
   public selectedColor: 'r' | 'b' | 'p' = 'b';
 
