@@ -78,7 +78,7 @@ async def ws_keyboard(ws: WebSocket):
                         if start_t:
                             dur = (datetime.now() - start_t).total_seconds()
                             # POSITION IN DER MAP AKTUALISIEREN
-                            ts.update_position_keyboard(key, dur)
+                            # ts.update_position_keyboard(key, dur)
                             log_command("KEYBOARD_DURATION", json.dumps({"key": key, "duration": dur}),
                                         source="keyboard")
 
@@ -106,7 +106,7 @@ async def ws_ps5(ws: WebSocket):
 
             if ts.is_logging_allowed and any(abs(v) > 0.05 for v in coords.values()):
                 # ANALOGE POSITION IN DER MAP AKTUALISIEREN
-                ts.update_position_analog(coords["lx"], coords["ly"])
+                # ts.update_position_analog(coords["lx"], coords["ly"])
                 log_command("PS5_MOVE", coords, source="ps5")
     except WebSocketDisconnect:
         pass
@@ -131,7 +131,7 @@ async def ws_touch(ws: WebSocket):
 
             if ts.is_logging_allowed and any(abs(v) > 0.05 for v in coords.values()):
                 # ANALOGE POSITION IN DER MAP AKTUALISIEREN
-                ts.update_position_analog(coords["lx"], coords["ly"])
+                # ts.update_position_analog(coords["lx"], coords["ly"])
                 log_command("TOUCH_MOVE", coords, source="touch")
     except WebSocketDisconnect:
         pass

@@ -2,6 +2,7 @@ import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, Chan
 import { DroneService } from '../app/services/drohne.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { NgIf, NgFor, NgClass, CommonModule } from '@angular/common';
 
 interface BBox {
   x1: number;
@@ -16,10 +17,15 @@ interface Detection {
   bbox: BBox;
 }
 
+interface RoutePoint {
+  x: number;
+  y: number;
+}
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, NgIf, NgFor, NgClass, CommonModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
@@ -31,6 +37,9 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
 
   // Canvas-Overlay für Objekterkennung
   @ViewChild('overlayCanvas') overlayCanvas?: ElementRef<HTMLCanvasElement>;
+
+  // Canvas für 2D Live-Flugroute
+  @ViewChild('routeCanvas') routeCanvas?: ElementRef<HTMLCanvasElement>;
 
   isFlying: boolean = false;
   isStarted: boolean = false;
@@ -49,11 +58,25 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
   currentDetections: Detection[] = [];
   objectDetectionEnabled: boolean = true;
 
+  // ===== FLUGROUTE (2D Live-Ansicht) =====
+  // Position kommt über die bestehende Telemetrie (droneService.telemetry.x / .y)
+  routeConnected: boolean = false;
+  routePoints: RoutePoint[] = [];
+  lastPoint: RoutePoint | null = null;
+  private routeSampleId: any = null;
+  private lastFlightKey: string | null = null; // erkennt Start eines neuen Autopilot-Flugs
+  private readonly ROUTE_SAMPLE_MS = 150; // wie oft die Telemetrie nach Position abgefragt wird
+  private readonly MAX_ROUTE_POINTS = 2000; // Begrenzung, damit es nicht unendlich wächst
+
   // RECORDING STATE
   isRecording: boolean = false;
   recordingStartTime: number = 0;
   recordingDuration: string = '00:00';
   private recordingTimerId: any = null;
+
+  // --- LED MATRIX STATE (gleich wie in Home) ---
+  showLedModal: boolean = false;
+  public ledMatrix: number[][] = Array(8).fill(0).map(() => Array(8).fill(0));
 
   // JOYSTICK STATE
   private left = { x: 0, y: 0 };
@@ -83,6 +106,7 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
 
   ngOnInit() {
     this.initVideoStream();
+    this.startRouteSampling();
     setTimeout(() => {
       if (this.droneService.isAutoFlight && this.droneService.selectedAutoFlight) {
         this.startAutoFlightFromSetup();
@@ -95,6 +119,7 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
   ngAfterViewInit() {
     // Canvas auf native Frame-Auflösung setzen, damit Bbox-Koordinaten passen
     this.setupCanvas();
+    this.setupRouteCanvas();
   }
 
   private setupCanvas() {
@@ -154,6 +179,161 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
     }
   }
 
+  // ===== FLUGROUTE: WEBSOCKET + ZEICHNEN =====
+  private setupRouteCanvas() {
+    if (!this.routeCanvas) return;
+    const canvas = this.routeCanvas.nativeElement;
+    // interne Auflösung an die angezeigte Größe anpassen (für scharfe Linien)
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = Math.max(rect.width, 200);
+    canvas.height = Math.max(rect.height, 200);
+    this.drawRoute();
+  }
+
+  private startRouteSampling() {
+    this.stopRouteSampling();
+    this.zone.runOutsideAngular(() => {
+      this.routeSampleId = setInterval(() => {
+        const t = this.droneService.telemetry;
+
+        // Neuer Autopilot-Flug? -> Route zurücksetzen, damit es sauber von vorne zeichnet
+        if (this.droneService.isAutoFlight) {
+          const flightKey = this.droneService.selectedAutoFlight;
+          if (flightKey !== this.lastFlightKey) {
+            this.lastFlightKey = flightKey;
+            this.routePoints = [];
+            this.lastPoint = null;
+            this.drawRoute();
+          }
+        }
+
+        const x = t?.x;
+        const y = t?.y;
+
+        // nur fortfahren, wenn gültige Zahlen vorliegen
+        if (typeof x !== 'number' || typeof y !== 'number' ||
+          Number.isNaN(x) || Number.isNaN(y)) {
+          return;
+        }
+
+        // kein neuer Punkt, wenn sich die Position nicht verändert hat
+        if (this.lastPoint && this.lastPoint.x === x && this.lastPoint.y === y) {
+          return;
+        }
+
+        const point: RoutePoint = { x, y };
+        this.routePoints.push(point);
+        this.lastPoint = point;
+        if (this.routePoints.length > this.MAX_ROUTE_POINTS) {
+          this.routePoints.shift();
+        }
+
+        this.zone.run(() => {
+          this.routeConnected = true;
+          this.drawRoute();
+          this.cdr.detectChanges();
+        });
+      }, this.ROUTE_SAMPLE_MS);
+    });
+  }
+
+  private stopRouteSampling() {
+    if (this.routeSampleId) {
+      clearInterval(this.routeSampleId);
+      this.routeSampleId = null;
+    }
+  }
+
+  clearRoute() {
+    this.routePoints = [];
+    this.lastPoint = null;
+    this.drawRoute();
+  }
+
+  private drawRoute() {
+    if (!this.routeCanvas) return;
+    const canvas = this.routeCanvas.nativeElement;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const W = canvas.width;
+    const H = canvas.height;
+    const pad = 24;
+
+    // Hintergrund + Raster
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#0c0f14';
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+    ctx.lineWidth = 1;
+    const grid = 28;
+    for (let gx = 0; gx <= W; gx += grid) {
+      ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke();
+    }
+    for (let gy = 0; gy <= H; gy += grid) {
+      ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke();
+    }
+
+    if (this.routePoints.length === 0) return;
+
+    // Bounding-Box aller Punkte berechnen (Auto-Zoom)
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    for (const p of this.routePoints) {
+      if (p.x < minX) minX = p.x;
+      if (p.x > maxX) maxX = p.x;
+      if (p.y < minY) minY = p.y;
+      if (p.y > maxY) maxY = p.y;
+    }
+    const rangeX = Math.max(maxX - minX, 1);
+    const rangeY = Math.max(maxY - minY, 1);
+    // gleiche Skalierung für X/Y, damit die Route nicht verzerrt wird
+    const scale = Math.min((W - 2 * pad) / rangeX, (H - 2 * pad) / rangeY);
+    const offX = (W - rangeX * scale) / 2;
+    const offY = (H - rangeY * scale) / 2;
+
+    // y wird gespiegelt, damit "nach vorne/oben" im Bild oben ist
+    const tx = (x: number) => offX + (x - minX) * scale;
+    const ty = (y: number) => H - (offY + (y - minY) * scale);
+
+    // Spur (Linie)
+    ctx.strokeStyle = '#1e90ff';
+    ctx.lineWidth = 2.5;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    this.routePoints.forEach((p, i) => {
+      const px = tx(p.x);
+      const py = ty(p.y);
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    });
+    ctx.stroke();
+
+    // Startpunkt
+    const start = this.routePoints[0];
+    ctx.fillStyle = '#28a745';
+    ctx.beginPath();
+    ctx.arc(tx(start.x), ty(start.y), 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Aktuelle Position (Drohne) – pulsierender Punkt mit Glow
+    const cur = this.routePoints[this.routePoints.length - 1];
+    const cx = tx(cur.x);
+    const cy = ty(cur.y);
+    ctx.fillStyle = 'rgba(30, 144, 255, 0.25)';
+    ctx.beginPath();
+    ctx.arc(cx, cy, 11, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#1e90ff';
+    ctx.beginPath();
+    ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  }
+
   // --- OBJEKTERKENNUNG / CANVAS DRAWING ---
   private drawDetections(detections: Detection[]) {
     if (!this.overlayCanvas) return;
@@ -208,6 +388,56 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
     ctx.fillStyle = '#ffffff';
     ctx.textBaseline = 'top';
     ctx.fillText(label, labelX, labelY - fontSize + 4);
+  }
+
+  // --- LED MATRIX STEUERUNG (übernommen aus Home) ---
+  openLedModal() {
+    this.showLedModal = true;
+  }
+
+  closeLedModal() {
+    this.showLedModal = false;
+  }
+
+  toggleLed(row: number, col: number) {
+    const colorMap: { [key: string]: number } = { 'r': 1, 'b': 2, 'p': 3 };
+    const selectedColorCode = colorMap[this.droneService.selectedColor];
+
+    if (this.ledMatrix[row][col] === selectedColorCode) {
+      this.ledMatrix[row][col] = 0;
+    } else {
+      this.ledMatrix[row][col] = selectedColorCode;
+    }
+
+    this.droneService.sendLedUpdate(this.ledMatrix).subscribe({
+      next: (res) => console.log(`Matrix Update: Pixel [${row},${col}] Farbe ${this.droneService.selectedColor}`, res),
+      error: (err) => console.error('Matrix Fehler', err)
+    });
+  }
+
+  sendCurrentMatrix() {
+    if (!this.droneService.isConnected) return;
+    this.droneService.sendLedUpdate(this.ledMatrix).subscribe({
+      next: (res) => console.log('Matrix manuell gesendet:', res),
+      error: (err) => console.error('Fehler beim manuellen Senden der Matrix:', err)
+    });
+  }
+
+  selectColor(color: 'r' | 'b' | 'p') {
+    this.droneService.selectedColor = color;
+  }
+
+  clearMatrix() {
+    this.ledMatrix.forEach(row => row.fill(0));
+    this.droneService.sendLedUpdate(this.ledMatrix).subscribe();
+  }
+
+  sendScrollingText(text: string) {
+    if (!text || !this.droneService.isConnected) return;
+    this.droneService.sendControlCommand(text).subscribe({
+      next: () => console.log(`Text gesendet: ${text} (Farbe: ${this.droneService.selectedColor})`),
+      error: (err) => console.error('Fehler Text-Senden', err)
+    });
   }
 
   // --- VIDEO RECORDING ---
@@ -297,6 +527,11 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
     }
   }
 
+  @HostListener('window:resize')
+  onWindowResize() {
+    this.setupRouteCanvas();
+  }
+
   startJoystick(event: MouseEvent | TouchEvent, side: 'left' | 'right') {
     event.preventDefault();
     this.draggingSide = side;
@@ -357,6 +592,9 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
 
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
+    // Wenn LED-Modal offen ist und Text-Input fokussiert ist, keine Steuerung
+    if (this.showLedModal) return;
+
     if (event.key === ' ' || event.code === 'Space'){
       if(!this.isFlying) this.isFlying = true;
       if(this.isStarted) this.showafterland = true
@@ -376,6 +614,8 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
 
   @HostListener('window:keyup', ['$event'])
   handleKeyUp(event: KeyboardEvent) {
+    if (this.showLedModal) return;
+
     if (this.isFlying && this.droneService.selectedMode === 'controlkeyboard') {
       if (!this.allowedKeys.has(event.key)) return;
       event.preventDefault();
@@ -463,6 +703,7 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
     this.stopRecordingTimer();
     if (this.socket) this.socket.close();
     if (this.videoStreamSocket) this.videoStreamSocket.close();
+    this.stopRouteSampling();
   }
 
   ngOnDestroy() {
