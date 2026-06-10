@@ -51,6 +51,8 @@ class PoliceDroneMode:
         return self.active
 
     async def start(self) -> bool:
+        drohneService.ep_drone.led.set_led_blink(freq=1, r1=255, g1=0, b1=0, r2=0, g2=0, b2=255)
+
         """Startet den Tracking-Modus"""
         if self.active:
             logger.warning("Tracking läuft bereits")
