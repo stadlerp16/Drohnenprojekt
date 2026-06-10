@@ -1089,7 +1089,7 @@
   transform: scale(1.05);
 }
 
-/* ---- Responsive (an deine bestehenden Breakpoints angelehnt) ---- */
+/* ---- Responsive: Hochformat (an deine Breakpoints angelehnt) ---- */
 @media (max-width: 1100px) {
   .route-panel { flex: 0 0 240px; width: 240px; }
 }
@@ -1099,9 +1099,24 @@
   .route-title { font-size: 0.6rem; }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 700px) and (orientation: portrait) {
   .route-panel { flex: 0 0 130px; width: 130px; }
   .route-header { padding: 6px 8px; }
   .route-footer { padding: 5px 8px; }
   .route-coord { font-size: 0.6rem; }
 }
+
+/* ---- Querformat (Handy quer): Höhe knapp, Breite reichlich ---- */
+@media (orientation: landscape) and (max-height: 500px) {
+  .route-panel {
+    flex: 0 0 200px;
+    width: 200px;
+    overflow-y: auto;                  /* Liste scrollt */
+    -webkit-overflow-scrolling: touch;
+  }
+  .route-header { padding: 4px 8px; }  /* flach halten, spart Höhe */
+  .route-footer { padding: 4px 8px; }
+  .route-title  { font-size: 0.72rem; } /* wieder gut lesbar, seitlich ist Platz */
+  .route-coord  { font-size: 0.62rem; }
+}
+
