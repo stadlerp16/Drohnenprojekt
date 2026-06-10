@@ -64,6 +64,7 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
   routePoints: RoutePoint[] = [];
   lastPoint: RoutePoint | null = null;
   private routeSampleId: any = null;
+  private lastFlightKey: string | null = null; // erkennt Start eines neuen Autopilot-Flugs
   private readonly ROUTE_SAMPLE_MS = 150; // wie oft die Telemetrie nach Position abgefragt wird
   private readonly MAX_ROUTE_POINTS = 2000; // Begrenzung, damit es nicht unendlich wächst
 
@@ -194,6 +195,18 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
     this.zone.runOutsideAngular(() => {
       this.routeSampleId = setInterval(() => {
         const t = this.droneService.telemetry;
+
+        // Neuer Autopilot-Flug? -> Route zurücksetzen, damit es sauber von vorne zeichnet
+        if (this.droneService.isAutoFlight) {
+          const flightKey = this.droneService.selectedAutoFlight;
+          if (flightKey !== this.lastFlightKey) {
+            this.lastFlightKey = flightKey;
+            this.routePoints = [];
+            this.lastPoint = null;
+            this.drawRoute();
+          }
+        }
+
         const x = t?.x;
         const y = t?.y;
 
