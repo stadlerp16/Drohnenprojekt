@@ -114,7 +114,7 @@
   <!-- CONTROL BAR: Joysticks + Action-Buttons in einer Zeile -->
   <div class="control-bar">
 
-    <!-- Linke Seite: Aufnahme-Button -->
+    <!-- Linke Seite: Aufnahme-Button + Objekterkennung -->
     <div class="control-side left">
       <button
         class="btn-record"
@@ -124,6 +124,14 @@
         <span class="rec-icon"></span>
         <span class="rec-label">{{ isRecording ? 'STOP' : 'REC' }}</span>
       </button>
+
+      <div class="object-detection-controls">
+        <span class="object-detection-label">Objekterkennung</span>
+        <div class="object-detection-buttons">
+          <button class="btn-object-on" [class.active]="objectDetection" (click)="toggleObjectTrue()">AN</button>
+          <button class="btn-object-off" [class.active]="!objectDetection" (click)="toggleObjectFalse()">AUS</button>
+        </div>
+      </div>
     </div>
 
     <!-- Mitte: Joysticks (nur Touch-Modus) -->
@@ -187,6 +195,7 @@
 
   <!-- ===== LED MATRIX MODAL (gleiches Design wie in Home) ===== -->
   <div class="led-modal-overlay" *ngIf="showLedModal" (click)="closeLedModal()">
+
     <div class="led-modal" (click)="$event.stopPropagation()">
 
       <div class="led-modal-header">
