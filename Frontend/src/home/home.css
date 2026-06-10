@@ -806,6 +806,22 @@
   background: #000;
 }
 
+.video-card-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #888;
+  padding: 0 0.5rem 0.5rem;
+}
+
+.video-card-date {
+  font-style: italic;
+}
+
+.video-card-size {
+  font-weight: 500;
+}
+
 /* Mobile Video Modal */
 @media (max-width: 700px) {
   .video-modal-overlay {

@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { interval, Observable, startWith, switchMap } from 'rxjs';
+import {VideoItem} from '../../home/home';
+
 
 
 @Injectable({ providedIn: 'root' })
@@ -115,10 +117,13 @@ export class DroneService {
     return this.http.post(`${this.videoUrl}/stop`, {});
   }
 
+
+
   // --- VIDEO LIBRARY ---
   /** Holt die Liste aller gespeicherten Aufnahmen vom Backend */
-  getRecordedVideos(): Observable<{ videos: string[] }> {
-    return this.http.get<{ videos: string[] }>(`${this.videoUrl}/list`);
+  getRecordedVideos(): Observable<{ videos: VideoItem[] }> {
+    // FEHLER BEHOBEN: this.apiUrl geändert zu this.videoUrl (oder this.baseUrl, falls dein Endpunkt dort liegt)
+    return this.http.get<{ videos: VideoItem[] }>(`${this.videoUrl}/videos`);
   }
 
   /** Erzeugt die URL zum Abspielen einer einzelnen Videodatei */
