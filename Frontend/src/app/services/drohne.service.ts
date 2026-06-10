@@ -7,9 +7,9 @@ import {VideoItem} from '../../home/home';
 
 @Injectable({ providedIn: 'root' })
 export class DroneService {
-  private baseUrl = 'http://192.168.121.71:8000/drone';
-  private videoUrl = 'http://192.168.121.71:8000/video';
-  private wsUrl = 'ws://192.168.121.71:8000/drone/telemetrie';
+  private baseUrl = 'http://localhost:8000/drone';
+  private videoUrl = 'http://localhost:8000/video';
+  private wsUrl = 'ws://localhost:8000/drone/telemetrie';
 
   // Zentraler Status
   isConnected = false;
@@ -107,7 +107,7 @@ export class DroneService {
   }
 
   getVideoStreamSocket(): WebSocket {
-    return new WebSocket('ws://192.168.121.71:8000/video/getlivestream');
+    return new WebSocket('ws://localhost:8000/video/getlivestream');
   }
 
   // --- VIDEO RECORDING ---
