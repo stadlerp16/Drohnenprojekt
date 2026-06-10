@@ -171,7 +171,7 @@
           </button>
           <h2 class="video-modal-title">
             <ng-container *ngIf="!selectedVideo">Aufnahmen</ng-container>
-            <ng-container *ngIf="selectedVideo">{{ getDisplayName(selectedVideo) }}</ng-container>
+            <ng-container *ngIf="selectedVideo">{{ getDisplayName(selectedVideo.filename) }}</ng-container>
           </h2>
         </div>
         <button class="btn-modal-close" (click)="closeVideoGallery()" title="Schließen">✕</button>
@@ -209,7 +209,11 @@
               <div class="video-thumb">
                 <span class="play-overlay">▶</span>
               </div>
-              <div class="video-card-name" [title]="v">{{ getDisplayName(v) }}</div>
+              <div class="video-card-name" [title]="v.filename">{{ getDisplayName(v.filename) }}</div>
+              <div class="video-card-meta">
+                <span class="video-card-date">{{ formatDate(v.created_at) }}</span>
+                <span class="video-card-size">{{ formatFileSize(v.size_bytes) }}</span>
+              </div>
             </div>
           </div>
 

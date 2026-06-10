@@ -21,6 +21,7 @@ class VideoStreamService:
     def __init__(self):
         self.running = False
         self.frame_count = 0
+        self.last_detections = []
         self.model = YOLO("yolov8n.pt")
         self.last_person_detection = None
         self._last_person_ts = 0.0
@@ -68,6 +69,7 @@ class VideoStreamService:
             finally:
                 self._stream_started = False
 
+        # State zurücksetzen
         self.frame_count = 0
         self.last_detections = []
         logger.info("dispose() fertig")
@@ -95,6 +97,7 @@ class VideoStreamService:
                 self.frame_count = 0
                 self.last_detections = []
 
+                # Stream nur starten falls noch nicht aktiv
                 if not self._ensure_stream_started():
                     await websocket.send_json({
                         "type": "error",
@@ -105,6 +108,7 @@ class VideoStreamService:
                 logger.info(f"[Conn #{conn_id}] Betrete Frame-Loop")
 
                 while self.running:
+                    # Frame holen - mit Exception-Handling für Empty queue
                     frame = None
                     try:
                         frame = await asyncio.get_event_loop().run_in_executor(
