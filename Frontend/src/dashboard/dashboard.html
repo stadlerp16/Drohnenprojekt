@@ -109,6 +109,31 @@
         </div>
       </div>
     </div>
+
+    <!-- ===== ROUTEN-PANEL (rechte Seite, 2D Live-Ansicht) ===== -->
+    <div class="route-panel">
+      <div class="route-header">
+        <span class="route-title">Flugroute</span>
+        <span class="route-status" [class.live]="routeConnected">
+          {{ routeConnected ? '● Live' : '○ Offline' }}
+        </span>
+      </div>
+
+      <div class="route-map-wrapper">
+        <canvas #routeCanvas class="route-canvas"></canvas>
+        @if (routePoints.length === 0) {
+          <div class="route-empty">Warte auf Positionsdaten…</div>
+        }
+      </div>
+
+      <div class="route-footer">
+        <span class="route-coord">
+          X: {{ lastPoint ? lastPoint.x.toFixed(0) : '–' }} |
+          Y: {{ lastPoint ? lastPoint.y.toFixed(0) : '–' }}
+        </span>
+        <button class="btn-route-clear" (click)="clearRoute()" title="Route zurücksetzen">🗑️</button>
+      </div>
+    </div>
   </div>
 
   <!-- CONTROL BAR: Joysticks + Action-Buttons in einer Zeile -->
