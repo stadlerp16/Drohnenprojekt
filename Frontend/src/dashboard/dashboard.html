@@ -132,6 +132,14 @@
           <button class="btn-object-off" [class.active]="!objectDetection" (click)="toggleObjectFalse()">AUS</button>
         </div>
       </div>
+
+      <div class="object-police-controls">
+        <span class="object-detection-label">Policemode</span>
+        <div class="object-detection-buttons">
+          <button class="btn-object-on" [class.active]="policeDetection" (click)="togglePoliceTrue()">AN</button>
+          <button class="btn-object-off" [class.active]="!policeDetection" (click)="togglePoliceFalse()">AUS</button>
+        </div>
+      </div>
     </div>
 
     <!-- Mitte: Joysticks (nur Touch-Modus) -->

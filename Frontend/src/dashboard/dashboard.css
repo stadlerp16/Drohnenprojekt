@@ -970,8 +970,9 @@
   50% { opacity: 0.5; }
 }
 
-/* OBJEKTERKENNUNG TOGGLE */
-.object-detection-controls {
+/* OBJEKTERKENNUNG & POLICEMODE TOGGLES */
+.object-detection-controls,
+.object-police-controls {
   background: white;
   padding: 15px 24px;
   border-radius: 10px;

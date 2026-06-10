@@ -37,6 +37,7 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
   isStarted: boolean = false;
   isFlightActive: boolean = false;
   objectDetection: boolean = false;
+  policeDetection: boolean = false;
   private socket: WebSocket | null = null;
   showSaveModal: boolean = false;
   flightName: string = '';
@@ -451,6 +452,17 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
     this.objectDetection = true;
     this.droneService.enableObject(this.objectDetection)
   }
+
+  togglePoliceFalse(){
+    this.policeDetection = false;
+    this.droneService.enableObject(this.policeDetection)
+  }
+
+  togglePoliceTrue(){
+    this.policeDetection = true;
+    this.droneService.enablePolice(this.policeDetection)
+  }
+
 
   private startControllerLoop() {
     this.stopControllerLoop();

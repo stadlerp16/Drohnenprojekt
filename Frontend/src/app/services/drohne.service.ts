@@ -136,6 +136,14 @@ export class DroneService {
     }
   }
 
+  enablePolice(permission: boolean): Observable<any> {
+    if(!permission) {
+      return this.http.post(`${this.baseUrl}/police/stop`, {});
+    }else {
+      return this.http.post(`${this.baseUrl}/police/start`, {});
+    }
+  }
+
 
   public selectedColor: 'r' | 'b' | 'p' = 'b';
 
