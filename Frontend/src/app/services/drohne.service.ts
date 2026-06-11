@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { interval, Observable, startWith, switchMap } from 'rxjs';
+import {VideoItem} from '../../home/home';
+
 
 
 @Injectable({ providedIn: 'root' })
 export class DroneService {
-  private baseUrl = 'http://192.168.121.71:8000/drone';
-  private videoUrl = 'http://192.168.121.71:8000/video';
-  private wsUrl = 'ws://192.168.121.71:8000/drone/telemetrie';
+  private baseUrl = 'http://localhost:8000/drone';
+  private videoUrl = 'http://localhost:8000/video';
+  private wsUrl = 'ws://localhost:8000/drone/telemetrie';
 
   // Zentraler Status
   isConnected = false;
@@ -31,6 +33,8 @@ export class DroneService {
     yaw: 0,
     total_distance_cm: 0,
     flight_duration: 0,
+    x: null,
+    y: null,
   };
   connectedIp: string = '';
 
@@ -103,7 +107,7 @@ export class DroneService {
   }
 
   getVideoStreamSocket(): WebSocket {
-    return new WebSocket('ws://192.168.121.71:8000/video/getlivestream');
+    return new WebSocket('ws://localhost:8000/video/getlivestream');
   }
 
   // --- VIDEO RECORDING ---
@@ -115,10 +119,13 @@ export class DroneService {
     return this.http.post(`${this.videoUrl}/stop`, {});
   }
 
+
+
   // --- VIDEO LIBRARY ---
   /** Holt die Liste aller gespeicherten Aufnahmen vom Backend */
-  getRecordedVideos(): Observable<{ videos: string[] }> {
-    return this.http.get<{ videos: string[] }>(`${this.videoUrl}/list`);
+  getRecordedVideos(): Observable<{ videos: VideoItem[] }> {
+    // FEHLER BEHOBEN: this.apiUrl geändert zu this.videoUrl (oder this.baseUrl, falls dein Endpunkt dort liegt)
+    return this.http.get<{ videos: VideoItem[] }>(`${this.videoUrl}/videos`);
   }
 
   /** Erzeugt die URL zum Abspielen einer einzelnen Videodatei */
@@ -126,9 +133,34 @@ export class DroneService {
     return `${this.videoUrl}/file/${encodeURIComponent(filename)}`;
   }
 
+  enableObject(permission: boolean): Observable<any> {
+    if(!permission) {
+      permission = true;
+      return this.http.post(`${this.baseUrl}/video/enableObject`, {permission});
+    }else {
+      permission = false;
+      return this.http.post(`${this.baseUrl}/video/enableObject`, {permission});
+    }
+  }
+
+  enablePolice(permission: boolean): Observable<any> {
+    if(!permission) {
+      return this.http.post(`${this.baseUrl}/police/stop`, {});
+    }else {
+      return this.http.post(`${this.baseUrl}/police/start`, {});
+    }
+  }
+
 
   public selectedColor: 'r' | 'b' | 'p' = 'b';
 
+
+  /** Wandelt einen Wert in eine Zahl um, oder gibt null zurück (für Positionsdaten). */
+  private toNum(v: any): number | null {
+    if (v === undefined || v === null) return null;
+    const n = Number(v);
+    return Number.isNaN(n) ? null : n;
+  }
 
   private initTelemetryWebSocket() {
     this.socket = new WebSocket(this.wsUrl);
@@ -146,6 +178,9 @@ export class DroneService {
           yaw: data.yaw || 0,
           total_distance_cm: data.total_distance_cm || 0,
           flight_duration: data.flight_duration || 0,
+          // Position für die 2D-Flugroute (verschiedene mögliche Feldnamen)
+          x: this.toNum(data.x ?? data.pos_x ?? data.posX ?? data.position?.x),
+          y: this.toNum(data.y ?? data.pos_y ?? data.posY ?? data.position?.y),
         };
 
         console.log('Telemetrie Update:', this.telemetry);
