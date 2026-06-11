@@ -4,6 +4,14 @@ import { NgIf, NgFor, CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { DroneService } from '../app/services/drohne.service';
 
+export interface VideoItem {
+  id: number;
+  filename: string;
+  created_at: string | null;
+  size_bytes: number;
+  url: string;
+}
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -25,10 +33,10 @@ export class Home implements OnInit {
 
   // --- VIDEO GALLERY STATE ---
   showVideoGallery = false;
-  videoList: string[] = [];
+  videoList: VideoItem[] = [];
   videosLoading = false;
   videosError: string | null = null;
-  selectedVideo: string | null = null;
+  selectedVideo: VideoItem | null = null;
   selectedVideoUrl: string | null = null;
 
   constructor(
@@ -81,9 +89,9 @@ export class Home implements OnInit {
     });
   }
 
-  playVideo(filename: string) {
-    this.selectedVideo = filename;
-    this.selectedVideoUrl = this.droneService.getVideoFileUrl(filename);
+  playVideo(video: VideoItem) {
+    this.selectedVideo = video;
+    this.selectedVideoUrl = this.droneService.getVideoFileUrl(video.filename);
   }
 
   /** Zurück zur Galerie-Übersicht (vom Player aus) */
@@ -93,8 +101,39 @@ export class Home implements OnInit {
   }
 
   /** Liefert einen lesbareren Namen für die Anzeige in der Galerie */
-  getDisplayName(filename: string): string {
+  getDisplayName(filename: string | undefined | null): string {
+    if (!filename || typeof filename !== 'string') return 'Unbenannt';
     return filename.replace(/\.mp4$/i, '');
+  }
+
+  /** Formatiert die Dateigröße in lesbare Einheiten */
+  formatFileSize(bytes: number | undefined | null): string {
+    if (!bytes || bytes <= 0) return '0 B';
+    const units = ['B', 'KB', 'MB', 'GB'];
+    let size = bytes;
+    let unitIndex = 0;
+    while (size >= 1024 && unitIndex < units.length - 1) {
+      size /= 1024;
+      unitIndex++;
+    }
+    return `${size.toFixed(unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`;
+  }
+
+  /** Formatiert das Aufnahmedatum lesbar */
+  formatDate(dateString: string | null | undefined): string {
+    if (!dateString) return '';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleString('de-DE', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch {
+      return '';
+    }
   }
 
 

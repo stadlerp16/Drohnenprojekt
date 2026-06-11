@@ -1,6 +1,8 @@
 import asyncio
 import json
+from datetime import datetime
 import Services.DrohneVerwaltung.drohneService as ds
+import Services.DrohneVerwaltung.telemtrieService as ts
 from Services.Steuerung.keyboardSteuerung import set_key
 from Services.Steuerung.input_ps5 import set_gamepad
 from Services.Steuerung.input_touch import set_touch
@@ -26,6 +28,15 @@ async def play_flight(flight_name: str):
 
     session = ControlSession(hz=20)
     await session.start()
+
+    # ===== NEU: Positions-Tracking für die 2D-Karte starten =====
+    # Beim manuellen Flug passiert das in handle_takeoff_logic().
+    # Der Replay umgeht diese Logik, daher hier dasselbe Tracking initialisieren,
+    # damit telemetry.x / telemetry.y auch beim Autopilot aktualisiert werden.
+    ts.reset_tracking()
+    ts.current_flight_start = datetime.now()
+    asyncio.create_task(ts.start_takeoff_timer(2.0))
+
     print(f"[REPLAY] 🛫 START: {flight_name} | {len(commands)} Befehle")
 
     try:
@@ -62,6 +73,9 @@ async def play_flight(flight_name: str):
         print(f"[REPLAY] ✅ BEENDET")
     except asyncio.CancelledError: stop_drone_immediately()
     finally:
+        # ===== NEU: Positions-Tracking sauber beenden =====
+        ts.is_logging_allowed = False
+        ts.current_flight_start = None
         await session.stop()
         active_replay_task = None
 

@@ -6,6 +6,7 @@ from queue import Empty
 from fastapi import WebSocket, WebSocketDisconnect
 from ultralytics import YOLO
 import Services.DrohneVerwaltung.drohneService as drohneService
+import time
 
 logging.basicConfig(
     level=logging.INFO,
@@ -14,13 +15,16 @@ logging.basicConfig(
 )
 logger = logging.getLogger("VideoStream")
 
-
+object_detection_enabled = False
 class VideoStreamService:
+
     def __init__(self):
         self.running = False
         self.frame_count = 0
         self.last_detections = []
         self.model = YOLO("yolov8n.pt")
+        self.last_person_detection = None
+        self._last_person_ts = 0.0
         self._lock = asyncio.Lock()
         self._connection_count = 0
         self._stream_started = False
@@ -70,20 +74,14 @@ class VideoStreamService:
         self.last_detections = []
         logger.info("dispose() fertig")
 
-    async def stream_to_websocket(self, websocket: WebSocket, object_detection_enabled: bool = True):
+    async def stream_to_websocket(self, websocket: WebSocket):
         self._connection_count += 1
         conn_id = self._connection_count
         logger.info(f"[Conn #{conn_id}] WebSocket-Verbindung wird akzeptiert")
 
-        await websocket.accept()
 
-        if drohneService.ep_drone is None:
-            logger.warning(f"[Conn #{conn_id}] Keine Drohne verbunden")
-            await websocket.send_json({"type": "error", "message": "Keine Drohne verbunden"})
-            await websocket.close()
-            return
 
-        # Falls noch ein alter WebSocket-Loop läuft, erst stoppen lassen
+
         if self.running:
             logger.warning(f"[Conn #{conn_id}] Alter WebSocket-Loop läuft - stoppe ihn")
             self.running = False
@@ -155,13 +153,14 @@ class VideoStreamService:
 
                     frame = cv2.resize(frame, (640, 480))
 
-                    # Objekterkennung
-                    detections = []
                     detections_changed = False
 
                     if object_detection_enabled and self.frame_count % 4 == 0:
                         results = self.model(frame, conf=0.5)
                         detections = self._extract_detections(results[0])
+                        self.last_person_detection = self._get_closest_person(detections)
+                        self._last_person_ts = time.time()
+
                         detections = self._get_closest_object(detections)
                         detections_changed = self._detections_changed(detections)
 
@@ -218,8 +217,6 @@ class VideoStreamService:
                     f"empty_counter={empty_counter}"
                 )
                 self.running = False
-                # WICHTIG: Stream NICHT stoppen - bleibt für nächste Verbindung aktiv!
-                # Stream wird erst in dispose() (beim Drohnen-close) gestoppt
                 logger.info(f"[Conn #{conn_id}] Cleanup fertig (Stream läuft weiter)")
 
     def _extract_detections(self, results):
@@ -277,6 +274,25 @@ class VideoStreamService:
             return True
 
         return False
+
+    def _get_closest_person(self, detections):
+        persons = [d for d in detections if d.get("class") == "person"]
+        if not persons:
+            return None
+        persons.sort(
+            key=lambda d: (d["bbox"]["x2"] - d["bbox"]["x1"]) * (d["bbox"]["y2"] - d["bbox"]["y1"]),
+            reverse=True,
+        )
+        return persons[0]
+
+    def get_latest_person_detection(self):
+        if self.last_person_detection is None:
+            return None
+        if time.time() - self._last_person_ts > 0.5:  # älter als 500 ms = verworfen
+            return None
+        return self.last_person_detection
+
+
 
 
 video_stream_service = VideoStreamService()
