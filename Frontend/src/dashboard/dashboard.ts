@@ -515,14 +515,20 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
 
   private connectWebSocket() {
     const mode = this.droneService.selectedMode;
-    // Dynamischer Pfad: /keyboard oder /controller oder Joysticks
+    // Dynamischer Pfad: /controlkeyboard, /controlps oder /controltouch
     const WS_URL = `ws://localhost:8000/drone/${mode}`;
 
     this.socket = new WebSocket(WS_URL);
     this.socket.onopen = () => {
-      if (mode === 'controlps') this.startControllerLoop();
+      console.log('Steuerungs-WebSocket verbunden:', mode);
     };
     this.socket.onclose = () => this.stopControllerLoop();
+
+    // PS5-Controller: Polling sofort starten (nicht erst in onopen).
+    // sendData() prüft selbst, ob die Verbindung offen ist – genau wie im funktionierenden Test-File.
+    if (mode === 'controlps') {
+      this.startControllerLoop();
+    }
   }
 
   private sendData(data: any) {
@@ -677,7 +683,9 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
     this.stopControllerLoop();
     const loop = () => {
       this.controllerLoopId = setTimeout(loop, this.SEND_DT_MS);
-      if (!this.isFlying || this.droneService.selectedMode !== 'controlps') return;
+      // Kein isFlying-Gate mehr: solange der PS5-Modus aktiv ist, wird gepollt und gesendet.
+      // (Das fehlende "isFlying = true" im Controller-Modus war der Grund, warum nichts ankam.)
+      if (this.droneService.selectedMode !== 'controlps') return;
       const gp = this.getFirstGamepad();
       if (gp) this.processGamepadData(gp);
     };
@@ -707,11 +715,13 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
 
   private processGamepadData(gp: Gamepad) {
     const dz = (v: number) => Math.abs(v) < this.DEADZONE ? 0 : v;
+    const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
+
     const lx = dz(gp.axes[0] ?? 0);
     const ly = dz(gp.axes[1] ?? 0);
     const rx = dz(gp.axes[2] ?? 0);
-    const l2 = gp.buttons[6]?.value ?? 0;
-    const r2 = gp.buttons[7]?.value ?? 0;
+    const l2 = clamp01(gp.buttons[6]?.value ?? 0);
+    const r2 = clamp01(gp.buttons[7]?.value ?? 0);
     const xNow = !!gp.buttons[0]?.pressed;
     let takeoffLand = false;
     if (xNow && !this.lastXPressed) takeoffLand = true;
