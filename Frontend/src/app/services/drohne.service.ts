@@ -122,6 +122,7 @@ export class DroneService {
 
 
   // --- VIDEO LIBRARY ---
+
   /** Holt die Liste aller gespeicherten Aufnahmen vom Backend */
   getRecordedVideos(): Observable<{ videos: VideoItem[] }> {
     // FEHLER BEHOBEN: this.apiUrl geändert zu this.videoUrl (oder this.baseUrl, falls dein Endpunkt dort liegt)
@@ -133,21 +134,23 @@ export class DroneService {
     return `${this.videoUrl}/file/${encodeURIComponent(filename)}`;
   }
 
-  enableObject(permission: boolean): Observable<any> {
-    if(!permission) {
-      permission = true;
-      return this.http.post(`${this.baseUrl}/video/enableObject`, {permission});
-    }else {
-      permission = false;
-      return this.http.post(`${this.baseUrl}/video/enableObject`, {permission});
-    }
+  enableObject(enable: boolean): Observable<any> {
+    const r = this.http.post(`${this.videoUrl}/enableObject`, {enable});
+    r.subscribe((res) => {})
+
+
+    return r
   }
 
   enablePolice(permission: boolean): Observable<any> {
     if(!permission) {
-      return this.http.post(`${this.baseUrl}/police/stop`, {});
+      const r = this.http.post(`${this.baseUrl}/police/stop`, {});
+      r.subscribe((res) => {})
+      return r
     }else {
-      return this.http.post(`${this.baseUrl}/police/start`, {});
+      const r = this.http.post(`${this.baseUrl}/police/start`, {});
+      r.subscribe((res) => {})
+      return r
     }
   }
 

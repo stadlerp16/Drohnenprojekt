@@ -5,7 +5,7 @@ from Services.Steuerung.police_drone import police_drone_mode
 router = APIRouter()
 
 
-@router.post("/start")
+@router.post("/police/start")
 async def start_police_mode():
     success = await police_drone_mode.start()
     if success:
@@ -17,7 +17,7 @@ async def start_police_mode():
     }
 
 
-@router.post("/stop")
+@router.post("/police/stop")
 async def stop_police_mode():
     success = await police_drone_mode.stop()
     return {
