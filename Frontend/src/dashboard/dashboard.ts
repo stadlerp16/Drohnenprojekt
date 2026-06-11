@@ -336,6 +336,7 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
     ctx.stroke();
   }
 
+
   // --- OBJEKTERKENNUNG / CANVAS DRAWING ---
   private drawDetections(detections: Detection[]) {
     if (!this.overlayCanvas) return;

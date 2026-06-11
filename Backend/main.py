@@ -43,7 +43,7 @@ app.include_router(drohnen_router, prefix="/drone")
 app.include_router(steuer_router, prefix="/drone")
 app.include_router(video_router, prefix="/video")
 
-app.include_router(police_router, prefix="/police")
+app.include_router(police_router, prefix="/drone")
 
 
 if __name__ == "__main__":

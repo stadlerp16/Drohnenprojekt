@@ -32,7 +32,7 @@ async def websocket_video_stream_enable(enable: bool = Body(..., embed=True)):
             status_code=500,
             detail={"status": "error", "message": "Keine Drohne verbunden"},
         )
-
+    print(enable)
     livestream.object_detection_enabled = enable
     return {
         "status": "ok",
