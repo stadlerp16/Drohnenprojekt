@@ -149,8 +149,9 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
                 this.objectDetectionEnabled = data.object_detection_enabled;
               }
 
-              // Detections verarbeiten (auch leeres Array ist gültig)
-              const detections: Detection[] = data.detections || [];
+              // Detections nur übernehmen, wenn die Objekterkennung im UI aktiv ist.
+              // Ist sie aus, immer leeres Array -> Canvas wird geleert (keine Geister-Box).
+              const detections: Detection[] = this.objectDetection ? (data.detections || []) : [];
               this.currentDetections = detections;
 
               this.zone.run(() => {
@@ -626,24 +627,49 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
     }
   }
 
-  toggleObjectFalse(){
+  /** Entfernt sofort alle gezeichneten Boxen + Labels vom Overlay-Canvas. */
+  private clearDetectionOverlay() {
+    this.currentDetections = [];
+    if (!this.overlayCanvas) return;
+    const canvas = this.overlayCanvas.nativeElement;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+
+  toggleObjectFalse() {
     this.objectDetection = false;
-    this.droneService.enableObject(this.objectDetection)
+    this.droneService.enableObject(this.objectDetection);
+
+    // Personenverfolgung (Policemode) hängt an der Objekterkennung:
+    // Wird die Objekterkennung deaktiviert, muss auch der Policemode aus.
+    if (this.policeDetection) {
+      this.policeDetection = false;
+      this.droneService.enablePolice(false);
+    }
+
+    // Letzte gezeichnete Box sofort entfernen
+    this.clearDetectionOverlay();
   }
 
-  toggleObjectTrue(){
+  toggleObjectTrue() {
     this.objectDetection = true;
-    this.droneService.enableObject(this.objectDetection)
+    this.droneService.enableObject(this.objectDetection);
   }
 
-  togglePoliceFalse(){
+  togglePoliceFalse() {
+    // Nur reagieren, wenn die Objekterkennung aktiv ist
+    if (!this.objectDetection) return;
     this.policeDetection = false;
-    this.droneService.enableObject(this.policeDetection)
+    this.droneService.enablePolice(false); // Fix: vorher wurde fälschlich enableObject() aufgerufen
   }
 
-  togglePoliceTrue(){
+  togglePoliceTrue() {
+    // Personenverfolgung lässt sich nur einschalten, wenn Objekterkennung an ist
+    if (!this.objectDetection) return;
     this.policeDetection = true;
-    this.droneService.enablePolice(this.policeDetection)
+    this.droneService.enablePolice(this.policeDetection);
   }
 
 

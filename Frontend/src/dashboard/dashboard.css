@@ -102,9 +102,9 @@
 
 /* --- VIDEO & HUD (nimmt verfügbaren Platz ein) --- */
 .main-view-container {
-  width: 65%;
-  max-width: 900px;
-  margin: 8px auto 8px 2%;
+  width: 96%;
+  max-width: 1400px;
+  margin: 8px auto;
   background: #000;
   border-radius: 12px;
   overflow: hidden;
@@ -1025,14 +1025,24 @@
   color: white;
 }
 
-.btn-object-on:not(.active):hover {
+.btn-object-on:not(.active):not(:disabled):hover {
   background: #e8f5e9;
   color: #28a745;
 }
 
-.btn-object-off:not(.active):hover {
+.btn-object-off:not(.active):not(:disabled):hover {
   background: #fdecea;
   color: #dc3545;
+}
+
+/* Policemode gesperrt – nur nutzbar, wenn Objekterkennung aktiv ist */
+.object-police-controls.disabled {
+  opacity: 0.55;
+}
+
+.btn-object-on:disabled,
+.btn-object-off:disabled {
+  cursor: not-allowed;
 }
 
 
@@ -1184,4 +1194,3 @@
   .route-title  { font-size: 0.72rem; } /* wieder gut lesbar, seitlich ist Platz */
   .route-coord  { font-size: 0.62rem; }
 }
-
