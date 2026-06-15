@@ -158,11 +158,11 @@
         </div>
       </div>
 
-      <div class="object-police-controls">
+      <div class="object-police-controls" [class.disabled]="!objectDetection">
         <span class="object-detection-label">Policemode</span>
         <div class="object-detection-buttons">
-          <button class="btn-object-on" [class.active]="policeDetection" (click)="togglePoliceTrue()">AN</button>
-          <button class="btn-object-off" [class.active]="!policeDetection" (click)="togglePoliceFalse()">AUS</button>
+          <button class="btn-object-on" [class.active]="policeDetection" [disabled]="!objectDetection" (click)="togglePoliceTrue()">AN</button>
+          <button class="btn-object-off" [class.active]="!policeDetection" [disabled]="!objectDetection" (click)="togglePoliceFalse()">AUS</button>
         </div>
       </div>
     </div>

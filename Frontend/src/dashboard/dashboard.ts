@@ -149,8 +149,9 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
                 this.objectDetectionEnabled = data.object_detection_enabled;
               }
 
-              // Detections verarbeiten (auch leeres Array ist gültig)
-              const detections: Detection[] = data.detections || [];
+              // Detections nur übernehmen, wenn die Objekterkennung im UI aktiv ist.
+              // Ist sie aus, immer leeres Array -> Canvas wird geleert (keine Geister-Box).
+              const detections: Detection[] = this.objectDetection ? (data.detections || []) : [];
               this.currentDetections = detections;
 
               this.zone.run(() => {
@@ -514,14 +515,20 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
 
   private connectWebSocket() {
     const mode = this.droneService.selectedMode;
-    // Dynamischer Pfad: /keyboard oder /controller oder Joysticks
+    // Dynamischer Pfad: /controlkeyboard, /controlps oder /controltouch
     const WS_URL = `ws://localhost:8000/drone/${mode}`;
 
     this.socket = new WebSocket(WS_URL);
     this.socket.onopen = () => {
-      if (mode === 'controlps') this.startControllerLoop();
+      console.log('Steuerungs-WebSocket verbunden:', mode);
     };
     this.socket.onclose = () => this.stopControllerLoop();
+
+    // PS5-Controller: Polling sofort starten (nicht erst in onopen).
+    // sendData() prüft selbst, ob die Verbindung offen ist – genau wie im funktionierenden Test-File.
+    if (mode === 'controlps') {
+      this.startControllerLoop();
+    }
   }
 
   private sendData(data: any) {
@@ -626,24 +633,49 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
     }
   }
 
-  toggleObjectFalse(){
+  /** Entfernt sofort alle gezeichneten Boxen + Labels vom Overlay-Canvas. */
+  private clearDetectionOverlay() {
+    this.currentDetections = [];
+    if (!this.overlayCanvas) return;
+    const canvas = this.overlayCanvas.nativeElement;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+
+  toggleObjectFalse() {
     this.objectDetection = false;
-    this.droneService.enableObject(this.objectDetection)
+    this.droneService.enableObject(this.objectDetection);
+
+    // Personenverfolgung (Policemode) hängt an der Objekterkennung:
+    // Wird die Objekterkennung deaktiviert, muss auch der Policemode aus.
+    if (this.policeDetection) {
+      this.policeDetection = false;
+      this.droneService.enablePolice(false);
+    }
+
+    // Letzte gezeichnete Box sofort entfernen
+    this.clearDetectionOverlay();
   }
 
-  toggleObjectTrue(){
+  toggleObjectTrue() {
     this.objectDetection = true;
-    this.droneService.enableObject(this.objectDetection)
+    this.droneService.enableObject(this.objectDetection);
   }
 
-  togglePoliceFalse(){
+  togglePoliceFalse() {
+    // Nur reagieren, wenn die Objekterkennung aktiv ist
+    if (!this.objectDetection) return;
     this.policeDetection = false;
-    this.droneService.enableObject(this.policeDetection)
+    this.droneService.enablePolice(false); // Fix: vorher wurde fälschlich enableObject() aufgerufen
   }
 
-  togglePoliceTrue(){
+  togglePoliceTrue() {
+    // Personenverfolgung lässt sich nur einschalten, wenn Objekterkennung an ist
+    if (!this.objectDetection) return;
     this.policeDetection = true;
-    this.droneService.enablePolice(this.policeDetection)
+    this.droneService.enablePolice(this.policeDetection);
   }
 
 
@@ -651,7 +683,9 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
     this.stopControllerLoop();
     const loop = () => {
       this.controllerLoopId = setTimeout(loop, this.SEND_DT_MS);
-      if (!this.isFlying || this.droneService.selectedMode !== 'controlps') return;
+      // Kein isFlying-Gate mehr: solange der PS5-Modus aktiv ist, wird gepollt und gesendet.
+      // (Das fehlende "isFlying = true" im Controller-Modus war der Grund, warum nichts ankam.)
+      if (this.droneService.selectedMode !== 'controlps') return;
       const gp = this.getFirstGamepad();
       if (gp) this.processGamepadData(gp);
     };
@@ -681,11 +715,13 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
 
   private processGamepadData(gp: Gamepad) {
     const dz = (v: number) => Math.abs(v) < this.DEADZONE ? 0 : v;
+    const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
+
     const lx = dz(gp.axes[0] ?? 0);
     const ly = dz(gp.axes[1] ?? 0);
     const rx = dz(gp.axes[2] ?? 0);
-    const l2 = gp.buttons[6]?.value ?? 0;
-    const r2 = gp.buttons[7]?.value ?? 0;
+    const l2 = clamp01(gp.buttons[6]?.value ?? 0);
+    const r2 = clamp01(gp.buttons[7]?.value ?? 0);
     const xNow = !!gp.buttons[0]?.pressed;
     let takeoffLand = false;
     if (xNow && !this.lastXPressed) takeoffLand = true;
