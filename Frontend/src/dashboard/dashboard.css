@@ -432,6 +432,12 @@
   box-shadow: 0 4px 0 #d68910;
   text-align: center;
   line-height: 1.1;
+  /* Mobil: Tap sofort auslösen (kein 300ms-Delay), kein Doppeltipp-Zoom,
+     keine Textauswahl/Highlight beim Drücken */
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .space-btn:active {
@@ -521,6 +527,8 @@
   line-height: 1.1;
   min-width: 100px;
   transition: all 0.2s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn-emergency:hover {
@@ -1181,16 +1189,80 @@
   .route-coord { font-size: 0.6rem; }
 }
 
-/* ---- Querformat (Handy quer): Höhe knapp, Breite reichlich ---- */
+/* =========================================================
+   HANDY IM QUERFORMAT (Landscape)
+   Greift bei kurzen, breiten Viewports = Smartphones quer
+   (max-height: 500px trifft Handys, nicht Tablets/Laptops).
+   Ziel: alles passt OHNE Scrollen in die geringe Höhe.
+   ========================================================= */
 @media (orientation: landscape) and (max-height: 500px) {
+
+  /* --- Header so flach wie möglich --- */
+  .dashboard-header { padding: 3px 0; }
+  .header-content h1,
+  .flight-title { font-size: 0.9rem; }
+  .mode-text,
+  .mode-label { font-size: 0.55rem; letter-spacing: 0.5px; }
+  .status-badge { padding: 1px 8px; font-size: 0.55rem; margin-top: 2px; }
+
+  /* LED-Button kompakt, Text-Label aus (Platz sparen) */
+  .btn-led-control { padding: 4px 8px; font-size: 0.7rem; gap: 4px; right: 8px; }
+  .btn-led-control .led-btn-label { display: none; }
+  .btn-led-control .led-icon { font-size: 0.95rem; }
+
+  /* --- Video-Box bekommt den restlichen Platz --- */
+  .main-view-container { margin: 4px auto; border-width: 1px; }
+
+  /* HUD kompakt, damit es das (kleine) Video nicht zudeckt */
+  .telemetry-hud { top: 4px; left: 4px; gap: 3px; max-height: 92%; }
+  .hud-card { min-width: 70px; padding: 2px 6px; }
+  .hud-label { font-size: 0.42rem; }
+  .hud-value { font-size: 0.62rem; }
+  .hud-value.small { font-size: 0.52rem; }
+
+  /* Detection-Panel im Video flacher */
+  .detection-panel { bottom: 4px; left: 4px; padding: 4px 8px; min-width: 95px; }
+
+  /* --- Routen-Panel schmaler -> mehr Breite fürs Video --- */
   .route-panel {
-    flex: 0 0 200px;
-    width: 200px;
-    overflow-y: auto;                  /* Liste scrollt */
+    flex: 0 0 180px;
+    width: 180px;
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
-  .route-header { padding: 4px 8px; }  /* flach halten, spart Höhe */
+  .route-header { padding: 4px 8px; }
   .route-footer { padding: 4px 8px; }
-  .route-title  { font-size: 0.72rem; } /* wieder gut lesbar, seitlich ist Platz */
-  .route-coord  { font-size: 0.62rem; }
+  .route-title  { font-size: 0.66rem; }
+  .route-coord  { font-size: 0.58rem; }
+
+  /* --- Steuerleiste: EINE Reihe, NICHT umbrechen, kompakt --- */
+  .control-bar {
+    flex-wrap: nowrap;          /* überschreibt den Umbruch aus max-width:700px */
+    gap: 6px;
+    padding: 4px 6px;
+  }
+
+  /* Joysticks: an die Höhe gekoppelt, mit dem Daumen bedienbar */
+  .joystick-wrapper { gap: 8px; }
+  .joystick-controls { gap: 4px; }
+  .joystick {
+    width: clamp(54px, 15vh, 78px);
+    height: clamp(54px, 15vh, 78px);
+  }
+  .joystick-label { font-size: 0.5rem; }
+  .space-btn { padding: 6px 10px; font-size: 0.55rem; }
+
+  /* Aktions-Buttons kompakt */
+  .btn-record { min-width: 50px; padding: 6px 8px; gap: 2px; }
+  .btn-record .rec-icon { width: 11px; height: 11px; }
+  .btn-record .rec-label { font-size: 0.58rem; }
+
+  .btn-emergency { padding: 8px 12px; font-size: 0.6rem; min-width: 72px; }
+
+  /* Objekterkennung / Policemode kompakt */
+  .object-detection-controls,
+  .object-police-controls { padding: 6px 10px; gap: 4px; }
+  .object-detection-label { font-size: 0.55rem; }
+  .btn-object-on,
+  .btn-object-off { padding: 5px 14px; font-size: 0.72rem; }
 }

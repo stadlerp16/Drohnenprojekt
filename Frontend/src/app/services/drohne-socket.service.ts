@@ -5,7 +5,7 @@ export class DroneSocketService {
   private socket?: WebSocket;
 
   connect() {
-    this.socket = new WebSocket('http://localhost:8000/drone/control');
+    this.socket = new WebSocket('http://192.168.185.71:8000/drone/control');
   }
 
   sendControls(controls: any) {

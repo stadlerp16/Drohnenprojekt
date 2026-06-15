@@ -153,15 +153,15 @@ class VideoService:
             )
 
             os.replace(tmp_path, self.current_path)
-            print(f"[Recorder] ✅ Re-encoded H.264 @ {real_fps:.2f} FPS (browserkompatibel)")
+            print(f"[Recorder] Re-encoded H.264 @ {real_fps:.2f} FPS (browserkompatibel)")
 
         except subprocess.CalledProcessError as e:
-            print(f"[Recorder] ⚠️  ffmpeg-Konvertierung fehlgeschlagen:")
+            print(f"[Recorder]fmpeg-Konvertierung fehlgeschlagen:")
             print(e.stderr.decode(errors='ignore')[:500])
             if os.path.exists(tmp_path):
                 os.remove(tmp_path)
         except Exception as e:
-            print(f"[Recorder] ⚠️  Unerwarteter Fehler: {e}")
+            print(f"[Recorder] Unerwarteter Fehler: {e}")
             if os.path.exists(tmp_path):
                 os.remove(tmp_path)
 

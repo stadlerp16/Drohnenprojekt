@@ -516,7 +516,7 @@ export class Dashboard implements OnDestroy, OnInit, AfterViewInit {
   private connectWebSocket() {
     const mode = this.droneService.selectedMode;
     // Dynamischer Pfad: /controlkeyboard, /controlps oder /controltouch
-    const WS_URL = `ws://localhost:8000/drone/${mode}`;
+    const WS_URL = `http://127.0.0.1:8000/drone/${mode}`;
 
     this.socket = new WebSocket(WS_URL);
     this.socket.onopen = () => {

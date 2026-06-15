@@ -1,5 +1,6 @@
 from fastapi import APIRouter, WebSocket, HTTPException, Body
 from Services.Video.liveStream import  video_stream_service
+import Services.Video.videoService as video_service
 import Services.DrohneVerwaltung.drohneService as drohne_service
 import Services.Video.liveStream as livestream
 from fastapi import APIRouter, WebSocket, HTTPException, Request
@@ -44,13 +45,13 @@ async def websocket_video_stream_enable(enable: bool = Body(..., embed=True)):
 
 @router.post("/start")
 async def start_rec():
-    video_stream_service.start_recording()
+    video_service.start_recording()
     return {"status": "recording started"}
 
 
 @router.post("/stop")
 async def stop_rec():
-    video_stream_service.stop_recording()
+    video_service.stop_recording()
     return {"status": "recording stopped"}
 
 
@@ -95,7 +96,7 @@ async def get_video_file(filename: str, request: Request):
     if safe_filename != filename:
         raise HTTPException(status_code=400, detail="Ungültiger Dateiname")
 
-    file_path = os.path.join(video_stream_service.output_dir, safe_filename)
+    file_path = os.path.join(video_service.output_dir, safe_filename)
 
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="Video nicht gefunden")
@@ -162,7 +163,7 @@ async def delete_video(filename: str):
     if safe_filename != filename:
         raise HTTPException(status_code=400, detail="Ungültiger Dateiname")
 
-    file_path = os.path.join(video_stream_service.output_dir, safe_filename)
+    file_path = os.path.join(video_service.output_dir, safe_filename)
 
     if os.path.exists(file_path):
         try:
