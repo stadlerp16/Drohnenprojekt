@@ -1,13 +1,14 @@
-from fastapi import APIRouter, WebSocket, HTTPException, Body
-from Services.Video.liveStream import  video_stream_service
-import Services.Video.videoService as video_service
-import Services.DrohneVerwaltung.drohneService as drohne_service
-import Services.Video.liveStream as livestream
-from fastapi import APIRouter, WebSocket, HTTPException, Request
+from fastapi import APIRouter, WebSocket, HTTPException, Body, Request
 from fastapi.responses import StreamingResponse, FileResponse
 from sqlmodel import Session, select
 import os
 import re
+
+# WICHTIG: die Instanzen importieren, nicht die Module
+from Services.Video.liveStream import video_stream_service
+from Services.Video.videoService import video_service
+import Services.DrohneVerwaltung.drohneService as drohne_service
+import Services.Video.liveStream as livestream
 from Models.video import Video
 from connect import engine
 
@@ -24,6 +25,7 @@ async def websocket_video_stream(websocket: WebSocket):
         await websocket.close()
         return
     await video_stream_service.stream_to_websocket(websocket)
+
 
 @router.post("/enableObject")
 async def websocket_video_stream_enable(enable: bool = Body(..., embed=True)):
@@ -42,7 +44,6 @@ async def websocket_video_stream_enable(enable: bool = Body(..., embed=True)):
     }
 
 
-
 @router.post("/start")
 async def start_rec():
     video_service.start_recording()
@@ -55,7 +56,7 @@ async def stop_rec():
     return {"status": "recording stopped"}
 
 
-@router.get("/list")
+@router.get("/videos")
 async def list_videos():
     """
     Liefert alle Aufnahmen aus der DB, sortiert nach Datum (neueste zuerst).
@@ -69,7 +70,7 @@ async def list_videos():
             results = session.exec(statement).all()
 
             for video in results:
-                file_path = os.path.join(video_stream_service.output_dir, video.filename)
+                file_path = os.path.join(video_service.output_dir, video.filename)
                 if not os.path.exists(file_path):
                     continue
 
