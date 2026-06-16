@@ -17,13 +17,13 @@ async def play_key_duration(key: str, duration: float):
     set_key(key, True)
     await asyncio.sleep(duration)
     set_key(key, False)
-    print(f"[REPLAY] ⌨️ Taste {key} nach {duration}s losgelassen")
+    print(f"[REPLAY]  Taste {key} nach {duration}s losgelassen")
 
 async def play_flight(flight_name: str):
     global active_replay_task
     commands = get_commands_by_name(flight_name)
     if not commands:
-        print(f"[REPLAY] ❌ Fehler: Flug '{flight_name}' nicht gefunden.")
+        print(f"[REPLAY] Fehler: Flug '{flight_name}' nicht gefunden.")
         return
 
     session = ControlSession(hz=20)
@@ -65,12 +65,12 @@ async def play_flight(flight_name: str):
                     if i == 0: await asyncio.sleep(4.0)
 
             except Exception as e:
-                print(f"[REPLAY] ❌ Fehler bei Befehl {i}: {e}")
+                print(f"[REPLAY] Fehler bei Befehl {i}: {e}")
             last_time = cmd.timestamp
 
         await asyncio.sleep(2.0) # Warten auf letzte Tasks
         set_rc(0, 0, 0, 0)
-        print(f"[REPLAY] ✅ BEENDET")
+        print(f"[REPLAY] BEENDET")
     except asyncio.CancelledError: stop_drone_immediately()
     finally:
         # ===== NEU: Positions-Tracking sauber beenden =====
